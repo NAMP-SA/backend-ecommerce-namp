@@ -17,4 +17,5 @@ public class UserDTO {
     private String phone;
     private String username;
     private String password;
+    private String confirmPassword;
 }

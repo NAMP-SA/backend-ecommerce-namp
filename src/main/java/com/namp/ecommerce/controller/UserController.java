@@ -30,6 +30,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("user/{id}")
+    public ResponseEntity<?> getUserId(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(userService.getUserById(id)); // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());  //500
+        }
+    }
 
     @PostMapping("user")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
@@ -80,6 +89,4 @@ public class UserController {
                     .body("Error deleting the user: " + e.getMessage());
         }
     }
-
-
 }

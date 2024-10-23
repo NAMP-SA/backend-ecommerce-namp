@@ -34,6 +34,7 @@ public class User implements Serializable {
 
     @NotNull(message = "El email no debe estar vacio")
     @Size(max = 50, message = "El email puede contener maximo 50 caracteres")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El formate ingresado no es correcto, por favor intente nuevamente")
     private String email;
 
     @NotNull(message = "La direccion no debe estar vacia")
@@ -51,6 +52,4 @@ public class User implements Serializable {
 
     @NotNull(message = "La contrasena no debe estar vacia")
     private String password;
-
-
 }

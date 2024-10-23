@@ -10,6 +10,8 @@ import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IUserDAO;
 import com.namp.ecommerce.service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.commons.codec.cli.Digest;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +36,36 @@ public class UserImplementation implements IUserService {
     }
 
     @Override
-    public UserDTO save(UserDTO userDTO) {
+    public UserAnswerDTO getUserById(long id) {
+        User user = userDAO.findByIdUser(id);
 
+        if (user == null){
+            return null;
+        }
+
+        return mapperUser.convertUserToUserAnswerDTO(user);
+    }
+
+    @Override
+    public UserDTO save(UserDTO userDTO) {
+        //Normalizo el email del usuario
+        String normalizedEmail = userDTO.getEmail().replaceAll("\\s+", " ").trim().toUpperCase();
         // Normalizo el nombre de usuario
         String normalizedUsername = userDTO.getUsername().replaceAll("\\s+", " ").trim().toUpperCase();
 
-        if(!verifyName(normalizedUsername) || normalizedUsername.matches("\\d+")) {
+        if(!verifyUsername(normalizedUsername) || normalizedUsername.matches("\\d+")) {
+            if(!verifyEmail(normalizedEmail) && userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
+                String pass = DigestUtils.sha256Hex(userDTO.getPassword());
 
-            userDTO.setUsername(normalizedUsername);
+                userDTO.setPassword(pass);
+                userDTO.setUsername(normalizedUsername);
+                userDTO.setEmail(normalizedEmail);
 
-            User user = mapperUser.convertUserDTOToUser(userDTO);
+                User user = mapperUser.convertUserDTOToUser(userDTO);
+                User savedUser = userDAO.save(user);
 
-            User savedUser = userDAO.save(user);
-
-            return mapperUser.convertUserToUserDTO(savedUser);
+                return mapperUser.convertUserToUserDTO(savedUser);
+            }
         }
         return null;
     }
@@ -64,6 +82,9 @@ public class UserImplementation implements IUserService {
 
     @Override
     public UserEditableDTO update(long id, UserEditableDTO userEditableDTO) {
+        ///Chequear si usar id o objeto_real
+
+        String normalizedEmail = userEditableDTO.getEmail().replaceAll("\\s+", " ").trim().toUpperCase();
 
         if (!findById(id)) {
             return null;
@@ -71,21 +92,22 @@ public class UserImplementation implements IUserService {
         User existingUser = userDAO.findByIdUser(id);
 
         if (existingUser != null) {
-            existingUser.setName(userEditableDTO.getName());
-            existingUser.setEmail(userEditableDTO.getEmail());
-            existingUser.setAddress(userEditableDTO.getAddress());
-            existingUser.setPhone(userEditableDTO.getPhone());
+            if(!verifyEmail(normalizedEmail,id)) {
+                existingUser.setName(userEditableDTO.getName());
+                existingUser.setEmail(userEditableDTO.getEmail());
+                existingUser.setAddress(userEditableDTO.getAddress());
+                existingUser.setPhone(userEditableDTO.getPhone());
 
-            userDAO.save(existingUser);
-
-            return mapperUser.convertUserToUserEditableDTO(existingUser);
+                userDAO.save(existingUser);
+                return mapperUser.convertUserToUserEditableDTO(existingUser);
+            }
         }
         return null;
 
     }
 
     @Override
-    public boolean verifyName(String normalizedUsername){
+    public boolean verifyUsername(String normalizedUsername){
         List<User> users = userDAO.findAll();
         String userName = normalizedUsername.replaceAll("\\s+", "");
 
@@ -96,6 +118,49 @@ public class UserImplementation implements IUserService {
             }
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean verifyUsername(String normalizedName, long userId) {
+        List<User> users = userDAO.findAll();
+        String name = normalizedName.replaceAll("\\s+", "");
+
+        //Verifica si se repite el nombre en los demas usuarios, menos con la que se está actualizando
+        for (User user : users) {
+            if (user.getIdUser() != userId && name.equals(user.getName().replaceAll("\s+", ""))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean verifyEmail(String normalizedEmail){
+        List<User> users = userDAO.findAll();
+        String userEmail = normalizedEmail.replaceAll("\\s+", "");
+
+        //Comparar el email que se quiere guardar, con todos los demas sin espacio para ver si es el mismo
+        for(User user : users){
+            if(userEmail.equals(user.getUsername().replaceAll("\\s+", ""))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean verifyEmail(String normalizedEmail, long userId){
+        List<User> users = userDAO.findAll();
+        String userEmail = normalizedEmail.replaceAll("\\s+", "");
+
+        //Verifica si se repite el email en los demas usuarios, menos con el que se está actualizando
+        for(User user : users){
+            if(user.getIdUser() != userId && userEmail.equals(user.getUsername().replaceAll("\\s+", ""))){
+                return true;
+            }
+        }
         return false;
     }
 

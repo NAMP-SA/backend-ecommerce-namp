@@ -13,6 +13,10 @@ public interface IUserService {
     UserDTO save(UserDTO userDTO);
     void delete(long id);
     UserEditableDTO update(long id, UserEditableDTO userEditableDTO);
-    boolean verifyName(String normalizedUsername);
+    boolean verifyUsername(String normalizedUsername);
+    boolean verifyUsername(String normalizedUsername, long id);
+    boolean verifyEmail(String normalizedEmail);
+    boolean verifyEmail(String normalizedEmail, long id);
     boolean findById(long id);
+    UserAnswerDTO getUserById(long id);
 }
