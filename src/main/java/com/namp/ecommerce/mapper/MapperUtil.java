@@ -199,4 +199,50 @@ public class MapperUtil {
 
         return comboWithItDTO;
     }
+    /*
+    ----------------------------------------------------------------------------------------------------------
+                                             USERS METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public UserDTO convertUserToUserDTO(User user){
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setIdUser(user.getIdUser());
+        userDTO.setName(user.getName());
+        userDTO.setLastname(user.getLastname());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setPhone(user.getPhone());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setPassword(user.getPassword());
+
+        return userDTO;
+    }
+
+    public UserAnswerDTO convertUserToUserAnswerDTO(User user) {
+        UserAnswerDTO userAnswerDTO = new UserAnswerDTO();
+
+        userAnswerDTO.setIdUser(user.getIdUser());
+        userAnswerDTO.setName(user.getName());
+        userAnswerDTO.setLastname(user.getLastname());
+        userAnswerDTO.setEmail(user.getEmail());
+        userAnswerDTO.setAddress(user.getAddress());
+        userAnswerDTO.setPhone(user.getPhone());
+        userAnswerDTO.setUsername(user.getUsername());
+
+        return userAnswerDTO;
+    }
+
+    public UserEditableDTO convertUserToUserEditableDTO(User user){
+        UserEditableDTO userEditableDTO = new UserEditableDTO();
+
+        //userEditableDTO.setIdUser(user.getIdUser());
+        userEditableDTO.setName(user.getName());
+        userEditableDTO.setEmail(user.getEmail());
+        userEditableDTO.setAddress(user.getAddress());
+        userEditableDTO.setPhone(user.getPhone());
+
+        return userEditableDTO;
+    }
 }
