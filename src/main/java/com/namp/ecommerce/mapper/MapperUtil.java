@@ -239,6 +239,9 @@ public class MapperUtil {
 
         //userEditableDTO.setIdUser(user.getIdUser());
         userEditableDTO.setName(user.getName());
+        userEditableDTO.setLastname(user.getLastname());
+        userEditableDTO.setUsername(user.getUsername());
+        userEditableDTO.setPassword(user.getPassword());
         userEditableDTO.setEmail(user.getEmail());
         userEditableDTO.setAddress(user.getAddress());
         userEditableDTO.setPhone(user.getPhone());

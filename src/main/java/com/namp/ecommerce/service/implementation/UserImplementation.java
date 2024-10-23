@@ -85,6 +85,7 @@ public class UserImplementation implements IUserService {
         ///Chequear si usar id o objeto_real
 
         String normalizedEmail = userEditableDTO.getEmail().replaceAll("\\s+", " ").trim().toUpperCase();
+        String normalizedUsername = userEditableDTO.getUsername().replaceAll("\\s+", " ").trim().toUpperCase();
 
         if (!findById(id)) {
             return null;
@@ -92,14 +93,19 @@ public class UserImplementation implements IUserService {
         User existingUser = userDAO.findByIdUser(id);
 
         if (existingUser != null) {
-            if(!verifyEmail(normalizedEmail,id)) {
-                existingUser.setName(userEditableDTO.getName());
-                existingUser.setEmail(userEditableDTO.getEmail());
-                existingUser.setAddress(userEditableDTO.getAddress());
-                existingUser.setPhone(userEditableDTO.getPhone());
+            if(!verifyEmail(normalizedEmail,id) && !verifyUsername(normalizedUsername,id)) {
+                if(userEditableDTO.getPassword().equals(userEditableDTO.getConfirmPassword())) {
+                    existingUser.setName(userEditableDTO.getName());
+                    existingUser.setLastname(userEditableDTO.getLastname());
+                    existingUser.setUsername(normalizedUsername);
+                    existingUser.setPassword(userEditableDTO.getPassword());
+                    existingUser.setEmail(normalizedEmail);
+                    existingUser.setAddress(userEditableDTO.getAddress());
+                    existingUser.setPhone(userEditableDTO.getPhone());
 
-                userDAO.save(existingUser);
-                return mapperUser.convertUserToUserEditableDTO(existingUser);
+                    userDAO.save(existingUser);
+                    return mapperUser.convertUserToUserEditableDTO(existingUser);
+                }
             }
         }
         return null;
@@ -117,7 +123,6 @@ public class UserImplementation implements IUserService {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -128,7 +133,7 @@ public class UserImplementation implements IUserService {
 
         //Verifica si se repite el nombre en los demas usuarios, menos con la que se está actualizando
         for (User user : users) {
-            if (user.getIdUser() != userId && name.equals(user.getName().replaceAll("\s+", ""))) {
+            if (user.getIdUser() != userId && name.equals(user.getUsername().replaceAll("\s+", ""))) {
                 return true;
             }
         }
@@ -143,7 +148,7 @@ public class UserImplementation implements IUserService {
 
         //Comparar el email que se quiere guardar, con todos los demas sin espacio para ver si es el mismo
         for(User user : users){
-            if(userEmail.equals(user.getUsername().replaceAll("\\s+", ""))){
+            if(userEmail.equals(user.getEmail().replaceAll("\\s+", ""))){
                 return true;
             }
         }
@@ -157,7 +162,7 @@ public class UserImplementation implements IUserService {
 
         //Verifica si se repite el email en los demas usuarios, menos con el que se está actualizando
         for(User user : users){
-            if(user.getIdUser() != userId && userEmail.equals(user.getUsername().replaceAll("\\s+", ""))){
+            if(user.getIdUser() != userId && userEmail.equals(user.getEmail().replaceAll("\\s+", ""))){
                 return true;
             }
         }
