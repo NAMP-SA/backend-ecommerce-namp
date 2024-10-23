@@ -98,7 +98,10 @@ public class UserImplementation implements IUserService {
                     existingUser.setName(userEditableDTO.getName());
                     existingUser.setLastname(userEditableDTO.getLastname());
                     existingUser.setUsername(normalizedUsername);
-                    existingUser.setPassword(userEditableDTO.getPassword());
+
+                    String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
+                    existingUser.setPassword(pass);
+
                     existingUser.setEmail(normalizedEmail);
                     existingUser.setAddress(userEditableDTO.getAddress());
                     existingUser.setPhone(userEditableDTO.getPhone());
