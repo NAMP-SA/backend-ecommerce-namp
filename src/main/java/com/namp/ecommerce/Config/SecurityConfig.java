@@ -32,13 +32,15 @@ public class SecurityConfig {
             .authorizeHttpRequests(authRequest ->
                 authRequest
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/api-namp/product").hasAnyRole("USER","ADMIN")
+                .requestMatchers("/api-namp/category").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(sessionManager ->
                 sessionManager
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authProvider)
-            .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Ninguna sesion se mantiene en el servidor, hay que autenticar cada solicitud de manera independiente
+            .authenticationProvider(authProvider) // Se encarga de verificar las credenciales de los usuarios 
+            .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class) // Filtro por defecto de spring security para validar usuario y contraseña
             .build();
     }
 }

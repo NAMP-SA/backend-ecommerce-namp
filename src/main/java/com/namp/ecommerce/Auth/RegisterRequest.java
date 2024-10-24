@@ -1,5 +1,7 @@
 package com.namp.ecommerce.Auth;
 
+import com.namp.ecommerce.model.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +17,5 @@ public class RegisterRequest {
     String firstname;
     String lastname;
     String country; 
+    Role role; 
 }

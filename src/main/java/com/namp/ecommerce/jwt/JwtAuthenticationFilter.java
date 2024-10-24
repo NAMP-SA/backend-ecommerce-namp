@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.namp.ecommerce.service.IJwtService;
+import com.namp.ecommerce.service.implementation.CustomUserDetailsService;
 
 import org.springframework.util.StringUtils;
 import jakarta.servlet.FilterChain;
@@ -29,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     @Autowired
     private final IJwtService jwtService;
 
-    private final UserDetailsService userDetailsService; 
+    private final CustomUserDetailsService userDetailsService; 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

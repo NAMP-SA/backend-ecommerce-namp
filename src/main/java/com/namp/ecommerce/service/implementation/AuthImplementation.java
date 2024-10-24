@@ -50,7 +50,7 @@ public class AuthImplementation implements IAuthService {
             .firstname(request.getFirstname())
             .lastname(request.getLastname())
             .country(request.getCountry())
-            .role(Role.USER)
+            .role(request.getRole())
             .build();
 
         userDAO.save(user); 
