@@ -2,6 +2,7 @@ package com.namp.ecommerce.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,9 +32,14 @@ public class SecurityConfig {
             .disable())
             .authorizeHttpRequests(authRequest ->
                 authRequest
+                //Public endpoint
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api-namp/product").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/api-namp/category").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api-namp/**").permitAll()
+                //USER role endpoints 
+                .requestMatchers("/api-namp/user/**").hasAnyRole("USER","ADMIN")
+                //ADMIN role endpoints
+                .requestMatchers("/api-namp/admin/**").hasRole("ADMIN")
+
                 .anyRequest().authenticated()
             )
             .sessionManagement(sessionManager ->

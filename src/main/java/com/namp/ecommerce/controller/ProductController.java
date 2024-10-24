@@ -51,7 +51,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping("product")
+    @PostMapping("/admin/product")
     public ResponseEntity<?> createProduct(@RequestParam("product") String productJson, @RequestParam(value="file", required = false) MultipartFile file){
         // Verificar si el archivo es null o está vacío
         //Este codigo lo pusimo para formatear el error y no crear un manejador global de excepciones, pero deberiamos cambiarlo.
@@ -78,7 +78,7 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("product/{id}")
+    @DeleteMapping("/admin/product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable long id){
         try{
             ProductDTO productDTO = productService.findById(id);
@@ -99,7 +99,7 @@ public class ProductController {
     
     }
 
-    @PutMapping("product/{id}")
+    @PutMapping("/admin/product/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestParam("product") String productJson, @RequestParam(value = "file", required = false) MultipartFile file){
         try{
             ProductDTO existingProduct = productService.findById(id);

@@ -35,7 +35,7 @@ public class ComboController {
                     .body("Error showing the combos:"+e.getMessage());
         }
     }
-    @PostMapping("combo")
+    @PostMapping("/admin/combo")
     public ResponseEntity<?> createCombo(@RequestParam("combo") String comboJson, @RequestParam("file") MultipartFile file){
         try{
             ComboWithItDTO createdComboDTO = comboService.saveComboWithIt(comboJson, file);
@@ -56,7 +56,7 @@ public class ComboController {
         }
     }
 
-    @DeleteMapping("combo/{id}")
+    @DeleteMapping("/admin/combo/{id}")
     public ResponseEntity<?> deleteCombo(@PathVariable long id){
         try{
             ComboDTO comboDTO = comboService.findById(id);
@@ -74,7 +74,7 @@ public class ComboController {
         }
     }
 
-    @PutMapping("combo/{id}")
+    @PutMapping("/admin/combo/{id}")
     public ResponseEntity<?> updateCombo(@PathVariable long id, @RequestParam("combo") String comboJson, @RequestParam(value = "file", required = false) MultipartFile file){
         try{
             ComboWithItDTO existingComboDTO = comboService.findByIdWithIt(id);

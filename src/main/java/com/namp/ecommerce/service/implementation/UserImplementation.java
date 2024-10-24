@@ -51,7 +51,7 @@ public class UserImplementation implements IUserService {
         //Normalizo el email del usuario
         String normalizedEmail = userDTO.getEmail().replaceAll("\\s+", " ").trim().toUpperCase();
         // Normalizo el nombre de usuario
-        String normalizedUsername = userDTO.getUsername().replaceAll("\\s+", " ").trim().toUpperCase();
+        String normalizedUsername = userDTO.getUsername().replaceAll("\\s+", " ").trim();
 
         if(!verifyUsername(normalizedUsername) || normalizedUsername.matches("\\d+")) {
             if(!verifyEmail(normalizedEmail)) {
