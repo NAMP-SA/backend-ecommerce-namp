@@ -43,8 +43,9 @@ public class AuthImplementation implements IAuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        User user = userDAO.findByUsername(request.getUsername()).orElseThrow();
-        String token = jwtService.getToken(user);
+        UserDTO userDTO = userService.findByUsername(request.getUsername());
+
+        String token = jwtService.getToken(userDTO);
         return AuthResponse.builder()
             .token(token)
             .build();

@@ -180,7 +180,12 @@ public class UserImplementation implements IUserService {
         }
         //return mapperUser.convertUserToUserEditableDTO(user);
         return true;
-
     }
 
+    @Override
+    public UserDTO findByUsername(String username){
+        User user = userDAO.findByUsername(username).orElseThrow();
+
+        return mapperUser.convertUserToUserDTO(user);
+    }
 }
