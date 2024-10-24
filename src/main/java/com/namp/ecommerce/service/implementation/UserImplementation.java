@@ -54,13 +54,9 @@ public class UserImplementation implements IUserService {
         String normalizedUsername = userDTO.getUsername().replaceAll("\\s+", " ").trim().toUpperCase();
 
         if(!verifyUsername(normalizedUsername) || normalizedUsername.matches("\\d+")) {
-            if(!verifyEmail(normalizedEmail) && userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
-                String pass = DigestUtils.sha256Hex(userDTO.getPassword());
-
-                userDTO.setPassword(pass);
+            if(!verifyEmail(normalizedEmail)) {
                 userDTO.setUsername(normalizedUsername);
                 userDTO.setEmail(normalizedEmail);
-
                 User user = mapperUser.convertUserDTOToUser(userDTO);
                 User savedUser = userDAO.save(user);
 
@@ -94,21 +90,20 @@ public class UserImplementation implements IUserService {
 
         if (existingUser != null) {
             if(!verifyEmail(normalizedEmail,id) && !verifyUsername(normalizedUsername,id)) {
-                if(userEditableDTO.getPassword().equals(userEditableDTO.getConfirmPassword())) {
-                    existingUser.setName(userEditableDTO.getName());
-                    existingUser.setLastname(userEditableDTO.getLastname());
-                    existingUser.setUsername(normalizedUsername);
+                
+                existingUser.setName(userEditableDTO.getName());
+                existingUser.setLastname(userEditableDTO.getLastname());
+                existingUser.setUsername(normalizedUsername);
+                String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
+                existingUser.setPassword(pass);
 
-                    String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
-                    existingUser.setPassword(pass);
+                existingUser.setEmail(normalizedEmail);
+                existingUser.setAddress(userEditableDTO.getAddress());
+                existingUser.setPhone(userEditableDTO.getPhone());
 
-                    existingUser.setEmail(normalizedEmail);
-                    existingUser.setAddress(userEditableDTO.getAddress());
-                    existingUser.setPhone(userEditableDTO.getPhone());
-
-                    userDAO.save(existingUser);
-                    return mapperUser.convertUserToUserEditableDTO(existingUser);
-                }
+                userDAO.save(existingUser);
+                return mapperUser.convertUserToUserEditableDTO(existingUser);
+                
             }
         }
         return null;

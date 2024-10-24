@@ -37,15 +37,22 @@ public class AuthImplementation implements IAuthService {
     @Autowired
     private MapperUser mapperUser;
 
+    private final PasswordEncoder passwordEncoder;
+
 
     private final AuthenticationManager authenticationManager; 
 
     @Override
     public AuthResponse login(LoginRequest request) {
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        
+
         UserDTO userDTO = userService.findByUsername(request.getUsername());
 
+
         String token = jwtService.getToken(userDTO);
+        
         return AuthResponse.builder()
             .token(token)
             .build();
@@ -55,8 +62,7 @@ public class AuthImplementation implements IAuthService {
     public AuthResponse register(RegisterRequest request) {
         UserDTO userDTO = UserDTO.builder()
             .username(request.getUsername())
-            .password(request.getPassword())
-            .confirmPassword(request.getConfirmPassword())
+            .password(passwordEncoder.encode(request.getPassword()))
             .name(request.getName())
             .lastname(request.getLastname())
             .email(request.getEmail())
