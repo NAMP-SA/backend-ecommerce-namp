@@ -1,4 +1,4 @@
-package com.namp.ecommerce.Auth;
+package com.namp.ecommerce.auth;
 
 import com.namp.ecommerce.model.Role;
 

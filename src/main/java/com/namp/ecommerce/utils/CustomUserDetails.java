@@ -1,4 +1,4 @@
-package com.namp.ecommerce.Utils;
+package com.namp.ecommerce.utils;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

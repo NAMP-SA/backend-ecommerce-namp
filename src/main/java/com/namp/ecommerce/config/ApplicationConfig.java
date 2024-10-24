@@ -1,4 +1,4 @@
-package com.namp.ecommerce.Config;
+package com.namp.ecommerce.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

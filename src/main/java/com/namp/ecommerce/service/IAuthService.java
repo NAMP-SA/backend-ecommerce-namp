@@ -1,8 +1,8 @@
 package com.namp.ecommerce.service;
 
-import com.namp.ecommerce.Auth.AuthResponse;
-import com.namp.ecommerce.Auth.LoginRequest;
-import com.namp.ecommerce.Auth.RegisterRequest;
+import com.namp.ecommerce.auth.AuthResponse;
+import com.namp.ecommerce.auth.LoginRequest;
+import com.namp.ecommerce.auth.RegisterRequest;
 
 public interface IAuthService {
     AuthResponse login(LoginRequest request);

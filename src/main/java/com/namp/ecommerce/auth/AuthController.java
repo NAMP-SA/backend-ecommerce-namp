@@ -1,4 +1,4 @@
-package com.namp.ecommerce.Auth;
+package com.namp.ecommerce.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

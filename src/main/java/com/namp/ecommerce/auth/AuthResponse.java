@@ -1,4 +1,4 @@
-package com.namp.ecommerce.Auth;
+package com.namp.ecommerce.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

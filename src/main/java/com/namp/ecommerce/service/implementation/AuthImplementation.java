@@ -7,10 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.namp.ecommerce.Auth.AuthResponse;
-import com.namp.ecommerce.Auth.LoginRequest;
-import com.namp.ecommerce.Auth.RegisterRequest;
-import com.namp.ecommerce.model.Role;
+import com.namp.ecommerce.auth.AuthResponse;
+import com.namp.ecommerce.auth.LoginRequest;
+import com.namp.ecommerce.auth.RegisterRequest;
 import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IUserDAO;
 import com.namp.ecommerce.service.IAuthService;

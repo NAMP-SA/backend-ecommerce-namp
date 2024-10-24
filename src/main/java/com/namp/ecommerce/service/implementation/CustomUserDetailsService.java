@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.namp.ecommerce.Utils.CustomUserDetails;
+import com.namp.ecommerce.utils.CustomUserDetails;
 import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IUserDAO;
 
