@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 import com.namp.ecommerce.auth.AuthResponse;
 import com.namp.ecommerce.auth.LoginRequest;
 import com.namp.ecommerce.auth.RegisterRequest;
+import com.namp.ecommerce.dto.UserDTO;
+import com.namp.ecommerce.mapper.MapperUser;
 import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IUserDAO;
 import com.namp.ecommerce.service.IAuthService;
 import com.namp.ecommerce.service.IJwtService;
+import com.namp.ecommerce.service.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,15 +29,21 @@ public class AuthImplementation implements IAuthService {
     private IUserDAO userDAO;
 
     @Autowired
+    private IUserService userService; 
+
+    @Autowired
     private final IJwtService jwtService; 
 
-    private final PasswordEncoder passwordEncoder; 
+    @Autowired
+    private MapperUser mapperUser;
+
+
     private final AuthenticationManager authenticationManager; 
 
     @Override
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = userDAO.findByUsername(request.getUsername()).orElseThrow();
+        User user = userDAO.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
             .token(token)
@@ -43,19 +52,25 @@ public class AuthImplementation implements IAuthService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
-        User user = User.builder()
+        UserDTO userDTO = UserDTO.builder()
             .username(request.getUsername())
-            .password(passwordEncoder.encode( request.getPassword()))
-            .firstname(request.getFirstname())
+            .password(request.getPassword())
+            .confirmPassword(request.getConfirmPassword())
+            .name(request.getName())
             .lastname(request.getLastname())
-            .country(request.getCountry())
+            .email(request.getEmail())
+            .phone(request.getPhone())
+            .address(request.getAddress())
             .role(request.getRole())
             .build();
 
-        userDAO.save(user); 
+        
+        userService.save(userDTO);
+
+       
 
         return AuthResponse.builder()
-            .token(jwtService.getToken(user))
+            .token(jwtService.getToken(userDTO))
             .build();
     }
 
