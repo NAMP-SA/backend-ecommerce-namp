@@ -199,4 +199,66 @@ public class MapperUtil {
 
         return comboWithItDTO;
     }
+
+    /*
+    ----------------------------------------------------------------------------------------------------------
+                                             State METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+    public StateDTO convertStateToDTO(State state) {
+        StateDTO stateDTO = new StateDTO();
+
+        stateDTO.setIdState(state.getIdState());
+        stateDTO.setName(state.getName());
+
+        return stateDTO;
+    }
+
+    public StateWithOrdersDTO convertStateWithOrderToDTO(State state){
+        StateWithOrdersDTO stateWithOrderDTO = new StateWithOrdersDTO();
+
+        stateWithOrderDTO.setIdState(state.getIdState());
+        stateWithOrderDTO.setName(state.getName());
+
+        stateWithOrderDTO.setOrdes(state.getOrders()
+            .stream()
+            .map(this::convertOrderToDTO)
+            .collect(Collectors.toList()));
+
+        return stateWithOrderDTO;
+    }
+
+    public StateWithOrdersDTO convertStateIdWithOrderDTO(State state){
+        StateWithOrdersDTO stateIdWithOrderDTO = new StateWithOrdersDTO();
+
+        stateIdWithOrderDTO.setIdState(state.getIdState());
+        stateIdWithOrderDTO.setName(state.getName());
+
+        stateIdWithOrderDTO.setOrdes(state.getOrders()
+            .stream()
+            .map(this::convertOrderToDTO)
+            .collect(Collectors.toList()));
+        
+        // stateIdWithOrderDTO.setOrderWithDetailOrder(state.getOrders()
+        //     .stream()
+        //     .map(this.)
+
+        return stateIdWithOrderDTO;
+    }
+
+
+    /*
+    ----------------------------------------------------------------------------------------------------------
+                                             Order METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+    public OrderDTO convertOrderToDTO(Order order){
+        OrderDTO orderDTO = new OrderDTO(); 
+
+        orderDTO.setIdOrder(order.getIdOrder());
+        orderDTO.setDateHour(order.getFechaHora());
+        orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
+        
+        return orderDTO;
+    }
 }
