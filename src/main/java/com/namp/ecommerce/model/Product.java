@@ -45,6 +45,9 @@ public class Product implements Serializable{
     private String img;
     //Falta promocion
 
+    @OneToMany(mappedBy = "idProduct",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<RegisterStock> registerStocks = new ArrayList<>();
+    
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_subcategory", referencedColumnName = "idSubcategory")

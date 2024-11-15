@@ -37,6 +37,16 @@ public class ProductController {
         }
     }
 
+    @GetMapping("productWithRegisterStocks")
+    public ResponseEntity<?> getProductsWithRegisterStocks(){
+        try{
+            return ResponseEntity.ok(productService.getProductWithRegisterStocks());
+
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al mostrar los productos:"+e.getMessage());
+        }
+    }
+
     @GetMapping("product/{id}")
     public ResponseEntity<?> getProductsId(@PathVariable long id){
         try{

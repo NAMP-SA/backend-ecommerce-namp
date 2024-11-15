@@ -2,6 +2,7 @@ package com.namp.ecommerce.service.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
+import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
 import com.namp.ecommerce.mapper.MapperProduct;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IProductDAO;
@@ -62,6 +63,14 @@ public class ProductImplementation implements IProductService{
         return productDAO.findAll()
                 .stream()
                 .map(mapperProduct::convertProductWithItToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductWithRegisterStocksDTO> getProductWithRegisterStocks(){
+        return productDAO.findAll()
+                .stream()
+                .map(mapperProduct::convertProductWithRegisterStocksToDto)
                 .collect(Collectors.toList());
     }
 
@@ -241,6 +250,25 @@ public class ProductImplementation implements IProductService{
         }
 
         return false;
+    }
+
+
+    @Override
+    public void increaseStock(ProductDTO productDTO, int quantity) {
+        Product product = productDAO.findByIdProduct(productDTO.getIdProduct());
+        product.setStock(product.getStock()+quantity);
+        productDAO.save(product);
+    }
+
+
+    @Override
+    public void decraseStock(ProductDTO productDTO, int quantity) {
+        if (productDTO.getStock() < quantity) {
+            throw new IllegalArgumentException("Insufficient stock for product with ID: " + productDTO.getIdProduct());
+        }
+        Product product = productDAO.findByIdProduct(productDTO.getIdProduct());
+        product.setStock(product.getStock()-quantity);
+        productDAO.save(product);
     }
     
 }
