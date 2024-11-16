@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.namp.ecommerce.dto.OrderDetailDTO;
-import com.namp.ecommerce.dto.OrderDetailDTO;
 import com.namp.ecommerce.model.OrderDetail;
 import com.namp.ecommerce.repository.IComboDAO;
 import com.namp.ecommerce.repository.IOrderDAO;
@@ -31,10 +30,14 @@ public class MapperOrderDetail {
 
         OrderDetail.setSubTotal(orderDetailDTO.getSubTotal());
         OrderDetail.setQuantity(orderDetailDTO.getQuantity());
+        
+        if (orderDetailDTO.getIdCombo() == null){
+            OrderDetail.setIdProduct(productDAO.findByIdProduct(orderDetailDTO.getIdProduct().getIdProduct()));
+        }else{
+            OrderDetail.setIdCombo(comboDAO.findByIdCombo(orderDetailDTO.getIdCombo().getIdCombo()));
+        }
+        
         OrderDetail.setIdOrder(orderDAO.findByIdOrder(orderDetailDTO.getIdOrder().getIdOrder()));
-        OrderDetail.setIdCombo(comboDAO.findByIdCombo(orderDetailDTO.getIdCombo().getIdCombo()));
-        OrderDetail.setIdProduct(productDAO.findByIdProduct(orderDetailDTO.getIdProduct().getIdProduct()));
-
         return OrderDetail; 
     }
 

@@ -321,10 +321,14 @@ public class MapperUtil {
         orderDetailDTO.setIdOrderDetail(orderDetail.getIdDetailOrder());
         orderDetailDTO.setSubTotal(orderDetail.getSubTotal());
         orderDetailDTO.setQuantity(orderDetail.getQuantity());
+        
+        if (orderDetail.getIdCombo() == null){
+            orderDetailDTO.setIdProduct(this.convertProductToDto(orderDetail.getIdProduct()));
+        }else{
+            orderDetailDTO.setIdCombo(this.convertComboToDto(orderDetail.getIdCombo()));
+        }
+        
         orderDetailDTO.setIdOrder(this.convertOrderToDTO(orderDetail.getIdOrder()));
-        orderDetailDTO.setIdCombo(this.convertComboToDto(orderDetail.getIdCombo()));
-        orderDetailDTO.setIdProduct(this.convertProductToDto(orderDetail.getIdProduct()));
-
         return orderDetailDTO; 
     }
 }

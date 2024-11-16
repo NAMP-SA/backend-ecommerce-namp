@@ -22,15 +22,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "Detail Combo")
+@Table(name = "OrderDetail")
 public class OrderDetail implements Serializable{
     
     @Id  
     @Column(name="idDetailOrder")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idDetailOrder;
-    
-
     
     private double subTotal;
 
@@ -40,7 +38,7 @@ public class OrderDetail implements Serializable{
 
 
     @ManyToOne
-    @JoinColumn(name = "fk_product", referencedColumnName = "idProduct")
+    @JoinColumn(name = "fk_product", referencedColumnName = "idProduct", nullable = true)
     private Product idProduct; 
 
     @NotNull
@@ -50,7 +48,7 @@ public class OrderDetail implements Serializable{
   
   
     @ManyToOne
-    @JoinColumn(name = "fk_combo", referencedColumnName = "idCombo")
+    @JoinColumn(name = "fk_combo", referencedColumnName = "idCombo", nullable = true)
     private Combo idCombo;
 }
 
