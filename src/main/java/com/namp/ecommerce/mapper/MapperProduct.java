@@ -3,6 +3,7 @@ package com.namp.ecommerce.mapper;
 import com.namp.ecommerce.dto.CategoryDTO;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
+import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
 import com.namp.ecommerce.dto.SubcategoryDTO;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
@@ -44,6 +45,11 @@ public class MapperProduct {
 
     public ProductWithItDTO convertProductWithItToDto(Product product) {
         ProductWithItDTO productDTO = mapperUtil.convertProductWithItToDto(product);
+        return productDTO;
+    }
+
+    public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
+        ProductWithRegisterStocksDTO productDTO = mapperUtil.convertProductWithRegisterStocksToDto(product);
         return productDTO;
     }
 }

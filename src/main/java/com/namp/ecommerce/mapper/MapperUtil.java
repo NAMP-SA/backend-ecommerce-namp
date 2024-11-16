@@ -133,6 +133,19 @@ public class MapperUtil {
 
         return productDTO;
     }
+    
+    //Este metodo esta creado porque al actualizar un RegisterStock, ya que tiraba que la subcategory era nula 
+    public ProductDTO convertProductWOSubcategoryToDto(Product product){
+        ProductDTO productDTO = new ProductDTO();
+
+        productDTO.setIdProduct(product.getIdProduct());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setStock(product.getStock());
+        productDTO.setImg(product.getImg());
+        return productDTO;
+    }
 
     public ProductWithItDTO convertProductWithItToDto(Product product) {
         ProductWithItDTO productDTO = new ProductWithItDTO();
@@ -148,6 +161,25 @@ public class MapperUtil {
                 .stream()
                 .map(this::convertProductComboToDto)
                 .collect(Collectors.toList()));
+
+        return productDTO;
+    }
+
+    public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
+        ProductWithRegisterStocksDTO productDTO = new ProductWithRegisterStocksDTO();
+       
+        productDTO.setIdProduct(product.getIdProduct());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setStock(product.getStock());
+        productDTO.setImg(product.getImg());
+
+        productDTO.setRegisterStocks(product.getRegisterStocks()
+            .stream()
+            .map(this::convertRegisterStockToDto)
+            .collect(Collectors.toList())
+        );
 
         return productDTO;
     }
@@ -247,5 +279,24 @@ public class MapperUtil {
         userEditableDTO.setPhone(user.getPhone());
 
         return userEditableDTO;
+    }
+
+
+    /*
+    ----------------------------------------------------------------------------------------------------------
+                                             REGISTERSTOCK METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public RegisterStockDTO convertRegisterStockToDto(RegisterStock registerStock){
+        RegisterStockDTO registerStockDTO = new RegisterStockDTO();
+
+        registerStockDTO.setIdRegisterStock(registerStock.getIdRegisterStock());
+        registerStockDTO.setFechaHora(registerStock.getDateTime());
+        registerStockDTO.setQuantity(registerStock.getQuantity());
+
+        registerStockDTO.setIdProduct(this.convertProductWOSubcategoryToDto(registerStock.getIdProduct()));
+
+        return registerStockDTO;
     }
 }
