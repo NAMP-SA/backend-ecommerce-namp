@@ -52,4 +52,7 @@ public class Product implements Serializable{
 
     @OneToMany(mappedBy = "idProduct")
     private List<ProductCombo> productCombo = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idProduct")
+    private List<OrderDetail> orderDetail = new ArrayList<>(); 
 }

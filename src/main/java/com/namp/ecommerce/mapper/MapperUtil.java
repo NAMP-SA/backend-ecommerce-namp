@@ -151,6 +151,25 @@ public class MapperUtil {
 
         return productDTO;
     }
+
+    public ProductWithDoDTO convertProductWithDoToDto(Product product){
+        ProductWithDoDTO productWithDoDTO = new ProductWithDoDTO(); 
+        
+        productWithDoDTO.setIdProduct(product.getIdProduct());
+        productWithDoDTO.setName(product.getName());
+        productWithDoDTO.setDescription(product.getDescription());
+        productWithDoDTO.setPrice(product.getPrice());
+        productWithDoDTO.setStock(product.getStock());
+        productWithDoDTO.setImg(product.getImg());
+
+        productWithDoDTO.setOrderDetail(product.getOrderDetail()
+                .stream()
+                .map(this::convertOrderDetailToDto)
+                .collect(Collectors.toList()));
+        
+        return productWithDoDTO; 
+    }
+
     /*
     ----------------------------------------------------------------------------------------------------------
                                          PRODUCT COMBO METHODS
@@ -182,7 +201,6 @@ public class MapperUtil {
 
         return comboDTO;
     }
-
     public ComboWithItDTO convertComboWithItToDto(Combo combo) {
         ComboWithItDTO comboWithItDTO = new ComboWithItDTO();
 
@@ -198,6 +216,22 @@ public class MapperUtil {
                 .collect(Collectors.toList()));
 
         return comboWithItDTO;
+    }
+    public ComboWithDoDTO convertComboWithDoTDoDto(Combo combo){
+        ComboWithDoDTO comboWithDoDTO = new ComboWithDoDTO();
+        
+        comboWithDoDTO.setIdCombo(combo.getIdCombo());
+        comboWithDoDTO.setName(combo.getName());
+        comboWithDoDTO.setDescription(combo.getDescription());
+        comboWithDoDTO.setPrice(combo.getPrice());
+        comboWithDoDTO.setImg(combo.getImg());
+
+        comboWithDoDTO.setOrderDetail(combo.getOrderDetail()
+                .stream()
+                .map(this:: convertOrderDetailToDto)
+                .collect(Collectors.toList()));
+        
+        return comboWithDoDTO;
     }
 
     /*
@@ -238,10 +272,6 @@ public class MapperUtil {
             .stream()
             .map(this::convertOrderToDTO)
             .collect(Collectors.toList()));
-        
-        // stateIdWithOrderDTO.setOrderWithDetailOrder(state.getOrders()
-        //     .stream()
-        //     .map(this.)
 
         return stateIdWithOrderDTO;
     }
@@ -260,5 +290,41 @@ public class MapperUtil {
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         
         return orderDTO;
+    }
+
+    public OrderWithDoDTO convertOrderWithDoToDto(Order order){
+        OrderWithDoDTO orderWithDoDTO = new OrderWithDoDTO();
+
+        orderWithDoDTO.setIdOrder(order.getIdOrder());
+        orderWithDoDTO.setDateHour(order.getFechaHora());
+        orderWithDoDTO.setIdState(this.convertStateToDTO(order.getIdState()));
+
+        orderWithDoDTO.setOrderDetail(order.getOrderDetail()
+                    .stream()
+                    .map(this::convertOrderDetailToDto)
+                    .collect(Collectors.toList())); 
+        
+        return orderWithDoDTO; 
+    }
+
+    
+    /*
+    ----------------------------------------------------------------------------------------------------------
+                                             Detail Order METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public OrderDetailDTO convertOrderDetailToDto(OrderDetail orderDetail){
+        OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
+     
+        
+        orderDetailDTO.setIdOrderDetail(orderDetail.getIdDetailOrder());
+        orderDetailDTO.setSubTotal(orderDetail.getSubTotal());
+        orderDetailDTO.setQuantity(orderDetail.getQuantity());
+        orderDetailDTO.setIdOrder(this.convertOrderToDTO(orderDetail.getIdOrder()));
+        orderDetailDTO.setIdCombo(this.convertComboToDto(orderDetail.getIdCombo()));
+        orderDetailDTO.setIdProduct(this.convertProductToDto(orderDetail.getIdProduct()));
+
+        return orderDetailDTO; 
     }
 }

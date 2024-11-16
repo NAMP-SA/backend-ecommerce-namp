@@ -46,6 +46,9 @@ public class Combo implements Serializable {
 
     @Value("${image.upload.dir}")
     private String img;
+
+    @OneToMany(mappedBy = "idCombo")
+    private List<OrderDetail> orderDetail = new ArrayList<>();
 }
 
 

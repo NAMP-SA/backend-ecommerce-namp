@@ -1,0 +1,18 @@
+package com.namp.ecommerce.service;
+
+import java.util.List;
+import com.namp.ecommerce.dto.OrderDetailDTO;
+import com.namp.ecommerce.model.OrderDetail;
+
+public interface IOrderDetailService {
+
+    List<OrderDetailDTO> getOderDetails(); 
+    OrderDetailDTO save(OrderDetailDTO orderDetailDTO);
+    OrderDetailDTO update(OrderDetailDTO existingOrderDetailDTO, OrderDetail orderDetail);
+    void delete(OrderDetailDTO orderDetailDTO);
+    OrderDetailDTO findById(long id); 
+    
+    //Sumar Productos o Combos
+    double CalculateSubTotalProduct(Integer quantity, double productPrice);
+    double CalculateSubTotalCombo(Integer quantity, double comboPrice);  
+}

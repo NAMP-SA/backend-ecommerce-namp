@@ -2,6 +2,9 @@ package com.namp.ecommerce.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -34,4 +37,6 @@ public class Order implements Serializable {
     @JoinColumn(name = "fk_state", referencedColumnName = "idState")
     private State idState; 
     
+    @OneToMany(mappedBy = "idOrder")
+    private List<OrderDetail> orderDetail = new ArrayList<>();
 }
