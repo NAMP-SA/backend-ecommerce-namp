@@ -3,6 +3,7 @@ package com.namp.ecommerce.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.namp.ecommerce.dto.RegisterStockDTO;
@@ -29,6 +30,11 @@ public class RegisterStockController {
 
     @PostMapping("registerStock")
     public ResponseEntity<?> createRegisterStock(@Valid @RequestBody RegisterStockDTO registerStockDTO){
+        if (registerStockDTO.getQuantity()<0){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Quantity cannot be less than zero");
+        }
+
         try{
             RegisterStockDTO createdRegisterStockDTO = registerStockService.save(registerStockDTO);
 
@@ -87,6 +93,11 @@ public class RegisterStockController {
 
     @PutMapping("registerStock/{id}")
     public ResponseEntity<?> updateRegisterStock(@PathVariable long id, @Valid @RequestBody RegisterStock registerStock){
+        if (registerStock.getQuantity()<0){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Quantity cannot be less than zero");
+        }
+
         try{
             RegisterStockDTO existingRegisterStockDTO = registerStockService.findById(id);
 
