@@ -1,7 +1,10 @@
 package com.namp.ecommerce.service;
 
 import java.util.List;
+
+import com.namp.ecommerce.dto.ComboDTO;
 import com.namp.ecommerce.dto.OrderDetailDTO;
+import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.model.OrderDetail;
 
 public interface IOrderDetailService {
@@ -15,4 +18,7 @@ public interface IOrderDetailService {
     //Sumar Productos o Combos
     double CalculateSubTotalProduct(Integer quantity, double productPrice);
     double CalculateSubTotalCombo(Integer quantity, double comboPrice);  
+
+    void decreaseStockProduct(OrderDetailDTO orderDetailDTO,ProductDTO productDTO);
+    /* void decreaseStockCombo(OrderDetailDTO orderDetailDTO,ComboDTO comboDTO); */
 }

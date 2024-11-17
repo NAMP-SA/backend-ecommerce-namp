@@ -286,6 +286,7 @@ public class MapperUtil {
         OrderDTO orderDTO = new OrderDTO(); 
 
         orderDTO.setIdOrder(order.getIdOrder());
+        //orderDTO.setTotal(order.getTotal());
         orderDTO.setDateHour(order.getFechaHora());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         
@@ -296,6 +297,7 @@ public class MapperUtil {
         OrderWithDoDTO orderWithDoDTO = new OrderWithDoDTO();
 
         orderWithDoDTO.setIdOrder(order.getIdOrder());
+        //orderWithDoDTO.setTotal(order.getTotal());
         orderWithDoDTO.setDateHour(order.getFechaHora());
         orderWithDoDTO.setIdState(this.convertStateToDTO(order.getIdState()));
 

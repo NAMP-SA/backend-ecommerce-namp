@@ -1,5 +1,7 @@
 package com.namp.ecommerce.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.namp.ecommerce.dto.OrderDTO;
+import com.namp.ecommerce.dto.OrderWithDoDTO;
 import com.namp.ecommerce.model.Order;
 import com.namp.ecommerce.service.IOrderService;
 
@@ -35,10 +38,32 @@ public class OrderController {
         }
     }
 
-    //El get maping para el OrderWithDetailsOrders 
-    // @GetMapping
-    // Lo msimo pero con la Id 
-    //@GetMapping 
+    @GetMapping("orderWithOrderDetails")
+    public ResponseEntity<?> getOrdersWithOrderDetails(){
+        try{
+            return ResponseEntity.ok(orderService.getOrdersWithOrderDetails());
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        
+            .body("Error showing the orders " + e.getMessage());
+        }
+    }   
+    
+
+    @GetMapping("orderWithOrderDetails/{id}")
+    public ResponseEntity<?> getOrderIdWithOrderDetails(@PathVariable long id){
+        try{
+            if (orderService.getOrdersIdWithOrderDetails(id)==null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Order with ID "+ id+ "not found");
+            }
+            return ResponseEntity.ok(orderService.getOrdersIdWithOrderDetails(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error showing the order " + e.getMessage());
+        }
+    }
 
     @PostMapping("order")
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO){
@@ -69,7 +94,7 @@ public class OrderController {
             return ResponseEntity.ok().build(); 
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro deleting the order:"+e.getMessage());
+                .body("Error deleting the order:"+e.getMessage());
         }
     }
     
@@ -94,5 +119,11 @@ public class OrderController {
         }
     }
 
-}
+    @PostMapping("confirmOrder/{id}")
+    public void confirmOrder(@PathVariable long id){
+        OrderDTO orderDTO = orderService.findById(id);
+        orderService.calculateTotal(orderDTO);
+        orderService.decreaseStocks(orderDTO);
+    }
+}   
 

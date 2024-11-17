@@ -7,9 +7,13 @@ import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.namp.ecommerce.dto.OrderDTO;
+import com.namp.ecommerce.dto.OrderDetailDTO;
+import com.namp.ecommerce.dto.OrderWithDoDTO;
 import com.namp.ecommerce.mapper.MapperOrder;
 import com.namp.ecommerce.model.Order;
+import com.namp.ecommerce.model.OrderDetail;
 import com.namp.ecommerce.repository.IOrderDAO;
+import com.namp.ecommerce.service.IOrderDetailService;
 import com.namp.ecommerce.service.IOrderService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +26,9 @@ public class OrderImplementation implements IOrderService {
 
     @Autowired
     private MapperOrder mapperOrder;
+
+    @Autowired
+    private IOrderDetailService orderDetailService;
 
     @Override
     public List<OrderDTO> getOrders() {
@@ -87,18 +94,56 @@ public class OrderImplementation implements IOrderService {
         return mapperOrder.convertOrderToDTO(order); 
     }
     
+    @Override
+    public OrderWithDoDTO getOrdersIdWithOrderDetails(long id) {
+        Order order = orderDAO.findByIdOrder(id);
+        if (order == null){
+            return null;
+        }
+
+        return mapperOrder.convertOrderWithOrderDetailToDto(order);
+    } 
 
     @Override
-    public boolean verifyName(String normalizedName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verifyName'");
+    public void calculateTotal(OrderDTO orderDTO) {
+
+        OrderWithDoDTO orderWithDoDTO = this.getOrdersIdWithOrderDetails(orderDTO.getIdOrder());
+        double total = orderWithDoDTO.getOrderDetail().stream()
+                                      .mapToDouble(OrderDetailDTO::getSubTotal)
+                                      .sum();
+        System.out.println(total);
+    }   
+
+    @Override
+    public List<OrderWithDoDTO> getOrdersWithOrderDetails(){
+        return orderDAO.findAll()
+                .stream()
+                .map(mapperOrder::convertOrderWithOrderDetailToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean verifyName(String normalizedName, long idOrder) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verifyName'");
-    } 
+    public void decreaseStocks(OrderDTO orderDTO) {
+
+        Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder());
+        OrderWithDoDTO orderWithDoDTO = mapperOrder.convertOrderWithOrderDetailToDto(order);
+        for (OrderDetailDTO orderDetail : orderWithDoDTO.getOrderDetail()) {
+            if (orderDetail.getIdProduct() != null){
+                orderDetailService.decreaseStockProduct(orderDetail, orderDetail.getIdProduct());
+            }
+            
+        }
+
+    }
+
+
+    //METODO PROVISIORIO 
+
+    @Override 
+    public void confirmOrder(OrderDTO orderDTO){
+        this.calculateTotal(orderDTO);
+        this.decreaseStocks(orderDTO);
+    }
 
     
 

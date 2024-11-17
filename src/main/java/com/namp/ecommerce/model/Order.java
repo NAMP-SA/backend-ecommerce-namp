@@ -31,7 +31,7 @@ public class Order implements Serializable {
     // @ManyToOne
     // @JoinColumn(name = "fk_user", referencedColumnName = "idUser")
     // private User idUser; 
-
+    //private double total; 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_state", referencedColumnName = "idState")

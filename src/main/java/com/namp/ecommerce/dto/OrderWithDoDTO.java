@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class OrderWithDoDTO {
     private long idOrder; 
     private Timestamp dateHour; 
-
+    //private double total;
     private StateDTO idState; 
     //private User user; 
     private List<OrderDetailDTO> orderDetail; 
