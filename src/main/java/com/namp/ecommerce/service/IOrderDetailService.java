@@ -20,5 +20,5 @@ public interface IOrderDetailService {
     double CalculateSubTotalCombo(Integer quantity, double comboPrice);  
 
     void decreaseStockProduct(OrderDetailDTO orderDetailDTO,ProductDTO productDTO);
-    /* void decreaseStockCombo(OrderDetailDTO orderDetailDTO,ComboDTO comboDTO); */
+    void decreaseStockCombo(OrderDetailDTO orderDetailDTO,ComboDTO comboDTO);
 }

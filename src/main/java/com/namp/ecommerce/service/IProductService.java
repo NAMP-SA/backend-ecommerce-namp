@@ -18,5 +18,5 @@ public interface IProductService {
     boolean verifyName(String normalizedName);
     boolean verifyName(String normalizedName, long idProduct);
     void increaseStock(ProductDTO productDTO, int quantity);
-    void decraseStock(ProductDTO productDTO, int quantity);
+    void decreaseStock(ProductDTO productDTO, int quantity);
 }

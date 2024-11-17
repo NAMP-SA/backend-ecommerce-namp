@@ -131,6 +131,9 @@ public class OrderImplementation implements IOrderService {
             if (orderDetail.getIdProduct() != null){
                 orderDetailService.decreaseStockProduct(orderDetail, orderDetail.getIdProduct());
             }
+            if (orderDetail.getIdCombo() != null){
+                orderDetailService.decreaseStockCombo(orderDetail, orderDetail.getIdCombo());
+            }
             
         }
 

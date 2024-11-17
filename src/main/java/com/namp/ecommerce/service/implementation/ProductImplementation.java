@@ -252,7 +252,7 @@ public class ProductImplementation implements IProductService{
 
 
     @Override
-    public void decraseStock(ProductDTO productDTO, int quantity) {
+    public void decreaseStock(ProductDTO productDTO, int quantity) {
         if (productDTO.getStock() < quantity) {
             throw new IllegalArgumentException("Insufficient stock for product with ID: " + productDTO.getIdProduct());
         }

@@ -3,6 +3,7 @@ package com.namp.ecommerce.service.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ComboDTO;
 import com.namp.ecommerce.dto.ComboWithItDTO;
+import com.namp.ecommerce.dto.OrderDetailDTO;
 import com.namp.ecommerce.dto.ProductComboDTO;
 import com.namp.ecommerce.error.InvalidFileFormatException;
 import com.namp.ecommerce.mapper.MapperCombo;
@@ -12,6 +13,8 @@ import com.namp.ecommerce.model.ProductCombo;
 import com.namp.ecommerce.repository.IProductComboDAO;
 import com.namp.ecommerce.repository.IProductDAO;
 import com.namp.ecommerce.service.IComboService;
+import com.namp.ecommerce.service.IProductComboService;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +43,8 @@ public class ComboImplementation implements IComboService{
     @Autowired
     private IComboDAO comboDAO;
 
-    @Autowired
-    private IProductDAO productDAO;
+    @Autowired 
+    private IProductComboService productComboService;
 
     @Autowired
     private IProductComboDAO productComboDAO;
@@ -264,6 +267,16 @@ public class ComboImplementation implements IComboService{
             }
         }
         return false;
+    }
+
+    @Override
+    public void decreaseStock(ComboDTO comboDTO, int detailQuantity) {
+        Combo combo = comboDAO.findByIdCombo(comboDTO.getIdCombo());
+        ComboWithItDTO comboWithItDTO = mapperCombo.convertComboWithItToDto(combo);
+        for (ProductComboDTO productComboDTO : comboWithItDTO.getProductCombo()) {
+            productComboService.decreaseStock(productComboDTO, detailQuantity);
+            
+        }
     }
 }
 

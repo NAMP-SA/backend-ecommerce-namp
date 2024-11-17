@@ -18,4 +18,5 @@ public interface IComboService {
     ComboWithItDTO findByIdWithIt(Long id);
     boolean verifyName(String normalizedName);
     boolean verifyName(String normalizedName, long idProduct);
+    void decreaseStock(ComboDTO comboDTO,int quantity);
 }
