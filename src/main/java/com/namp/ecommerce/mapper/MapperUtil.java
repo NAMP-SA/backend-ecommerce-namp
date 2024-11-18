@@ -133,6 +133,19 @@ public class MapperUtil {
 
         return productDTO;
     }
+        
+    //Este metodo esta creado porque al actualizar un RegisterStock, ya que tiraba que la subcategory era nula 
+    public ProductDTO convertProductWOSubcategoryToDto(Product product){
+        ProductDTO productDTO = new ProductDTO();
+
+        productDTO.setIdProduct(product.getIdProduct());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setStock(product.getStock());
+        productDTO.setImg(product.getImg());
+        return productDTO;
+    }
 
     public ProductWithItDTO convertProductWithItToDto(Product product) {
         ProductWithItDTO productDTO = new ProductWithItDTO();
@@ -293,6 +306,18 @@ public class MapperUtil {
         return orderDTO;
     }
 
+    //Este metodo tambien es para que no tire error porque no existe la clave foranea
+    public OrderDTO convertOrderWoStateToDTO(Order order){
+        OrderDTO orderDTO = new OrderDTO(); 
+
+        orderDTO.setIdOrder(order.getIdOrder());
+        //orderDTO.setTotal(order.getTotal());
+        orderDTO.setDateHour(order.getFechaHora());
+
+        
+        return orderDTO;
+    }
+
     public OrderWithDoDTO convertOrderWithDoToDto(Order order){
         OrderWithDoDTO orderWithDoDTO = new OrderWithDoDTO();
 
@@ -325,12 +350,12 @@ public class MapperUtil {
         orderDetailDTO.setQuantity(orderDetail.getQuantity());
         
         if (orderDetail.getIdCombo() == null){
-            orderDetailDTO.setIdProduct(this.convertProductToDto(orderDetail.getIdProduct()));
+            orderDetailDTO.setIdProduct(this.convertProductWOSubcategoryToDto(orderDetail.getIdProduct()));
         }else{
             orderDetailDTO.setIdCombo(this.convertComboToDto(orderDetail.getIdCombo()));
         }
         
-        orderDetailDTO.setIdOrder(this.convertOrderToDTO(orderDetail.getIdOrder()));
+        orderDetailDTO.setIdOrder(this.convertOrderWoStateToDTO(orderDetail.getIdOrder()));
         return orderDetailDTO; 
     }
 }

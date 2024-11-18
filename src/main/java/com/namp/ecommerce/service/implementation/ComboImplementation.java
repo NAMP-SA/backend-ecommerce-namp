@@ -278,5 +278,18 @@ public class ComboImplementation implements IComboService{
             
         }
     }
+
+    @Override
+    public boolean checkStock(ComboDTO comboDTO, int detailQuantity) {
+        Combo combo = comboDAO.findByIdCombo(comboDTO.getIdCombo());
+        ComboWithItDTO comboWithItDTO = mapperCombo.convertComboWithItToDto(combo);
+        for (ProductComboDTO productComboDTO : comboWithItDTO.getProductCombo()) {
+            if(productComboService.checkStock(productComboDTO, detailQuantity)==false){
+                return false;
+            };
+        }
+
+        return true;
+    }
 }
 

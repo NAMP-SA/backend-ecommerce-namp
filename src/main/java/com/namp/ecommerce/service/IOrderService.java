@@ -18,6 +18,7 @@ public interface IOrderService {
     List<OrderWithDoDTO> getOrdersWithOrderDetails();
     void calculateTotal(OrderDTO orderDTO);
     void decreaseStocks(OrderDTO orderDTO);
+    boolean checkStocks(OrderDTO orderDTO);
     //METODO PROVISIORIO
     void confirmOrder(OrderDTO orderDTO);
 }

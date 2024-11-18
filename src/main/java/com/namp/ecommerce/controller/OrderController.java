@@ -120,10 +120,17 @@ public class OrderController {
     }
 
     @PostMapping("confirmOrder/{id}")
-    public void confirmOrder(@PathVariable long id){
+    public ResponseEntity<?> confirmOrder(@PathVariable long id){
         OrderDTO orderDTO = orderService.findById(id);
-        orderService.calculateTotal(orderDTO);
-        orderService.decreaseStocks(orderDTO);
+        if (orderService.checkStocks(orderDTO)==true){
+            orderService.calculateTotal(orderDTO);
+            orderService.decreaseStocks(orderDTO);
+            return ResponseEntity.ok(orderDTO);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("the order could not be confirmed");
+        }
+
     }
 }   
 

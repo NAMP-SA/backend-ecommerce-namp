@@ -42,7 +42,7 @@ public class OrderDetailController {
             
             if (createdOderDetailDTO == null){
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("This Order Detail akready exist"); 
+                    .body("This Order Detail already exist"); 
             } 
 
             return ResponseEntity.ok(createdOderDetailDTO); 

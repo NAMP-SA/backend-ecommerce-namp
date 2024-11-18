@@ -89,4 +89,10 @@ public class ProductComboImplementation implements IProductComboService {
         int quantity = detailQuantity*productComboDTO.getQuantity();
         productService.decreaseStock(productComboDTO.getIdProduct(), quantity);
     }
+
+    @Override
+    public boolean checkStock(ProductComboDTO productComboDTO, int detailQuantity) {
+        int quantity = detailQuantity*productComboDTO.getQuantity();
+        return(productService.checkStock(productComboDTO.getIdProduct(), quantity));
+    }
 }

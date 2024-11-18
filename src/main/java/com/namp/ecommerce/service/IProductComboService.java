@@ -13,4 +13,6 @@ public interface IProductComboService {
     void delete(ProductComboDTO productComboDTO);
     ProductComboDTO findById(long id);
     void decreaseStock(ProductComboDTO productComboDTO, int detailQuantity);
+
+    boolean checkStock(ProductComboDTO productComboDTO,int detailQuantity);
 }

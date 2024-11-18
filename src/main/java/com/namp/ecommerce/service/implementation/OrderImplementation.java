@@ -11,10 +11,12 @@ import com.namp.ecommerce.dto.OrderDetailDTO;
 import com.namp.ecommerce.dto.OrderWithDoDTO;
 import com.namp.ecommerce.mapper.MapperOrder;
 import com.namp.ecommerce.model.Order;
-import com.namp.ecommerce.model.OrderDetail;
+import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IOrderDAO;
+import com.namp.ecommerce.repository.IProductDAO;
 import com.namp.ecommerce.service.IOrderDetailService;
 import com.namp.ecommerce.service.IOrderService;
+import com.namp.ecommerce.service.IProductService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -29,6 +31,9 @@ public class OrderImplementation implements IOrderService {
 
     @Autowired
     private IOrderDetailService orderDetailService;
+
+    @Autowired
+    private IProductDAO productDAO;
 
     @Override
     public List<OrderDTO> getOrders() {
@@ -137,6 +142,32 @@ public class OrderImplementation implements IOrderService {
             
         }
 
+    }
+
+    @Override
+    public boolean checkStocks(OrderDTO orderDTO){
+        List<Product> products = productDAO.findAll();
+        for (Product product : products){
+            product.setSimulatedStock(product.getStock());
+        }
+        
+        Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder());
+        OrderWithDoDTO orderWithDoDTO = mapperOrder.convertOrderWithOrderDetailToDto(order);
+        for (OrderDetailDTO orderDetail : orderWithDoDTO.getOrderDetail()) {
+            if (orderDetail.getIdProduct() != null){
+                if(orderDetailService.checkStockProduct(orderDetail, orderDetail.getIdProduct())==false){
+                    return false;
+                };
+            }
+            if (orderDetail.getIdCombo() != null){
+               if(orderDetailService.checkStockCombo(orderDetail, orderDetail.getIdCombo())==false){
+                return false;
+               };
+            }
+      
+        }
+
+        return true; 
     }
 
 

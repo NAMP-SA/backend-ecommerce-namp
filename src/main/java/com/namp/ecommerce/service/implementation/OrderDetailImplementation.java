@@ -49,6 +49,15 @@ public class OrderDetailImplementation implements IOrderDetailService {
     @Override
     public OrderDetailDTO save(OrderDetailDTO orderDetailDTO) {
         OrderDetail orderDetail = mapperOrderDetail.convertDtoToOrderDetail(orderDetailDTO);
+        List<OrderDetail> orderDetails = orderDetailDAO.findAll();
+        for (OrderDetail orderDetailBD : orderDetails){
+          if (orderDetail.getIdOrder() == orderDetailBD.getIdOrder() && orderDetail.getIdProduct()== orderDetailBD.getIdProduct()){
+            return null; 
+          }
+          if (orderDetail.getIdOrder() == orderDetailBD.getIdOrder() && orderDetail.getIdCombo()== orderDetailBD.getIdCombo()){
+            return null; 
+          }
+        }
         if (orderDetailDTO.getIdProduct() == null){
           ComboDTO comboDTO = comboService.findById(orderDetailDTO.getIdCombo().getIdCombo()); 
           orderDetail.setSubTotal(this.CalculateSubTotalCombo(orderDetailDTO.getQuantity(), comboDTO.getPrice())); 
@@ -140,6 +149,19 @@ public class OrderDetailImplementation implements IOrderDetailService {
     public void decreaseStockCombo(OrderDetailDTO orderDetailDTO,ComboDTO comboDTO){
       int quantity = orderDetailDTO.getQuantity();
       comboService.decreaseStock(comboDTO,quantity);
+
+    }
+
+    @Override
+    public boolean checkStockProduct(OrderDetailDTO orderDetailDTO, ProductDTO productDTO) {
+      int quantity = orderDetailDTO.getQuantity();
+      return(productService.checkStock(productDTO,quantity));
+    }
+
+    @Override
+    public boolean checkStockCombo(OrderDetailDTO orderDetailDTO, ComboDTO comboDTO) {
+      int quantity = orderDetailDTO.getQuantity();
+      return(comboService.checkStock(comboDTO,quantity));
 
     }
 }

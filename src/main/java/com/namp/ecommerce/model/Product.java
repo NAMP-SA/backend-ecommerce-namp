@@ -44,7 +44,9 @@ public class Product implements Serializable{
     @Value("${image.upload.dir}")
     private String img;
     //Falta promocion
-
+    @Transient
+    int simulatedStock; 
+    
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_subcategory", referencedColumnName = "idSubcategory")

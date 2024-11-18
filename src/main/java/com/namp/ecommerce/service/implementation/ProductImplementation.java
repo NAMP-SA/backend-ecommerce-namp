@@ -260,5 +260,17 @@ public class ProductImplementation implements IProductService{
         product.setStock(product.getStock()-quantity);
         productDAO.save(product);
     }
+
+
+    @Override
+    public boolean checkStock(ProductDTO productDTO, int quantity) {
+        Product product = productDAO.findByIdProduct(productDTO.getIdProduct());
+        if (product.getSimulatedStock() < quantity) {
+            return false;
+        }
+
+        product.setSimulatedStock(product.getSimulatedStock() - quantity);
+        return true; 
+    }
     
 }
