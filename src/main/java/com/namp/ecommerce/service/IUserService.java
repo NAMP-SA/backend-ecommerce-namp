@@ -19,4 +19,5 @@ public interface IUserService {
     boolean verifyEmail(String normalizedEmail, long id);
     boolean findById(long id);
     UserAnswerDTO getUserById(long id);
+    UserDTO findByUsername(String username);
 }

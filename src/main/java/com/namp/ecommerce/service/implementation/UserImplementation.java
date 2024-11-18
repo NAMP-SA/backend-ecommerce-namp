@@ -51,21 +51,18 @@ public class UserImplementation implements IUserService {
         //Normalizo el email del usuario
         String normalizedEmail = userDTO.getEmail().replaceAll("\\s+", " ").trim().toUpperCase();
         // Normalizo el nombre de usuario
-        String normalizedUsername = userDTO.getUsername().replaceAll("\\s+", " ").trim().toUpperCase();
+        String normalizedUsername = userDTO.getUsername().replaceAll("\\s+", " ").trim();
 
         if(!verifyUsername(normalizedUsername) || normalizedUsername.matches("\\d+")) {
-            if(!verifyEmail(normalizedEmail) && userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
-                String pass = DigestUtils.sha256Hex(userDTO.getPassword());
-
-                userDTO.setPassword(pass);
+            if(!verifyEmail(normalizedEmail)) {
                 userDTO.setUsername(normalizedUsername);
                 userDTO.setEmail(normalizedEmail);
-
                 User user = mapperUser.convertUserDTOToUser(userDTO);
                 User savedUser = userDAO.save(user);
 
                 return mapperUser.convertUserToUserDTO(savedUser);
             }
+            return null;
         }
         return null;
     }
@@ -94,21 +91,20 @@ public class UserImplementation implements IUserService {
 
         if (existingUser != null) {
             if(!verifyEmail(normalizedEmail,id) && !verifyUsername(normalizedUsername,id)) {
-                if(userEditableDTO.getPassword().equals(userEditableDTO.getConfirmPassword())) {
-                    existingUser.setName(userEditableDTO.getName());
-                    existingUser.setLastname(userEditableDTO.getLastname());
-                    existingUser.setUsername(normalizedUsername);
+                
+                existingUser.setName(userEditableDTO.getName());
+                existingUser.setLastname(userEditableDTO.getLastname());
+                existingUser.setUsername(normalizedUsername);
+                String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
+                existingUser.setPassword(pass);
 
-                    String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
-                    existingUser.setPassword(pass);
+                existingUser.setEmail(normalizedEmail);
+                existingUser.setAddress(userEditableDTO.getAddress());
+                existingUser.setPhone(userEditableDTO.getPhone());
 
-                    existingUser.setEmail(normalizedEmail);
-                    existingUser.setAddress(userEditableDTO.getAddress());
-                    existingUser.setPhone(userEditableDTO.getPhone());
-
-                    userDAO.save(existingUser);
-                    return mapperUser.convertUserToUserEditableDTO(existingUser);
-                }
+                userDAO.save(existingUser);
+                return mapperUser.convertUserToUserEditableDTO(existingUser);
+                
             }
         }
         return null;
@@ -180,7 +176,12 @@ public class UserImplementation implements IUserService {
         }
         //return mapperUser.convertUserToUserEditableDTO(user);
         return true;
-
     }
 
+    @Override
+    public UserDTO findByUsername(String username){
+        User user = userDAO.findByUsername(username).orElseThrow();
+
+        return mapperUser.convertUserToUserDTO(user);
+    }
 }

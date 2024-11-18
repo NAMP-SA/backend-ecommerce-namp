@@ -27,7 +27,7 @@ public class ProductComboController {
         }
     }
 
-    @PostMapping("productCombo")
+    @PostMapping("/admin/productCombo")
     public ResponseEntity<?> addProductCombo(@Valid @RequestBody ProductComboDTO productComboDTO) {
         try {
             ProductComboDTO createdProductComboDTO = productComboService.save(productComboDTO);
@@ -44,7 +44,7 @@ public class ProductComboController {
         }
     }
 
-    @DeleteMapping("productCombo/{id}")
+    @DeleteMapping("/admin/productCombo/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable long id) {
         try {
             ProductComboDTO productComboDTO = productComboService.findById(id);
@@ -63,7 +63,7 @@ public class ProductComboController {
         }
     }
 
-    @PutMapping("productCombo/{id}")
+    @PutMapping("/admin/productCombo/{id}")
     public ResponseEntity<?> updateProductCombo(@PathVariable long id, @Valid @RequestBody ProductCombo productCombo) {
         try {
             ProductComboDTO existingProductComboDTO = productComboService.findById(id);

@@ -16,7 +16,7 @@ public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
 
-    @GetMapping("category")
+    @GetMapping("/user/category")
     public ResponseEntity<?> getCategories(){
         try{
             return ResponseEntity.ok(categoryService.getCategories());
@@ -50,7 +50,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("category")
+    @PostMapping("/admin/category")
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         try{
             CategoryDTO createdCategoryDTO = categoryService.save(categoryDTO);
@@ -67,7 +67,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("category/{id}")
+    @DeleteMapping("/admin/category/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable long id){
         try{
             CategoryDTO categoryDTO = categoryService.findById(id);
@@ -87,7 +87,7 @@ public class CategoryController {
     }
 
 
-    @PutMapping("category/{id}")
+    @PutMapping("/admin/category/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable long id, @Valid @RequestBody Category category){
         try{
             CategoryDTO existingCategoryDTO = categoryService.findById(id);

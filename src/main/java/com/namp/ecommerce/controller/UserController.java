@@ -21,7 +21,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("user")
+    @GetMapping("/admin/user")
     public ResponseEntity<?> getUsers() {
         try {
             return ResponseEntity.ok(userService.getUsers()); // 200 OK
@@ -30,7 +30,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/admin/user/{id}")
     public ResponseEntity<?> getUserId(@PathVariable long id) {
         try {
             return ResponseEntity.ok(userService.getUserById(id)); // 200 OK
@@ -40,7 +40,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("user")
+    @PostMapping("/admin/user")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
         try{
             UserDTO createdUserDTO = userService.save(userDTO);
@@ -58,7 +58,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("user/{id}")
+    @PutMapping("/admin/user/{id}")
     public ResponseEntity<?> updateUser(@PathVariable long id, @Valid @RequestBody UserEditableDTO userEditableDTO){
         try{
             UserEditableDTO updatedUser = userService.update(id, userEditableDTO);
@@ -75,7 +75,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("/admin/user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable long id){
         try{
             if (!userService.findById(id)){

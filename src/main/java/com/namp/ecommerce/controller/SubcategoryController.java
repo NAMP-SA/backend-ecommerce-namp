@@ -50,7 +50,7 @@ public class SubcategoryController {
         }
     }
 
-    @PostMapping("subcategory")
+    @PostMapping("/admin/subcategory")
     public ResponseEntity<?> createSubcategory(@Valid @RequestBody SubcategoryDTO subcategoryDTO) {
         try{
             SubcategoryDTO createdSubCategoryDTO = subcategoryService.save(subcategoryDTO);
@@ -67,7 +67,7 @@ public class SubcategoryController {
         }
     }
 
-    @DeleteMapping("subcategory/{id}")
+    @DeleteMapping("/admin/subcategory/{id}")
     public ResponseEntity<?> deleteSubcategory(@PathVariable long id){
         try{
             SubcategoryDTO subcategoryDTO = subcategoryService.findById(id);
@@ -86,7 +86,7 @@ public class SubcategoryController {
         }
     }
 
-    @PutMapping("subcategory/{id}")
+    @PutMapping("/admin/subcategory/{id}")
     public ResponseEntity<?> updateSubcategory(@PathVariable long id, @Valid @RequestBody Subcategory subcategory){
         try{
             SubcategoryDTO existinSubcategoryDTO = subcategoryService.findById(id);
