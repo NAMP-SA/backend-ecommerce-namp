@@ -71,14 +71,15 @@ public class AuthImplementation implements IAuthService {
             .role(request.getRole())
             .build();
 
-        
-        userService.save(userDTO);
 
+        UserDTO createdUser = userService.save(userDTO);
+        if (createdUser !=null){
+            return AuthResponse.builder().token(jwtService.getToken(userDTO)).build();
+        }else{
+            return null;
+        }
        
 
-        return AuthResponse.builder()
-            .token(jwtService.getToken(userDTO))
-            .build();
     }
 
 

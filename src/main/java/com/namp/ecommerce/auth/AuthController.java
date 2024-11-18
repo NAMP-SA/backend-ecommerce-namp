@@ -2,6 +2,7 @@ package com.namp.ecommerce.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,12 @@ public class AuthController {
     }
     
     @PostMapping(value = "register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request){
+        AuthResponse response = authService.register(request);
+        if (response == null){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("This user already exists");
+        }
+        return ResponseEntity.ok(response);
     }
 }

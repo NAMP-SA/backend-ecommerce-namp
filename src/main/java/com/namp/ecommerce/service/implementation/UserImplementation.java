@@ -62,6 +62,7 @@ public class UserImplementation implements IUserService {
 
                 return mapperUser.convertUserToUserDTO(savedUser);
             }
+            return null;
         }
         return null;
     }
