@@ -28,7 +28,7 @@ public class RegisterStockController {
         }
     }
 
-    @PostMapping("registerStock")
+    @PostMapping("/admin/registerStock")
     public ResponseEntity<?> createRegisterStock(@Valid @RequestBody RegisterStockDTO registerStockDTO){
         if (registerStockDTO.getQuantity()<0){
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -51,7 +51,7 @@ public class RegisterStockController {
 
     }
 
-    @DeleteMapping("registerStock/{id}")
+    @DeleteMapping("/admin/registerStock/{id}")
     public ResponseEntity<?> deleteRegisterStock(@PathVariable long id){
         try{
             RegisterStockDTO registerStockDTO = registerStockService.findById(id);
@@ -71,7 +71,7 @@ public class RegisterStockController {
         
     }
     
-    @DeleteMapping("registerStockWO/{id}")
+    @DeleteMapping("/admin/registerStockWO/{id}")
     public ResponseEntity<?> deleteRegisterStocWO(@PathVariable long id){
         try{
             RegisterStockDTO registerStockDTO = registerStockService.findById(id);
@@ -91,7 +91,7 @@ public class RegisterStockController {
         
     }
 
-    @PutMapping("registerStock/{id}")
+    @PutMapping("/admin/registerStock/{id}")
     public ResponseEntity<?> updateRegisterStock(@PathVariable long id, @Valid @RequestBody RegisterStock registerStock){
         if (registerStock.getQuantity()<0){
             return ResponseEntity.status(HttpStatus.CONFLICT)
