@@ -65,7 +65,8 @@ public class User implements Serializable, UserDetails {
     @NotNull(message = "La contrasena no debe estar vacia")
     private String password;
 
-    @Enumerated(EnumType.STRING)  // Esto asegura que el valor de Role se guarde como texto
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "role")  // Esto asegura que el valor de Role se guarde como entero
     Role role;
 
     @Override
