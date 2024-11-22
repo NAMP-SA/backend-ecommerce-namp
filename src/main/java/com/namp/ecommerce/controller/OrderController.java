@@ -128,7 +128,7 @@ public class OrderController {
             return ResponseEntity.ok(orderDTO);
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("the order could not be confirmed");
+                    .body("The order could not be confirmed");
         }
 
     }

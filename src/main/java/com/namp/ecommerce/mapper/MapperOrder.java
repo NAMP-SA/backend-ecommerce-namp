@@ -24,7 +24,7 @@ public class MapperOrder {
     public Order convertDtoToOrder(OrderDTO orderDTO) {
         Order order = new Order();
         //order.setTotal(orderDTO.getTotal());
-        order.setFechaHora(orderDTO.getDateHour());
+        order.setDateTime(orderDTO.getDateTime());
         order.setIdState(stateDAO.findByIdState(orderDTO.getIdState().getIdState()));
         //order.setIdUSer(); 
 

@@ -48,8 +48,8 @@ public class OrderImplementation implements IOrderService {
     @Override
     public OrderDTO save(OrderDTO orderDTO) {
        if(orderDTO != null) { 
-        if (orderDTO.getDateHour() == null) {
-             orderDTO.setDateHour(new Timestamp(System.currentTimeMillis()));
+        if (orderDTO.getDateTime() == null) {
+             orderDTO.setDateTime(new Timestamp(System.currentTimeMillis()));
         }
         // Convertir el DTO a la entidad Order 
         Order order = mapperOrder.convertDtoToOrder(orderDTO); 
@@ -69,8 +69,8 @@ public class OrderImplementation implements IOrderService {
          return null; 
         } 
         // Actualizar los campos de la entidad existente
-        if (order.getFechaHora() != null) {
-            existingOrder.setFechaHora(order.getFechaHora()); 
+        if (order.getDateTime() != null) {
+            existingOrder.setDateTime(order.getDateTime()); 
         } 
         if (order.getIdState() != null) {
             existingOrder.setIdState(order.getIdState()); 
@@ -146,6 +146,7 @@ public class OrderImplementation implements IOrderService {
 
     @Override
     public boolean checkStocks(OrderDTO orderDTO){
+        //Esto esta medio raro, no se si puedo usar el DAO del producto aca. Si alguien tiene otra solucion es bienvenida
         List<Product> products = productDAO.findAll();
         for (Product product : products){
             product.setSimulatedStock(product.getStock());

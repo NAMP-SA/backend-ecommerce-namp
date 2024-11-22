@@ -25,18 +25,17 @@ public class Order implements Serializable {
     private long idOrder;   
 
     @NotNull(message = "La fecha y hora no puede ser vacío")
-    private Timestamp  fechaHora;
+    private Timestamp  dateTime;
     
     // @NotNull
     // @ManyToOne
     // @JoinColumn(name = "fk_user", referencedColumnName = "idUser")
     // private User idUser; 
-    //private double total; 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_state", referencedColumnName = "idState")
     private State idState; 
     
-    @OneToMany(mappedBy = "idOrder")
+    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<OrderDetail> orderDetail = new ArrayList<>();
 }

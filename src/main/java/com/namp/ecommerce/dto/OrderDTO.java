@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDTO {
     private long idOrder; 
-    private Timestamp dateHour; 
+    private Timestamp dateTime; 
     //private double total; 
     private StateDTO idState; 
     
