@@ -2,6 +2,7 @@ package com.namp.ecommerce.jwt;
 
 import java.io.IOException;
 
+import com.namp.ecommerce.service.IBlackListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,38 +33,56 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
     private final CustomUserDetailsService userDetailsService; 
 
+    @Autowired
+    private IBlackListService blackListService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        
-        final String token = getTokenFromRequest(request);
-        final String username; 
 
-        if (token==null){
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.replace("Bearer ", "").trim();
 
-        username=jwtService.getUsernameFromToken(token); 
-
-        if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails=userDetailsService.loadUserByUsername(username);
-
-            if (jwtService.isTokenValid(token, userDetails))
-            {
-                UsernamePasswordAuthenticationToken authToken= new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities());
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            // Verificar si el token está en la lista negra
+            if (blackListService.isTokenBlacklisted(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido o expirado");
+                return;
             }
 
+            // Verificar si el token es válido y obtener el nombre de usuario
+            if (jwtService.validateToken(token)) {
+                String username = jwtService.getUsernameFromToken(token); // Extraemos el username del token
+
+                // Si el username no es nulo y no hay autenticación activa en el SecurityContext
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    // Cargar los detalles del usuario
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                    // Verificar que el token es válido para este usuario
+                    if (jwtService.isTokenValid(token, userDetails)) {
+                        // Crear un objeto de autenticación
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
+                        // Establecer los detalles de la autenticación
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                        // Establecer el contexto de autenticación
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
+                }
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido o expirado");
+                return;
+            }
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); // Continuar con el filtro
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
