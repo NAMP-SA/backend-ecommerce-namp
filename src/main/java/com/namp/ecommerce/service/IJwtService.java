@@ -20,5 +20,7 @@ public interface IJwtService {
     Claims getAllClaims(String token);
     <T> T getClaim(String token, Function<Claims,T> claimsResolver); 
     Date getExpiration(String token);
-    boolean isTokenExpired(String token); 
+    boolean isTokenExpired(String token);
+    long getExpirationTime(String token);
+    boolean validateToken(String token);
 }

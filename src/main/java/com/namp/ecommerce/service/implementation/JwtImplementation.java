@@ -78,5 +78,33 @@ public class JwtImplementation implements IJwtService{
     public boolean isTokenExpired(String token){
         return getExpiration(token).before(new Date());
     }
-    
+
+    @Override
+    public long getExpirationTime(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getExpiration().getTime(); // Devuelve el tiempo de expiración en milisegundos
+    }
+
+    // Método para validar el token
+    @Override
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true; // Si no lanza excepciones, el token es válido
+        } catch (Exception e) {
+            return false; // Si hay alguna excepción, el token no es válido
+        }
+    }
+
+    // Método para obtener la clave de firma en formato Key
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
 }
