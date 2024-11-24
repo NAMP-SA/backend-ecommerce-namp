@@ -2,9 +2,11 @@ package com.namp.ecommerce.service.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
+import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.mapper.MapperProduct;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IProductDAO;
+import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
 import com.namp.ecommerce.service.IProductService;
 import com.namp.ecommerce.error.InvalidFileFormatException;
@@ -17,7 +19,6 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -35,6 +36,9 @@ public class ProductImplementation implements IProductService{
 
     @Autowired
     private ISubcategoryDAO subcategoryDAO;
+
+    @Autowired
+    private IPromotionDAO promotionDAO; 
 
     @Autowired
     private MapperProduct mapperProduct;
@@ -148,8 +152,9 @@ public class ProductImplementation implements IProductService{
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setPrice(productDTO.getPrice());
         existingProduct.setStock(productDTO.getStock());
-        //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente
+        //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente, lo mismo para la Promocion en base a promotionDTO seteada en productDTO. 
         existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
+        existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
 
             //Hago la verificacion de imagen
             if (file != null && !file.isEmpty()){
@@ -271,6 +276,16 @@ public class ProductImplementation implements IProductService{
 
         product.setSimulatedStock(product.getSimulatedStock() - quantity);
         return true; 
+    }
+
+
+    @Override
+    public double getDiscountPrice(ProductDTO productDTO) {
+       PromotionDTO promotionDTO = productDTO.getIdPromotion();
+       if(promotionDTO != null && promotionDTO.isInEffect()){
+        return productDTO.getPrice() - (productDTO.getPrice() * promotionDTO.getDiscount() / 100); 
+       }
+       return productDTO.getPrice(); 
     }
     
 }

@@ -130,11 +130,12 @@ public class MapperUtil {
         productDTO.setImg(product.getImg());
 
         productDTO.setIdSubcategory(this.convertSubcategoryToDto(product.getIdSubcategory()));
+        productDTO.setIdPromotion(this.convertPromotionToDTO(product.getIdPromotion())); 
 
         return productDTO;
     }
-        
-    //Este metodo esta creado porque al actualizar un RegisterStock, ya que tiraba que la subcategory era nula 
+
+    //Este metodo esta creado porque al actualizar un RegisterStock, ya que tiraba que la subcategory era nula
     public ProductDTO convertProductWOSubcategoryToDto(Product product){
         ProductDTO productDTO = new ProductDTO();
 
@@ -166,8 +167,8 @@ public class MapperUtil {
     }
 
     public ProductWithDoDTO convertProductWithDoToDto(Product product){
-        ProductWithDoDTO productWithDoDTO = new ProductWithDoDTO(); 
-        
+        ProductWithDoDTO productWithDoDTO = new ProductWithDoDTO();
+
         productWithDoDTO.setIdProduct(product.getIdProduct());
         productWithDoDTO.setName(product.getName());
         productWithDoDTO.setDescription(product.getDescription());
@@ -179,8 +180,8 @@ public class MapperUtil {
                 .stream()
                 .map(this::convertOrderDetailToDto)
                 .collect(Collectors.toList()));
-        
-        return productWithDoDTO; 
+
+        return productWithDoDTO;
     }
 
     /*
@@ -232,7 +233,7 @@ public class MapperUtil {
     }
     public ComboWithDoDTO convertComboWithDoTDoDto(Combo combo){
         ComboWithDoDTO comboWithDoDTO = new ComboWithDoDTO();
-        
+
         comboWithDoDTO.setIdCombo(combo.getIdCombo());
         comboWithDoDTO.setName(combo.getName());
         comboWithDoDTO.setDescription(combo.getDescription());
@@ -243,7 +244,7 @@ public class MapperUtil {
                 .stream()
                 .map(this:: convertOrderDetailToDto)
                 .collect(Collectors.toList()));
-        
+
         return comboWithDoDTO;
     }
 
@@ -296,25 +297,25 @@ public class MapperUtil {
    -----------------------------------------------------------------------------------------------------------
     */
     public OrderDTO convertOrderToDTO(Order order){
-        OrderDTO orderDTO = new OrderDTO(); 
+        OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setIdOrder(order.getIdOrder());
         //orderDTO.setTotal(order.getTotal());
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
-        
+
         return orderDTO;
     }
 
     //Este metodo tambien es para que no tire error porque no existe la clave foranea
     public OrderDTO convertOrderWoStateToDTO(Order order){
-        OrderDTO orderDTO = new OrderDTO(); 
+        OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setIdOrder(order.getIdOrder());
         //orderDTO.setTotal(order.getTotal());
         orderDTO.setDateTime(order.getDateTime());
 
-        
+
         return orderDTO;
     }
 
@@ -329,12 +330,12 @@ public class MapperUtil {
         orderWithDoDTO.setOrderDetail(order.getOrderDetail()
                     .stream()
                     .map(this::convertOrderDetailToDto)
-                    .collect(Collectors.toList())); 
-        
-        return orderWithDoDTO; 
+                    .collect(Collectors.toList()));
+
+        return orderWithDoDTO;
     }
 
-    
+
     /*
     ----------------------------------------------------------------------------------------------------------
                                              Detail Order METHODS
@@ -343,19 +344,123 @@ public class MapperUtil {
 
     public OrderDetailDTO convertOrderDetailToDto(OrderDetail orderDetail){
         OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
-     
-        
+
+
         orderDetailDTO.setIdOrderDetail(orderDetail.getIdDetailOrder());
         orderDetailDTO.setSubTotal(orderDetail.getSubTotal());
         orderDetailDTO.setQuantity(orderDetail.getQuantity());
-        
+
         if (orderDetail.getIdCombo() == null){
             orderDetailDTO.setIdProduct(this.convertProductWOSubcategoryToDto(orderDetail.getIdProduct()));
         }else{
             orderDetailDTO.setIdCombo(this.convertComboToDto(orderDetail.getIdCombo()));
         }
-        
+
         orderDetailDTO.setIdOrder(this.convertOrderWoStateToDTO(orderDetail.getIdOrder()));
-        return orderDetailDTO; 
+        return orderDetailDTO;
     }
+
+
+    /*
+    ----------------------------------------------------------------------------------------------------------
+                                             Discount Type METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public DiscountTypeDTO convertDiscountTypeToDTO (DiscountType discountType){
+        DiscountTypeDTO discountTypeDTO = new DiscountTypeDTO();
+
+        discountTypeDTO.setIdDiscountType(discountType.getIdDiscountType());
+        discountTypeDTO.setName(discountType.getName());
+
+        return discountTypeDTO;
+    }
+
+
+    public DiscountTypeWithPromotionDTO convertDiscountTypeWithPromtionsToDTO(DiscountType discountType){
+        DiscountTypeWithPromotionDTO discountTypeWithPromotionDTO = new DiscountTypeWithPromotionDTO();
+
+        discountTypeWithPromotionDTO.setIdDiscountType(discountType.getIdDiscountType());
+        discountTypeWithPromotionDTO.setName(discountType.getName());
+
+        discountTypeWithPromotionDTO.setPromotions(discountType.getPromotions()
+                .stream()
+                .map(this::convertPromotionToDTO)
+                .collect(Collectors.toList()));
+
+        return discountTypeWithPromotionDTO;
+
+    }
+
+    public DiscountTypeWithPromotionDTO convertDiscountTypeIdWithPromtionsToDTO(DiscountType discountType){
+        DiscountTypeWithPromotionDTO discountTypeIdWithPromotionsDTO = new DiscountTypeWithPromotionDTO();
+
+        discountTypeIdWithPromotionsDTO.setIdDiscountType(discountType.getIdDiscountType());
+        discountTypeIdWithPromotionsDTO.setName(discountType.getName());
+
+        discountTypeIdWithPromotionsDTO.setPromotions(discountType.getPromotions()
+                .stream()
+                .map(this::convertPromotionToDTO)
+                .collect(Collectors.toList()));
+        return discountTypeIdWithPromotionsDTO;
+    }
+
+
+     /*
+    ----------------------------------------------------------------------------------------------------------
+                                             Promotion METHODS
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public PromotionDTO convertPromotionToDTO(Promotion promotion){
+        PromotionDTO promotionDTO = new PromotionDTO();
+
+        promotionDTO.setIdPromotion(promotion.getIdPromotion());
+        promotionDTO.setDiscount(promotion.getDiscount());
+        promotionDTO.setDateTimeStart(promotion.getDateTimeStart());
+        promotionDTO.setDateTimeEnd(promotion.getDateTimeEnd());
+        promotionDTO.setInEffect(promotion.isInEffect());
+
+        promotionDTO.setIdDiscountType(this.convertDiscountTypeToDTO(promotion.getIdDiscountType()));
+
+        return promotionDTO;
+    }
+
+    public PromotionWithProductsDTO convertPromotionWithProductsDto(Promotion promotion){
+        PromotionWithProductsDTO promotionWithProductsDTO = new PromotionWithProductsDTO();
+
+        promotionWithProductsDTO.setIdPromotion(promotion.getIdPromotion());
+        promotionWithProductsDTO.setDiscount(promotion.getDiscount());
+        promotionWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
+        promotionWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
+        promotionWithProductsDTO.setInEffect(promotion.isInEffect());
+
+
+        promotionWithProductsDTO.setProducts(promotion.getProducts()
+                .stream()
+                .map(this::convertProductToDto)
+                .collect(Collectors.toList()));
+
+        return promotionWithProductsDTO; 
+    }
+
+    public PromotionWithProductsDTO convertPromotionIdWithProductsDto(Promotion promotion){
+        PromotionWithProductsDTO promotionIdWithProductsDTO = new PromotionWithProductsDTO();
+
+        promotionIdWithProductsDTO.setIdPromotion(promotion.getIdPromotion());
+        promotionIdWithProductsDTO.setDiscount(promotion.getDiscount());
+        promotionIdWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
+        promotionIdWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
+        promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
+
+        promotionIdWithProductsDTO.setProducts(promotion.getProducts()
+                .stream()
+                .map(this::convertProductToDto)
+                .collect(Collectors.toList()));
+
+        return promotionIdWithProductsDTO; 
+    }
+
+
+
 }

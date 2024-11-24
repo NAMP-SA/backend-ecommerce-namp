@@ -1,5 +1,6 @@
 package com.namp.ecommerce.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class ProductDTO {
     private int stock;
     private String img;
     private SubcategoryDTO idSubcategory;
+    private PromotionDTO idPromotion; 
 }

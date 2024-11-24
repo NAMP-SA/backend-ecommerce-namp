@@ -16,7 +16,7 @@ public interface IOrderDetailService {
     OrderDetailDTO findById(long id); 
     
     //Sumar Productos o Combos
-    double CalculateSubTotalProduct(Integer quantity, double productPrice);
+    double CalculateSubTotalProduct(Integer quantity, double productPrice, ProductDTO productDTO);
     double CalculateSubTotalCombo(Integer quantity, double comboPrice);  
 
     boolean checkStockProduct(OrderDetailDTO orderDetailDTO,ProductDTO productDTO);

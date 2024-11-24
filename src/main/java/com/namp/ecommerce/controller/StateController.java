@@ -45,7 +45,7 @@ public class StateController {
     } 
 
     @PostMapping("state")
-    public ResponseEntity<?> createCategory(@Valid @RequestBody StateDTO stateDTO) {
+    public ResponseEntity<?> createState(@Valid @RequestBody StateDTO stateDTO) {
         try{
             StateDTO createdStateDTO = stateService.save(stateDTO);
 

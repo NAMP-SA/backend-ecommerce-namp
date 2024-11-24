@@ -57,4 +57,8 @@ public class Product implements Serializable{
 
     @OneToMany(mappedBy = "idProduct")
     private List<OrderDetail> orderDetail = new ArrayList<>(); 
+
+    @ManyToOne
+    @JoinColumn(name = "fk_promotion", referencedColumnName = "idPromotion")
+    private Promotion idPromotion;
 }

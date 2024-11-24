@@ -64,7 +64,7 @@ public class OrderDetailImplementation implements IOrderDetailService {
           
         }else{
           ProductDTO productDTO = productService.findById(orderDetailDTO.getIdProduct().getIdProduct());
-          orderDetail.setSubTotal(this.CalculateSubTotalProduct(orderDetailDTO.getQuantity(),productDTO.getPrice())); 
+          orderDetail.setSubTotal(this.CalculateSubTotalProduct(orderDetailDTO.getQuantity(),productDTO.getPrice(),productDTO)); 
         }
 
         OrderDetail savedOrderDetail = orderDetailDAO.save(orderDetail);
@@ -97,7 +97,7 @@ public class OrderDetailImplementation implements IOrderDetailService {
         
       }else{
         ProductDTO productDTO = productService.findById(orderDetailDTO.getIdProduct().getIdProduct());
-        subTotal += this.CalculateSubTotalProduct(orderDetailDTO.getQuantity(),productDTO.getPrice()); 
+        subTotal += this.CalculateSubTotalProduct(orderDetailDTO.getQuantity(),productDTO.getPrice(),productDTO); 
       }
 
       existingOrderDetail.setSubTotal(subTotal);
@@ -129,8 +129,19 @@ public class OrderDetailImplementation implements IOrderDetailService {
     }
 
     @Override
-    public double CalculateSubTotalProduct(Integer quantity, double productPrice) {
-      return quantity * productPrice;  
+    public double CalculateSubTotalProduct(Integer quantity, double productPrice, ProductDTO productDTO) {
+      double finalPrice;
+
+      System.out.println(productDTO.getIdPromotion());
+      System.out.println(productDTO.getIdPromotion().isInEffect());
+
+      if(productDTO.getIdPromotion() != null && productDTO.getIdPromotion().isInEffect()){
+        finalPrice = productPrice - (productPrice * productDTO.getIdPromotion().getDiscount() / 100);
+        System.out.println("SubTotal del producto con promocion"+finalPrice);
+      }else{
+        finalPrice = productPrice; // Si no hay promoción, emplea el precio base
+      }
+      return quantity * finalPrice;  
       
     }
 
