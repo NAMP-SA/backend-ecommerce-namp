@@ -10,7 +10,7 @@ import com.namp.ecommerce.model.Order;
 
 public interface IOrderService {
     List<OrderDTO> getOrders(); 
-    OrderDTO save(OrderDTO orderDTO);
+    OrderDTO save();
     OrderDTO update(OrderDTO existingOrderDTO, Order order);
     void delete(OrderDTO orderDTO);
     OrderDTO findById(long id);

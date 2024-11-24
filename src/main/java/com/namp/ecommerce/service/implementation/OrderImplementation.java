@@ -16,7 +16,7 @@ import com.namp.ecommerce.repository.IOrderDAO;
 import com.namp.ecommerce.repository.IProductDAO;
 import com.namp.ecommerce.service.IOrderDetailService;
 import com.namp.ecommerce.service.IOrderService;
-import com.namp.ecommerce.service.IProductService;
+import com.namp.ecommerce.service.IStateService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -35,6 +35,9 @@ public class OrderImplementation implements IOrderService {
     @Autowired
     private IProductDAO productDAO;
 
+    @Autowired
+    private IStateService stateService;
+
     @Override
     public List<OrderDTO> getOrders() {
         return orderDAO.findAll()
@@ -46,19 +49,20 @@ public class OrderImplementation implements IOrderService {
     //Listar los detalles del Pedido con getOrdersWhitDetailsOrders() y con ID
     
     @Override
-    public OrderDTO save(OrderDTO orderDTO) {
-       if(orderDTO != null) { 
-        if (orderDTO.getDateTime() == null) {
-             orderDTO.setDateTime(new Timestamp(System.currentTimeMillis()));
-        }
+    public OrderDTO save() {
+        OrderDTO orderDTO = new OrderDTO();
+
+        orderDTO.setDateTime(new Timestamp(System.currentTimeMillis()));
+    
+
+        orderDTO.setIdState(stateService.findbyid(1));
         // Convertir el DTO a la entidad Order 
         Order order = mapperOrder.convertDtoToOrder(orderDTO); 
         // Guardar la entidad en la base de datos 
         Order savedOrder = orderDAO.save(order); 
         // Convertir la entidad guardada de nuevo a DTO 
         return mapperOrder.convertOrderToDTO(savedOrder); 
-    }
-     return null;
+
     }
 
     @Override

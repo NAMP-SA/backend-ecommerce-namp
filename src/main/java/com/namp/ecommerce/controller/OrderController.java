@@ -66,9 +66,9 @@ public class OrderController {
     }
 
     @PostMapping("order")
-    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO){
+    public ResponseEntity<?> createOrder(){
         try{
-            OrderDTO createdOrderDTO = orderService.save(orderDTO); 
+            OrderDTO createdOrderDTO = orderService.save(); 
             if (createdOrderDTO == null){
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("This order already exists.");
