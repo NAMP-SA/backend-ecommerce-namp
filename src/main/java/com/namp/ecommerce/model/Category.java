@@ -1,9 +1,7 @@
 package com.namp.ecommerce.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +28,8 @@ public class Category implements Serializable {
     private String name;
 
     @NotNull(message = "La descripcion no debe estar vacia")
+    @NotBlank(message = "La descripcion no puede estar vacío ni contener solo espacios")
+    @Size(max = 100, message = "La descripcion puede contener maximo 100 caracteres")
     private String description;
 
     @OneToMany(mappedBy = "idCategory", cascade = CascadeType.ALL, orphanRemoval = true)
