@@ -1,16 +1,13 @@
 package com.namp.ecommerce.service.implementation;
 
-import com.namp.ecommerce.dto.CategoryDTO;
 import com.namp.ecommerce.dto.UserAnswerDTO;
 import com.namp.ecommerce.dto.UserDTO;
 import com.namp.ecommerce.dto.UserEditableDTO;
 import com.namp.ecommerce.mapper.MapperUser;
-import com.namp.ecommerce.model.Category;
 import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IUserDAO;
 import com.namp.ecommerce.service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.commons.codec.cli.Digest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,23 +86,22 @@ public class UserImplementation implements IUserService {
         }
         User existingUser = userDAO.findByIdUser(id);
 
-        if (existingUser != null) {
-            if(!verifyEmail(normalizedEmail,id) && !verifyUsername(normalizedUsername,id)) {
+        if (existingUser != null && !verifyEmail(normalizedEmail,id) && !verifyUsername(normalizedUsername,id)) {
                 
-                existingUser.setName(userEditableDTO.getName());
-                existingUser.setLastname(userEditableDTO.getLastname());
-                existingUser.setUsername(normalizedUsername);
-                String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
-                existingUser.setPassword(pass);
+            existingUser.setName(userEditableDTO.getName());
+            existingUser.setLastname(userEditableDTO.getLastname());
+            existingUser.setUsername(normalizedUsername);
+            String pass = DigestUtils.sha256Hex(userEditableDTO.getPassword());
+            existingUser.setPassword(pass);
 
-                existingUser.setEmail(normalizedEmail);
-                existingUser.setAddress(userEditableDTO.getAddress());
-                existingUser.setPhone(userEditableDTO.getPhone());
+            existingUser.setEmail(normalizedEmail);
+            existingUser.setAddress(userEditableDTO.getAddress());
+            existingUser.setPhone(userEditableDTO.getPhone());
 
-                userDAO.save(existingUser);
-                return mapperUser.convertUserToUserEditableDTO(existingUser);
-                
-            }
+            userDAO.save(existingUser);
+            return mapperUser.convertUserToUserEditableDTO(existingUser);
+               
+            
         }
         return null;
 
@@ -171,12 +167,9 @@ public class UserImplementation implements IUserService {
     @Override
     public boolean findById(long id) {
         User user = userDAO.findByIdUser(id);
-        if (user == null) {
-            return false;
-        }
-        //return mapperUser.convertUserToUserEditableDTO(user);
-        return true;
+        return user != null;
     }
+    
 
     @Override
     public UserDTO findByUsername(String username){

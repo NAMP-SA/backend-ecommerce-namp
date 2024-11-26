@@ -3,15 +3,13 @@ package com.namp.ecommerce.service.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ComboDTO;
 import com.namp.ecommerce.dto.ComboWithItDTO;
-import com.namp.ecommerce.dto.OrderDetailDTO;
 import com.namp.ecommerce.dto.ProductComboDTO;
 import com.namp.ecommerce.error.InvalidFileFormatException;
+import com.namp.ecommerce.exception.DeletionException;
 import com.namp.ecommerce.mapper.MapperCombo;
 import com.namp.ecommerce.model.Combo;
-import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.model.ProductCombo;
 import com.namp.ecommerce.repository.IProductComboDAO;
-import com.namp.ecommerce.repository.IProductDAO;
 import com.namp.ecommerce.service.IComboService;
 import com.namp.ecommerce.service.IProductComboService;
 
@@ -216,7 +214,7 @@ public class ComboImplementation implements IComboService{
         try{
             Files.delete(filePath);
         } catch (IOException e) {
-            throw new RuntimeException(combo.getName(), e);
+            throw new DeletionException("Error deleting the product: " + combo.getName(), e);
         }
 
         //Luego elimino el objeto combo de la base de datos
@@ -284,7 +282,7 @@ public class ComboImplementation implements IComboService{
         Combo combo = comboDAO.findByIdCombo(comboDTO.getIdCombo());
         ComboWithItDTO comboWithItDTO = mapperCombo.convertComboWithItToDto(combo);
         for (ProductComboDTO productComboDTO : comboWithItDTO.getProductCombo()) {
-            if(productComboService.checkStock(productComboDTO, detailQuantity)==false){
+            if(!productComboService.checkStock(productComboDTO, detailQuantity)){
                 return false;
             };
         }

@@ -1,17 +1,14 @@
 package com.namp.ecommerce.mapper;
 
-import com.namp.ecommerce.dto.CategoryDTO;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
-import com.namp.ecommerce.dto.SubcategoryDTO;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
 
 @Component
 public class MapperProduct {

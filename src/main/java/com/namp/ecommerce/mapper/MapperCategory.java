@@ -4,16 +4,12 @@ import com.namp.ecommerce.dto.CategoryDTO;
 import com.namp.ecommerce.dto.CategoryWithSubcategoriesDTO;
 import com.namp.ecommerce.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
 
 @Component
 public class MapperCategory {
 
-    @Autowired
-    private MapperSubcategory mapperSubcategory;
     @Autowired
     private MapperUtil mapperUtil;
 

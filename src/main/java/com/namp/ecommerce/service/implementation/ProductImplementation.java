@@ -11,6 +11,7 @@ import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
 import com.namp.ecommerce.service.IProductService;
 import com.namp.ecommerce.error.InvalidFileFormatException;
+import com.namp.ecommerce.exception.DeletionException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -213,8 +214,7 @@ public class ProductImplementation implements IProductService{
             try {
                 Files.delete(filePath);
             } catch (IOException e) {
-                throw new RuntimeException(product.getName(), e);
-            }
+                throw new DeletionException("Error deleting the product: " + product.getName(), e);            }
         }
 
         // Luego elimino el objeto producto de la base de datos

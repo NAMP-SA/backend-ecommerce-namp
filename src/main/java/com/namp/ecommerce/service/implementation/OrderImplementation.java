@@ -3,7 +3,6 @@ package com.namp.ecommerce.service.implementation;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import com.namp.ecommerce.model.State;
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,12 +154,12 @@ public class OrderImplementation implements IOrderService {
         if(!orderWithDoDTO.getOrderDetail().isEmpty()){
             for (OrderDetailDTO orderDetail : orderWithDoDTO.getOrderDetail()) {
                 if (orderDetail.getIdProduct() != null){
-                    if(orderDetailService.checkStockProduct(orderDetail, orderDetail.getIdProduct())==false){
+                    if(!orderDetailService.checkStockProduct(orderDetail, orderDetail.getIdProduct())){
                         return false;
                     };
                 }
                 if (orderDetail.getIdCombo() != null){
-                   if(orderDetailService.checkStockCombo(orderDetail, orderDetail.getIdCombo())==false){
+                   if(!orderDetailService.checkStockCombo(orderDetail, orderDetail.getIdCombo())){
                     return false;
                    };
                 }

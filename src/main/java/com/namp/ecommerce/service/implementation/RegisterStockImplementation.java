@@ -40,11 +40,10 @@ public class RegisterStockImplementation implements IRegisterStockService {
     @Override
     public RegisterStockDTO save(RegisterStockDTO registerStockDTO) {
 
-        if (registerStockDTO != null){
-            if (registerStockDTO.getFechaHora() == null){
-                registerStockDTO.setFechaHora(new Timestamp(System.currentTimeMillis()));
-            }
+        if (registerStockDTO != null && registerStockDTO.getFechaHora() == null){
+            registerStockDTO.setFechaHora(new Timestamp(System.currentTimeMillis()));
         }
+        
         productService.increaseStock(registerStockDTO.getIdProduct(), registerStockDTO.getQuantity());
         RegisterStock registerStock = mapperRegisterStock.convertDtoToRegisterStock(registerStockDTO);
         RegisterStock savedRegisterStock = registerStockDAO.save(registerStock);

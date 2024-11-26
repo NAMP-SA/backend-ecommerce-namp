@@ -1,7 +1,5 @@
 package com.namp.ecommerce.controller;
 
-import com.namp.ecommerce.dto.CategoryDTO;
-import com.namp.ecommerce.dto.UserAnswerDTO;
 import com.namp.ecommerce.dto.UserDTO;
 import com.namp.ecommerce.dto.UserEditableDTO;
 import com.namp.ecommerce.service.IUserService;
@@ -11,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
 
 
 @RestController

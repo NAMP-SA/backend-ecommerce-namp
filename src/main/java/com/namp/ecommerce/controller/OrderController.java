@@ -1,9 +1,7 @@
 package com.namp.ecommerce.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.namp.ecommerce.dto.OrderDTO;
-import com.namp.ecommerce.dto.OrderWithDoDTO;
 import com.namp.ecommerce.model.Order;
 import com.namp.ecommerce.service.IOrderService;
 
@@ -123,7 +120,7 @@ public class OrderController {
     @PostMapping("/user/confirmOrder/{id}")
     public ResponseEntity<?> confirmOrder(@PathVariable long id){
         OrderDTO orderDTO = orderService.findById(id);
-        if (orderService.checkStocks(orderDTO)==true){
+        if (orderService.checkStocks(orderDTO)){
             return ResponseEntity.ok(orderService.confirmOrder(orderDTO));
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

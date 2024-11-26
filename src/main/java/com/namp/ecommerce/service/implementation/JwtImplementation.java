@@ -20,16 +20,26 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 @Service
 @RequiredArgsConstructor
 public class JwtImplementation implements IJwtService{
+    
+    private static final String SECRET_KEY;
 
-    private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
+    static {
+        // Cargar el archivo .env
+        Dotenv dotenv = Dotenv.configure().load();
+        SECRET_KEY = dotenv.get("JWT_SECRET");
+    } 
 
     @Override
     public String getToken(UserDTO user) {
         return getToken(new HashMap<>(),user);
     }
+
 
     public String getToken(Map<String,Object> extraClaims, UserDTO user) {
         return Jwts
