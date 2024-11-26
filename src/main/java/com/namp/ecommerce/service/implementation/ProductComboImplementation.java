@@ -10,6 +10,7 @@ import com.namp.ecommerce.dto.ProductComboDTO;
 import com.namp.ecommerce.model.ProductCombo;
 import com.namp.ecommerce.repository.IProductComboDAO;
 import com.namp.ecommerce.service.IProductComboService;
+import com.namp.ecommerce.service.IProductService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -23,6 +24,8 @@ public class ProductComboImplementation implements IProductComboService {
 
     @Autowired
     private MapperProductCombo mapperProductCombo;
+
+    @Autowired IProductService productService;
 
     @Override
     public List<ProductComboDTO> getProductCombos() {
@@ -79,5 +82,17 @@ public class ProductComboImplementation implements IProductComboService {
             return null;
         }
         return mapperProductCombo.convertProductComboToDto(productCombo);
+    }
+
+    @Override
+    public void decreaseStock(ProductComboDTO productComboDTO, int detailQuantity) {
+        int quantity = detailQuantity*productComboDTO.getQuantity();
+        productService.decreaseStock(productComboDTO.getIdProduct(), quantity);
+    }
+
+    @Override
+    public boolean checkStock(ProductComboDTO productComboDTO, int detailQuantity) {
+        int quantity = detailQuantity*productComboDTO.getQuantity();
+        return(productService.checkStock(productComboDTO.getIdProduct(), quantity));
     }
 }

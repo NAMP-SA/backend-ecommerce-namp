@@ -6,6 +6,7 @@ import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
 import com.namp.ecommerce.dto.SubcategoryDTO;
 import com.namp.ecommerce.model.Product;
+import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class MapperProduct {
     private ISubcategoryDAO subcategoryDAO;
 
     @Autowired
+    private IPromotionDAO promotionDAO;
+
+    @Autowired
     private MapperUtil mapperUtil;
 
     //Metodo para convertir de ProductDTO a Product
@@ -30,6 +34,11 @@ public class MapperProduct {
         product.setStock(productDTO.getStock());
         product.setImg(productDTO.getImg());
         product.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
+
+        if(productDTO.getIdPromotion() != null){
+            product.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        }
+
 
         return product;
     }

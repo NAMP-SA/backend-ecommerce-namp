@@ -47,7 +47,10 @@ public class Product implements Serializable{
 
     @OneToMany(mappedBy = "idProduct",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<RegisterStock> registerStocks = new ArrayList<>();
-    
+
+    @Transient
+    int simulatedStock;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_subcategory", referencedColumnName = "idSubcategory")
@@ -55,4 +58,12 @@ public class Product implements Serializable{
 
     @OneToMany(mappedBy = "idProduct")
     private List<ProductCombo> productCombo = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idProduct")
+    private List<OrderDetail> orderDetail = new ArrayList<>();
+
+
+    @ManyToOne
+    @JoinColumn(name = "fk_promotion", referencedColumnName = "idPromotion", nullable = true)
+    private Promotion idPromotion;
 }
