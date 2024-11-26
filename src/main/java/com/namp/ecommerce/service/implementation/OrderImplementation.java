@@ -3,6 +3,7 @@ package com.namp.ecommerce.service.implementation;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import com.namp.ecommerce.model.State;
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.namp.ecommerce.model.Order;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IOrderDAO;
 import com.namp.ecommerce.repository.IProductDAO;
+import com.namp.ecommerce.repository.IStateDAO;
 import com.namp.ecommerce.service.IOrderDetailService;
 import com.namp.ecommerce.service.IOrderService;
 import com.namp.ecommerce.service.IStateService;
@@ -28,6 +30,9 @@ public class OrderImplementation implements IOrderService {
 
     @Autowired
     private MapperOrder mapperOrder;
+
+    @Autowired
+    private IStateDAO stateDAO; 
 
     @Autowired
     private IOrderDetailService orderDetailService;
@@ -113,15 +118,6 @@ public class OrderImplementation implements IOrderService {
         return mapperOrder.convertOrderWithOrderDetailToDto(order);
     } 
 
-    @Override
-    public void calculateTotal(OrderDTO orderDTO) {
-
-        OrderWithDoDTO orderWithDoDTO = this.getOrdersIdWithOrderDetails(orderDTO.getIdOrder());
-        double total = orderWithDoDTO.getOrderDetail().stream()
-                                      .mapToDouble(OrderDetailDTO::getSubTotal)
-                                      .sum();
-        System.out.println(total);
-    }   
 
     @Override
     public List<OrderWithDoDTO> getOrdersWithOrderDetails(){
@@ -158,30 +154,42 @@ public class OrderImplementation implements IOrderService {
         
         Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder());
         OrderWithDoDTO orderWithDoDTO = mapperOrder.convertOrderWithOrderDetailToDto(order);
-        for (OrderDetailDTO orderDetail : orderWithDoDTO.getOrderDetail()) {
-            if (orderDetail.getIdProduct() != null){
-                if(orderDetailService.checkStockProduct(orderDetail, orderDetail.getIdProduct())==false){
+        if(!orderWithDoDTO.getOrderDetail().isEmpty()){
+            for (OrderDetailDTO orderDetail : orderWithDoDTO.getOrderDetail()) {
+                if (orderDetail.getIdProduct() != null){
+                    if(orderDetailService.checkStockProduct(orderDetail, orderDetail.getIdProduct())==false){
+                        return false;
+                    };
+                }
+                if (orderDetail.getIdCombo() != null){
+                   if(orderDetailService.checkStockCombo(orderDetail, orderDetail.getIdCombo())==false){
                     return false;
-                };
+                   };
+                }
+          
             }
-            if (orderDetail.getIdCombo() != null){
-               if(orderDetailService.checkStockCombo(orderDetail, orderDetail.getIdCombo())==false){
-                return false;
-               };
-            }
-      
+    
+            return true; 
         }
 
-        return true; 
+        return false; 
+       
     }
 
 
     //METODO PROVISIORIO 
 
     @Override 
-    public void confirmOrder(OrderDTO orderDTO){
-        this.calculateTotal(orderDTO);
+    public OrderDTO confirmOrder(OrderDTO orderDTO){
         this.decreaseStocks(orderDTO);
+        
+        Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder()); 
+        order.setIdState(stateDAO.findByIdState(2));
+        Order savedOrder = orderDAO.save(order); 
+
+        // Convertir la entidad guardada de nuevo a DTO 
+        return mapperOrder.convertOrderToDTO(savedOrder); 
+
     }
 
     

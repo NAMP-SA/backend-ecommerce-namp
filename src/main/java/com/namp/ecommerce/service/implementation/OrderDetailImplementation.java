@@ -50,14 +50,23 @@ public class OrderDetailImplementation implements IOrderDetailService {
     public OrderDetailDTO save(OrderDetailDTO orderDetailDTO) {
         OrderDetail orderDetail = mapperOrderDetail.convertDtoToOrderDetail(orderDetailDTO);
         List<OrderDetail> orderDetails = orderDetailDAO.findAll();
-        for (OrderDetail orderDetailBD : orderDetails){
-          if (orderDetail.getIdOrder() == orderDetailBD.getIdOrder() && orderDetail.getIdProduct()== orderDetailBD.getIdProduct()){
-            return null; 
+        for (OrderDetail orderDetailBD : orderDetails) {
+          // Comparar productos
+          if (orderDetail.getIdProduct() != null && orderDetailBD.getIdProduct() != null &&
+              orderDetail.getIdOrder().equals(orderDetailBD.getIdOrder()) &&
+              orderDetail.getIdProduct().equals(orderDetailBD.getIdProduct())) {
+              return null; // Producto duplicado en el mismo pedido
           }
-          if (orderDetail.getIdOrder() == orderDetailBD.getIdOrder() && orderDetail.getIdCombo()== orderDetailBD.getIdCombo()){
-            return null; 
+      
+          // Comparar combos
+          if (orderDetail.getIdCombo() != null && orderDetailBD.getIdCombo() != null &&
+              orderDetail.getIdOrder().equals(orderDetailBD.getIdOrder()) &&
+              orderDetail.getIdCombo().equals(orderDetailBD.getIdCombo())) {
+              return null; // Combo duplicado en el mismo pedido
           }
         }
+      
+
         if (orderDetailDTO.getIdProduct() == null){
           ComboDTO comboDTO = comboService.findById(orderDetailDTO.getIdCombo().getIdCombo()); 
           orderDetail.setSubTotal(this.CalculateSubTotalCombo(orderDetailDTO.getQuantity(), comboDTO.getPrice())); 
@@ -73,43 +82,54 @@ public class OrderDetailImplementation implements IOrderDetailService {
 
     @Override
     public OrderDetailDTO update(OrderDetailDTO existingOrderDetailDTO, OrderDetail orderDetail) {
-      //Buscar el Detalle existente
-      OrderDetail existingOrderDetail = orderDetailDAO.findByIdDetailOrder(existingOrderDetailDTO.getIdOrderDetail());
-      if (existingOrderDetail == null){
+        // Buscar el Detalle existente
+        OrderDetail existingOrderDetail = orderDetailDAO.findByIdDetailOrder(existingOrderDetailDTO.getIdOrderDetail());
+        if (existingOrderDetail == null) {
             return null;
-      }
-
-      //variable Subtotal
-      double subTotal = 0; 
-
-      //Actualizar los campos de la entidad
-      existingOrderDetail.setIdCombo(orderDetail.getIdCombo());
-      existingOrderDetail.setIdOrder(orderDetail.getIdOrder());
-      existingOrderDetail.setIdProduct(orderDetail.getIdProduct());
-
-      existingOrderDetail.setQuantity(orderDetail.getQuantity());
-
-      OrderDetailDTO orderDetailDTO = mapperOrderDetail.convertOrderDetailToDto(orderDetail); 
-
-      if (orderDetailDTO.getIdProduct() == null){
-        ComboDTO comboDTO = comboService.findById(orderDetailDTO.getIdCombo().getIdCombo()); 
-        subTotal += this.CalculateSubTotalCombo(orderDetailDTO.getQuantity(), comboDTO.getPrice()); 
-        
-      }else{
-        ProductDTO productDTO = productService.findById(orderDetailDTO.getIdProduct().getIdProduct());
-        subTotal += this.CalculateSubTotalProduct(orderDetailDTO.getQuantity(),productDTO.getPrice(),productDTO); 
-      }
-
-      existingOrderDetail.setSubTotal(subTotal);
-
-      //Guardamos el detalle
-      OrderDetail updateOrderDetail = orderDetailDAO.save(existingOrderDetail);
-
-      //Devolvemos el DTO actaulizado
-      return mapperOrderDetail.convertOrderDetailToDto(updateOrderDetail);
-
+        }
+    
+        // Validar duplicados antes de actualizar
+        List<OrderDetail> orderDetails = orderDetailDAO.findAll(); // O filtrar por pedido si es posible
+        for (OrderDetail orderDetailBD : orderDetails) {
+            // Validar duplicados de productos
+            if (orderDetail.getIdProduct() != null && orderDetailBD.getIdProduct() != null &&
+                orderDetail.getIdOrder().equals(orderDetailBD.getIdOrder()) &&
+                orderDetail.getIdProduct().equals(orderDetailBD.getIdProduct())) {
+                return null; // Producto duplicado detectado
+            }
+    
+            // Validar duplicados de combos
+            if (orderDetail.getIdCombo() != null && orderDetailBD.getIdCombo() != null &&
+                orderDetail.getIdOrder().equals(orderDetailBD.getIdOrder()) &&
+                orderDetail.getIdCombo().equals(orderDetailBD.getIdCombo())) {
+                return null; // Combo duplicado detectado
+            }
+        }
+    
+        // Actualizar los campos de la entidad
+        double subTotal = 0; 
+        existingOrderDetail.setIdCombo(orderDetail.getIdCombo());
+        existingOrderDetail.setIdOrder(orderDetail.getIdOrder());
+        existingOrderDetail.setIdProduct(orderDetail.getIdProduct());
+        existingOrderDetail.setQuantity(orderDetail.getQuantity());
+    
+        // Calcular el subtotal
+        if (orderDetail.getIdProduct() == null) {
+            ComboDTO comboDTO = comboService.findById(orderDetail.getIdCombo().getIdCombo()); 
+            subTotal += this.CalculateSubTotalCombo(orderDetail.getQuantity(), comboDTO.getPrice()); 
+        } else {
+            ProductDTO productDTO = productService.findById(orderDetail.getIdProduct().getIdProduct());
+            subTotal += this.CalculateSubTotalProduct(orderDetail.getQuantity(), productDTO.getPrice(), productDTO); 
+        }
+        existingOrderDetail.setSubTotal(subTotal);
+    
+        // Guardar el detalle actualizado
+        OrderDetail updatedOrderDetail = orderDetailDAO.save(existingOrderDetail);
+    
+        // Devolver el DTO actualizado
+        return mapperOrderDetail.convertOrderDetailToDto(updatedOrderDetail);
     }
-
+    
     @Override
     public void delete(OrderDetailDTO orderDetailDTO) {
         OrderDetail orderDetail = orderDetailDAO.findByIdDetailOrder(orderDetailDTO.getIdOrderDetail());
@@ -131,9 +151,6 @@ public class OrderDetailImplementation implements IOrderDetailService {
     @Override
     public double CalculateSubTotalProduct(Integer quantity, double productPrice, ProductDTO productDTO) {
       double finalPrice;
-
-      System.out.println(productDTO.getIdPromotion());
-      System.out.println(productDTO.getIdPromotion().isInEffect());
 
       if(productDTO.getIdPromotion() != null && productDTO.getIdPromotion().isInEffect()){
         finalPrice = productPrice - (productPrice * productDTO.getIdPromotion().getDiscount() / 100);

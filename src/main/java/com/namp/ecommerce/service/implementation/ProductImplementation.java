@@ -152,9 +152,12 @@ public class ProductImplementation implements IProductService{
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setPrice(productDTO.getPrice());
         existingProduct.setStock(productDTO.getStock());
+        
         //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente, lo mismo para la Promocion en base a promotionDTO seteada en productDTO. 
         existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
-        existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        if(productDTO.getIdPromotion() != null){
+            existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        }
 
             //Hago la verificacion de imagen
             if (file != null && !file.isEmpty()){

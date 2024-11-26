@@ -24,7 +24,7 @@ public class StateController {
     @Autowired
     private IStateService stateService; 
 
-    @GetMapping("state")
+    @GetMapping("/admin/state")
     public ResponseEntity<?> getStates(){
         try{
             return ResponseEntity.ok(stateService.getStates());
@@ -34,7 +34,7 @@ public class StateController {
         }
     }
 
-    @GetMapping("stateWithOrders")
+    @GetMapping("/admin/stateWithOrders")
     public ResponseEntity<?> getStatesWithOrders(){
         try{
             return ResponseEntity.ok(stateService.getStatesWithOrders());
@@ -44,7 +44,7 @@ public class StateController {
         }
     } 
 
-    @PostMapping("state")
+    @PostMapping("/admin/state")
     public ResponseEntity<?> createState(@Valid @RequestBody StateDTO stateDTO) {
         try{
             StateDTO createdStateDTO = stateService.save(stateDTO);
@@ -61,7 +61,7 @@ public class StateController {
         }
     }
 
-    @DeleteMapping("state/{id}")
+    @DeleteMapping("/admin/state/{id}")
     public ResponseEntity<?> deleteState(@PathVariable long id){
         try{
             StateDTO stateDTO = stateService.findbyid(id);
@@ -80,7 +80,7 @@ public class StateController {
         }
     }
 
-    @PutMapping("state/{id}")
+    @PutMapping("/admin/state/{id}")
     public ResponseEntity<?> updateState(@PathVariable long id, @Valid @RequestBody State state){
         try{
             StateDTO existingStateDTO = stateService.findbyid(id);

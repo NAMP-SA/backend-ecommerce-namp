@@ -30,7 +30,11 @@ public class MapperProduct {
         product.setStock(productDTO.getStock());
         product.setImg(productDTO.getImg());
         product.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
-        product.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        
+        if(productDTO.getIdPromotion() != null){
+            product.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        }
+        
 
         return product;
     }

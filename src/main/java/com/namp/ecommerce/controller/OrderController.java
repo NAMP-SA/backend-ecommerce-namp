@@ -28,7 +28,7 @@ public class OrderController {
     @Autowired
     private IOrderService orderService; 
 
-    @GetMapping("order")
+    @GetMapping("/admin/order")
     public ResponseEntity<?> getOrders(){
         try{
             return ResponseEntity.ok(orderService.getOrders());
@@ -38,7 +38,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("orderWithOrderDetails")
+    @GetMapping("/admin/orderWithOrderDetails")
     public ResponseEntity<?> getOrdersWithOrderDetails(){
         try{
             return ResponseEntity.ok(orderService.getOrdersWithOrderDetails());
@@ -51,12 +51,12 @@ public class OrderController {
     }   
     
 
-    @GetMapping("orderWithOrderDetails/{id}")
+    @GetMapping("/user/orderWithOrderDetails/{id}")
     public ResponseEntity<?> getOrderIdWithOrderDetails(@PathVariable long id){
         try{
             if (orderService.getOrdersIdWithOrderDetails(id)==null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Order with ID "+ id+ "not found");
+                        .body("Order with ID "+ id + " not found");
             }
             return ResponseEntity.ok(orderService.getOrdersIdWithOrderDetails(id));
         }catch (Exception e){
@@ -65,7 +65,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("order")
+    @PostMapping("/user/order")
     public ResponseEntity<?> createOrder(){
         try{
             OrderDTO createdOrderDTO = orderService.save(); 
@@ -80,7 +80,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("order/{id}")
+    @DeleteMapping("/user/order/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable long id){
         try{
             OrderDTO orderDTO = orderService.findById(id); 
@@ -98,7 +98,7 @@ public class OrderController {
         }
     }
     
-    @PutMapping("order/{id}")
+    @PutMapping("/user/order/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable long id, @Valid @RequestBody Order order){
         try{
             OrderDTO existingOrderDTO = orderService.findById(id); 
@@ -119,13 +119,11 @@ public class OrderController {
         }
     }
 
-    @PostMapping("confirmOrder/{id}")
+    @PostMapping("/user/confirmOrder/{id}")
     public ResponseEntity<?> confirmOrder(@PathVariable long id){
         OrderDTO orderDTO = orderService.findById(id);
         if (orderService.checkStocks(orderDTO)==true){
-            orderService.calculateTotal(orderDTO);
-            orderService.decreaseStocks(orderDTO);
-            return ResponseEntity.ok(orderDTO);
+            return ResponseEntity.ok(orderService.confirmOrder(orderDTO));
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("The order could not be confirmed");

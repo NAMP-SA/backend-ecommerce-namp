@@ -20,6 +20,7 @@ public class PromotionImplementation implements IPromotionService {
 
     @Autowired
     private IPromotionDAO promotionDAO; 
+
     
     @Autowired
     private MapperPromotion mapperPromotion; 
@@ -53,18 +54,31 @@ public class PromotionImplementation implements IPromotionService {
     @Override
     public PromotionDTO save(PromotionDTO promotionDTO) {
 
-        if (promotionDTO.getDateTimeStart() == null || promotionDTO.getDateTimeEnd() == null) {
-            throw new IllegalArgumentException("La fecha de inicio y la fecha de fin no deben ser nulas.");
-        }
+        //Normalizar los espacios los espacios y convertir a mayusculas
+        String nomralizedName = promotionDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
 
-        if (promotionDTO.getDateTimeEnd().before(promotionDTO.getDateTimeStart())) {
-         throw new IllegalArgumentException("The end date must be later than the start date");
-        }
+        if( !verifyName(nomralizedName)){
+            
+
+            if (promotionDTO.getDateTimeStart() == null || promotionDTO.getDateTimeEnd() == null) {
+                throw new IllegalArgumentException("La fecha de inicio y la fecha de fin no deben ser nulas.");
+            }
+    
+            if (promotionDTO.getDateTimeEnd().before(promotionDTO.getDateTimeStart())) {
+             throw new IllegalArgumentException("The end date must be later than the start date");
+            }
+            
+            promotionDTO.setName(nomralizedName);
+
+            Promotion promotion = mapperPromotion.convertDtoToPromotion(promotionDTO);
+            Promotion savedPromotion = promotionDAO.save(promotion); 
+            return mapperPromotion.convertPromotionToDto(savedPromotion); 
         
-        Promotion promotion = mapperPromotion.convertDtoToPromotion(promotionDTO);
-        Promotion savedPromotion = promotionDAO.save(promotion); 
-        return mapperPromotion.convertPromotionToDto(savedPromotion); 
+        }
+        return null; 
+
     }
+      
 
     @Override
     public PromotionDTO update(PromotionDTO existingPromotionDTO, Promotion promotion) {
@@ -78,8 +92,18 @@ public class PromotionImplementation implements IPromotionService {
         if (promotion.getDateTimeEnd().before(promotion.getDateTimeStart())) {
              throw new IllegalArgumentException("The end date must be later than the start date");
         } 
+        
+        //Normalizar los espacios y convertir a mayusculas
+        String nomralizedName = promotion.getName().replaceAll("\\s+", " ").trim().toUpperCase();
+        //Verficar que el nombre este disponible 
+        if(verifyName(nomralizedName, existingPromotionDTO.getIdPromotion())){
+            return null;
+        }
+
+        
         //Actualizar los campos 
         existingPromotion.setDiscount(promotion.getDiscount());
+        existingPromotion.setName(nomralizedName); 
         existingPromotion.setDateTimeStart(promotion.getDateTimeStart());
         existingPromotion.setDateTimeEnd(promotion.getDateTimeEnd());
         existingPromotion.setInEffect(promotion.isInEffect()); 
@@ -94,10 +118,10 @@ public class PromotionImplementation implements IPromotionService {
 
     @Override
     public void delete(PromotionDTO promotionDTO) {
-       Promotion promotion = promotionDAO.findByIdPromotion(promotionDTO.getIdPromotion());
+       Promotion promotion = promotionDAO.findByIdPromotion(promotionDTO.getIdPromotion()); 
        if(promotion == null){
         throw new EntityNotFoundException("Promotion not foundwith ID: "+promotionDTO.getIdPromotion());
-       }
+       }            
        promotionDAO.delete(promotion);
     }
 
@@ -108,6 +132,33 @@ public class PromotionImplementation implements IPromotionService {
             return null;
         }
         return mapperPromotion.convertPromotionToDto(promotion); 
+    }
+
+    @Override
+    public boolean verifyName(String normalizedName) {
+     List<Promotion> promotions= promotionDAO.findAll();
+     String name = normalizedName.replaceAll("\\s+", "");
+
+     //Comparar el nombre de la promocion que se quiere guardar, contra todos los demas
+     for(Promotion promotion : promotions){
+        if(name.equals(promotion.getName().replaceAll("\\s+", ""))){
+            return true;
+        }
+     }
+     return false; 
+    }
+
+    @Override
+    public boolean verifyName(String normalizedName, long idPromotion) {
+        List<Promotion> promotions= promotionDAO.findAll();
+        String name = normalizedName.replaceAll("\\s+", "");
+        //Comparar el nombre de la promocion que se quiere guardar, contra todos los demas
+        for(Promotion promotion : promotions){
+            if(promotion.getIdPromotion() != idPromotion && name.equals(promotion.getName().replaceAll("\\s+", ""))){
+                return true;
+            }
+        }
+        return false; 
     }    
     
 }

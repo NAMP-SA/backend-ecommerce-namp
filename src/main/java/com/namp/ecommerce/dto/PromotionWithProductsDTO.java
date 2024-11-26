@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PromotionWithProductsDTO {
     private long idPromotion;
+    private String name; 
     private double discount; 
     private Timestamp dateHourStart; 
     private Timestamp dateHourEnd; 
     private boolean inEffect; 
-
-    private DiscountTypeDTO idDiscountType; 
 
     private List<ProductDTO> products;
 }

@@ -25,7 +25,7 @@ public class OrderDetailController {
     @Autowired
     private IOrderDetailService orderDetailService; 
 
-    @GetMapping("orderDetail")
+    @GetMapping("/admin/orderDetail")
     public ResponseEntity<?> getOrderDetail(){
         try{
             return ResponseEntity.ok(orderDetailService.getOderDetails()); 
@@ -35,7 +35,7 @@ public class OrderDetailController {
         }
     }
 
-    @PostMapping("orderDetail")
+    @PostMapping("/user/orderDetail")
     public ResponseEntity<?> addOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO){
         try{
             OrderDetailDTO createdOderDetailDTO = orderDetailService.save(orderDetailDTO);
@@ -52,7 +52,7 @@ public class OrderDetailController {
         }
     }
 
-    @DeleteMapping("orderDetail/{id}")
+    @DeleteMapping("/user/orderDetail/{id}")
     public ResponseEntity<?> deleteOrderDetail(@PathVariable long id){
         try{
             OrderDetailDTO orderDetailDTO = orderDetailService.findById(id); 
@@ -69,7 +69,7 @@ public class OrderDetailController {
         }
     }
 
-    @PutMapping("orderDetail/{id}")
+    @PutMapping("/user/orderDetail/{id}")
     public ResponseEntity<?> updateOrderDetail(@PathVariable long id, @Valid @RequestBody OrderDetail orderDetail){
         try{
             OrderDetailDTO existingOrderDetailDTO = orderDetailService.findById(id);

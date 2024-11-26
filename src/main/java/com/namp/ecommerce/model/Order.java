@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +22,7 @@ import lombok.ToString;
 @Entity
 @Table(name= "\"order\"")
 public class Order implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idOrder")
@@ -31,6 +35,7 @@ public class Order implements Serializable {
     // @ManyToOne
     // @JoinColumn(name = "fk_user", referencedColumnName = "idUser")
     // private User idUser; 
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_state", referencedColumnName = "idState")
@@ -38,4 +43,12 @@ public class Order implements Serializable {
     
     @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<OrderDetail> orderDetail = new ArrayList<>();
+
+    public double calculateTotal() {
+        return this.orderDetail.stream()
+                .mapToDouble(OrderDetail::getSubTotal)
+                .sum();
+    }
+
+    
 }

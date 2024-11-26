@@ -59,7 +59,7 @@ public class PromotionController {
         }
     }
 
-    @PostMapping("promotion")
+    @PostMapping("/admin/promotion")
     public ResponseEntity<?>  cratPromotion(@Valid @RequestBody PromotionDTO promotionDTO){
         try{
             PromotionDTO createdPromotionDTO = promotionService.save(promotionDTO); 
@@ -74,7 +74,7 @@ public class PromotionController {
         }
     }
 
-    @DeleteMapping("promotion/{id}")
+    @DeleteMapping("/admin/promotion/{id}")
     public ResponseEntity<?> deletePromotion(@PathVariable long id){
         try{
             PromotionDTO promotionDTO = promotionService.findById(id);
@@ -90,7 +90,7 @@ public class PromotionController {
         }
     }
 
-    @PutMapping("promotion/{id}")
+    @PutMapping("/admin/promotion/{id}")
     public ResponseEntity<?> updatePromotion(@PathVariable long id, @Valid @RequestBody Promotion promotion){
         try{
             PromotionDTO existingPromotionDTO = promotionService.findById(id); 

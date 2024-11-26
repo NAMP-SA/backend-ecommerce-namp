@@ -14,4 +14,6 @@ public interface IPromotionService {
     PromotionDTO update(PromotionDTO existingPromotionDTO, Promotion promotion); 
     void delete(PromotionDTO promotionDTO); 
     PromotionDTO findById(long id);
+    boolean verifyName(String normalizedName);
+    boolean verifyName(String normalizedName, long idPromotion);
 }

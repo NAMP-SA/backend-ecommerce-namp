@@ -16,12 +16,11 @@ import lombok.NoArgsConstructor;
 public class PromotionDTO {
     
     private long idPromotion;
+    private String name; 
     private double discount; //por porcentaje de descuento 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp dateTimeStart; 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp dateTimeEnd; 
     private boolean inEffect; 
-
-    private DiscountTypeDTO idDiscountType; 
 }

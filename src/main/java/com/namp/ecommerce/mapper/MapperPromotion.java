@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.dto.PromotionWithProductsDTO;
 import com.namp.ecommerce.model.Promotion;
-import com.namp.ecommerce.repository.IDiscountTypeDAO;
 
 @Component
 public class MapperPromotion {
@@ -15,18 +14,16 @@ public class MapperPromotion {
     @Autowired
     private MapperUtil mapperUtil;
 
-    @Autowired
-    private IDiscountTypeDAO discountTypeDAO; 
 
     //Metodo para convertir del PromotionDTO a Peomotion
     public Promotion convertDtoToPromotion(PromotionDTO promotionDTO){
         Promotion promotion = new Promotion(); 
 
         promotion.setDiscount(promotionDTO.getDiscount());
+        promotion.setName(promotionDTO.getName());
         promotion.setDateTimeStart(promotionDTO.getDateTimeStart());
         promotion.setDateTimeEnd(promotionDTO.getDateTimeEnd());
         promotion.setInEffect(promotionDTO.isInEffect());
-        promotion.setIdDiscountType(discountTypeDAO.findByIdDiscountType(promotionDTO.getIdDiscountType().getIdDiscountType()));
        
         return promotion; 
     }

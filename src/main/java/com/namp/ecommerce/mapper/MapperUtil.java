@@ -130,7 +130,10 @@ public class MapperUtil {
         productDTO.setImg(product.getImg());
 
         productDTO.setIdSubcategory(this.convertSubcategoryToDto(product.getIdSubcategory()));
-        productDTO.setIdPromotion(this.convertPromotionToDTO(product.getIdPromotion())); 
+
+        if(product.getIdPromotion() != null){
+            productDTO.setIdPromotion(this.convertPromotionToDTO(product.getIdPromotion()));
+        }
 
         return productDTO;
     }
@@ -361,51 +364,6 @@ public class MapperUtil {
     }
 
 
-    /*
-    ----------------------------------------------------------------------------------------------------------
-                                             Discount Type METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
-
-    public DiscountTypeDTO convertDiscountTypeToDTO (DiscountType discountType){
-        DiscountTypeDTO discountTypeDTO = new DiscountTypeDTO();
-
-        discountTypeDTO.setIdDiscountType(discountType.getIdDiscountType());
-        discountTypeDTO.setName(discountType.getName());
-
-        return discountTypeDTO;
-    }
-
-
-    public DiscountTypeWithPromotionDTO convertDiscountTypeWithPromtionsToDTO(DiscountType discountType){
-        DiscountTypeWithPromotionDTO discountTypeWithPromotionDTO = new DiscountTypeWithPromotionDTO();
-
-        discountTypeWithPromotionDTO.setIdDiscountType(discountType.getIdDiscountType());
-        discountTypeWithPromotionDTO.setName(discountType.getName());
-
-        discountTypeWithPromotionDTO.setPromotions(discountType.getPromotions()
-                .stream()
-                .map(this::convertPromotionToDTO)
-                .collect(Collectors.toList()));
-
-        return discountTypeWithPromotionDTO;
-
-    }
-
-    public DiscountTypeWithPromotionDTO convertDiscountTypeIdWithPromtionsToDTO(DiscountType discountType){
-        DiscountTypeWithPromotionDTO discountTypeIdWithPromotionsDTO = new DiscountTypeWithPromotionDTO();
-
-        discountTypeIdWithPromotionsDTO.setIdDiscountType(discountType.getIdDiscountType());
-        discountTypeIdWithPromotionsDTO.setName(discountType.getName());
-
-        discountTypeIdWithPromotionsDTO.setPromotions(discountType.getPromotions()
-                .stream()
-                .map(this::convertPromotionToDTO)
-                .collect(Collectors.toList()));
-        return discountTypeIdWithPromotionsDTO;
-    }
-
-
      /*
     ----------------------------------------------------------------------------------------------------------
                                              Promotion METHODS
@@ -416,12 +374,12 @@ public class MapperUtil {
         PromotionDTO promotionDTO = new PromotionDTO();
 
         promotionDTO.setIdPromotion(promotion.getIdPromotion());
+        promotionDTO.setName(promotion.getName());
         promotionDTO.setDiscount(promotion.getDiscount());
         promotionDTO.setDateTimeStart(promotion.getDateTimeStart());
         promotionDTO.setDateTimeEnd(promotion.getDateTimeEnd());
         promotionDTO.setInEffect(promotion.isInEffect());
 
-        promotionDTO.setIdDiscountType(this.convertDiscountTypeToDTO(promotion.getIdDiscountType()));
 
         return promotionDTO;
     }
@@ -430,6 +388,7 @@ public class MapperUtil {
         PromotionWithProductsDTO promotionWithProductsDTO = new PromotionWithProductsDTO();
 
         promotionWithProductsDTO.setIdPromotion(promotion.getIdPromotion());
+        promotionWithProductsDTO.setName(promotion.getName());
         promotionWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
@@ -448,6 +407,7 @@ public class MapperUtil {
         PromotionWithProductsDTO promotionIdWithProductsDTO = new PromotionWithProductsDTO();
 
         promotionIdWithProductsDTO.setIdPromotion(promotion.getIdPromotion());
+        promotionIdWithProductsDTO.setName(promotion.getName());
         promotionIdWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionIdWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionIdWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());

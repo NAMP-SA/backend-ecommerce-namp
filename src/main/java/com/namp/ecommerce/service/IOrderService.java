@@ -16,9 +16,9 @@ public interface IOrderService {
     OrderDTO findById(long id);
     OrderWithDoDTO getOrdersIdWithOrderDetails(long id);
     List<OrderWithDoDTO> getOrdersWithOrderDetails();
-    void calculateTotal(OrderDTO orderDTO);
     void decreaseStocks(OrderDTO orderDTO);
     boolean checkStocks(OrderDTO orderDTO);
+    
     //METODO PROVISIORIO
-    void confirmOrder(OrderDTO orderDTO);
+    OrderDTO confirmOrder(OrderDTO orderDTO);
 }
