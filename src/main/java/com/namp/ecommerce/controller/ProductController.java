@@ -78,6 +78,7 @@ public class ProductController {
             }
 
             return ResponseEntity.ok(createdProductDTO);
+        // 400 En el caso de que la imagen no cumpla el formato
         }catch (InvalidFileFormatException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
