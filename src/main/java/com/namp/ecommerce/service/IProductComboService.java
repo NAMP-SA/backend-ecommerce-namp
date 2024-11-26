@@ -8,6 +8,9 @@ import com.namp.ecommerce.model.ProductCombo;
 
 public interface IProductComboService {
     List<ProductComboDTO> getProductCombos();
+
+    List<ProductComboDTO> getProductCombosByComboId(long idCombo);
+
     ProductComboDTO save(ProductComboDTO productComboDTO);
     ProductComboDTO update(ProductComboDTO existingProductComboDTO, ProductCombo productCombo);
     void delete(ProductComboDTO productComboDTO);

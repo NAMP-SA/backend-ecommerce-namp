@@ -33,6 +33,14 @@ public class ProductComboImplementation implements IProductComboService {
     }
 
     @Override
+    public List<ProductComboDTO> getProductCombosByComboId(long idCombo){
+        return productComboDAO.findByComboId(idCombo)
+                .stream()
+                .map(mapperProductCombo::convertProductComboToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ProductComboDTO save(ProductComboDTO productComboDTO) {
 
         ProductCombo productCombo = mapperProductCombo.convertDtoToProductCombo(productComboDTO);

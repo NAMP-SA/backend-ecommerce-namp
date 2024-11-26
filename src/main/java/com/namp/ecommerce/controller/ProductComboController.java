@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api-namp")
@@ -26,6 +28,17 @@ public class ProductComboController {
                     .body("Error showing the Product Combos:" + e.getMessage());
         }
     }
+    @GetMapping("productCombo/{idCombo}")
+    public ResponseEntity<?> getProductCombosByComboId(@PathVariable Long idCombo) {
+        try {
+            return ResponseEntity.ok(productComboService.getProductCombosByComboId(idCombo));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error showing the Product Combos:" + e.getMessage());
+        }
+
+    }
+
 
     @PostMapping("productCombo")
     public ResponseEntity<?> addProductCombo(@Valid @RequestBody ProductComboDTO productComboDTO) {
@@ -45,7 +58,7 @@ public class ProductComboController {
     }
 
     @DeleteMapping("productCombo/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable long id) {
+    public ResponseEntity<?> deleteProductCombo(@PathVariable long id) {
         try {
             ProductComboDTO productComboDTO = productComboService.findById(id);
 
