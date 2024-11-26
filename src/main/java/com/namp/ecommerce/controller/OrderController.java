@@ -3,6 +3,7 @@ package com.namp.ecommerce.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,9 +67,9 @@ public class OrderController {
     }
 
     @PostMapping("/user/order")
-    public ResponseEntity<?> createOrder(){
+    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO){
         try{
-            OrderDTO createdOrderDTO = orderService.save(); 
+            OrderDTO createdOrderDTO = orderService.save(orderDTO); 
             if (createdOrderDTO == null){
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("This order already exists.");

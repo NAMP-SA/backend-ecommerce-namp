@@ -72,12 +72,12 @@ public class RegisterStockImplementation implements IRegisterStockService {
             }
             if(existingRegisterStock.getQuantity()>registerStock.getQuantity()){
                 int difference = existingRegisterStock.getQuantity() - registerStock.getQuantity();
-                productService.decraseStock(registerStockDTO.getIdProduct(), difference);
+                productService.decreaseStock(registerStockDTO.getIdProduct(), difference);
             }
         }else{
             System.out.println("Entro al else");
             System.out.println(existingRegisterStockDTO.getQuantity());
-            productService.decraseStock(existingRegisterStockDTO.getIdProduct(), existingRegisterStockDTO.getQuantity());
+            productService.decreaseStock(existingRegisterStockDTO.getIdProduct(), existingRegisterStockDTO.getQuantity());
             productService.increaseStock(registerStockDTO.getIdProduct(),registerStockDTO.getQuantity());
         }
 
@@ -97,7 +97,7 @@ public class RegisterStockImplementation implements IRegisterStockService {
             throw new EntityNotFoundException("Register Stock not found with ID: " + registerStockDTO.getIdRegisterStock());
 
         }
-        productService.decraseStock(registerStockDTO.getIdProduct(), registerStockDTO.getQuantity());
+        productService.decreaseStock(registerStockDTO.getIdProduct(), registerStockDTO.getQuantity());
         registerStockDAO.delete(registerStock);
     }
 

@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -31,10 +27,10 @@ public class Order implements Serializable {
     @NotNull(message = "La fecha y hora no puede ser vacío")
     private Timestamp  dateTime;
     
-    // @NotNull
-    // @ManyToOne
-    // @JoinColumn(name = "fk_user", referencedColumnName = "idUser")
-    // private User idUser; 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "fk_user", referencedColumnName = "idUser")
+    private User idUser; 
 
     @NotNull
     @ManyToOne

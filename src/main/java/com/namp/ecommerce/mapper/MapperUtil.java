@@ -187,6 +187,25 @@ public class MapperUtil {
         return productWithDoDTO;
     }
 
+    public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
+        ProductWithRegisterStocksDTO productDTO = new ProductWithRegisterStocksDTO();
+       
+        productDTO.setIdProduct(product.getIdProduct());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setStock(product.getStock());
+        productDTO.setImg(product.getImg());
+
+        productDTO.setRegisterStocks(product.getRegisterStocks()
+            .stream()
+            .map(this::convertRegisterStockToDto)
+            .collect(Collectors.toList())
+        );
+
+        return productDTO;
+    }
+
     /*
     ----------------------------------------------------------------------------------------------------------
                                          PRODUCT COMBO METHODS
@@ -307,6 +326,7 @@ public class MapperUtil {
         //orderDTO.setTotal(order.getTotal());
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
+        orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
 
         return orderDTO;
     }
@@ -316,10 +336,8 @@ public class MapperUtil {
         OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setIdOrder(order.getIdOrder());
-        //orderDTO.setTotal(order.getTotal());
         orderDTO.setDateTime(order.getDateTime());
-
-
+        orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
         return orderDTO;
     }
 
@@ -330,7 +348,7 @@ public class MapperUtil {
         //orderWithDoDTO.setTotal(order.getTotal());
         orderWithDoDTO.setDateTime(order.getDateTime());
         orderWithDoDTO.setIdState(this.convertStateToDTO(order.getIdState()));
-
+        orderWithDoDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
         orderWithDoDTO.setOrderDetail(order.getOrderDetail()
                     .stream()
                     .map(this::convertOrderDetailToDto)

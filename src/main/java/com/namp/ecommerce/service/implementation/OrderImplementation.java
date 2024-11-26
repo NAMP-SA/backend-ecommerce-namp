@@ -54,12 +54,8 @@ public class OrderImplementation implements IOrderService {
     //Listar los detalles del Pedido con getOrdersWhitDetailsOrders() y con ID
     
     @Override
-    public OrderDTO save() {
-        OrderDTO orderDTO = new OrderDTO();
-
+    public OrderDTO save(OrderDTO orderDTO) {
         orderDTO.setDateTime(new Timestamp(System.currentTimeMillis()));
-    
-
         orderDTO.setIdState(stateService.findbyid(1));
         // Convertir el DTO a la entidad Order 
         Order order = mapperOrder.convertDtoToOrder(orderDTO); 
@@ -84,6 +80,8 @@ public class OrderImplementation implements IOrderService {
         if (order.getIdState() != null) {
             existingOrder.setIdState(order.getIdState()); 
         } 
+
+        existingOrder.setIdUser(order.getIdUser());
         // Guardar la orden actualizada 
         Order updatedOrder = orderDAO.save(existingOrder); 
         // Devolver el DTO de la orden actualizada 

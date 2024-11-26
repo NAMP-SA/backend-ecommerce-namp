@@ -9,12 +9,16 @@ import com.namp.ecommerce.dto.OrderDTO;
 import com.namp.ecommerce.dto.OrderWithDoDTO;
 import com.namp.ecommerce.model.Order;
 import com.namp.ecommerce.repository.IStateDAO;
+import com.namp.ecommerce.repository.IUserDAO;
 
 @Component
 public class MapperOrder {
     
     @Autowired
     private IStateDAO stateDAO; 
+
+    @Autowired
+    private IUserDAO userDAO;
 
     @Autowired
     private MapperUtil mapperUtil; 
@@ -26,7 +30,7 @@ public class MapperOrder {
         //order.setTotal(orderDTO.getTotal());
         order.setDateTime(orderDTO.getDateTime());
         order.setIdState(stateDAO.findByIdState(orderDTO.getIdState().getIdState()));
-        //order.setIdUSer(); 
+        order.setIdUser(userDAO.findByIdUser(orderDTO.getIdUser().getIdUser()));
 
         return order;
     }
