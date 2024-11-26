@@ -113,8 +113,4 @@ public class JwtImplementation implements IJwtService{
         }
     }
 
-    // Método para obtener la clave de firma en formato Key
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-    }
 }
