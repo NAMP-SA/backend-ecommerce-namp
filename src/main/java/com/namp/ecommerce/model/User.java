@@ -65,7 +65,6 @@ public class User implements Serializable, UserDetails {
     @Pattern(regexp = "^(?!\\d+$)[a-zA-Z0-9 ]*$", message = "El username solo puede contener caracteres alfanumericos")
     private String username;
 
-    @Size(min = 8, max = 24, message = "La password debe tener entre 8-24 caracteres")
     @NotNull(message = "La contrasena no debe estar vacia")
     private String password;
 

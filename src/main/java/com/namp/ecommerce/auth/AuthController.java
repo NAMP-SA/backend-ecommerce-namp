@@ -2,6 +2,7 @@ package com.namp.ecommerce.auth;
 
 import com.namp.ecommerce.service.IBlackListService;
 import com.namp.ecommerce.service.IJwtService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class AuthController {
     }
     
     @PostMapping(value = "register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request){
         AuthResponse response = authService.register(request);
         if (response == null){
             return ResponseEntity.status(HttpStatus.CONFLICT)
