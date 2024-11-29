@@ -67,28 +67,11 @@ public class ComboImplementation implements IComboService{
     }
 
     @Override
-    public ComboDTO saveCombo(ComboDTO comboDTO){
-        //Normalizar los espacios en blanco y convertir a mayusculas
-        String normalizedName = comboDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
-
-        if(!verifyName(normalizedName)){
-            comboDTO.setName(normalizedName);
-
-            Combo combo = mapperCombo.convertDtoToCombo(comboDTO);
-
-            Combo savedCombo = comboDAO.save(combo);
-
-            return mapperCombo.convertComboToDto(savedCombo);
-        }
-        return null;
-    }
-
-    @Override
-    public ComboWithItDTO saveComboWithIt(String comboJson, MultipartFile file) throws IOException {
+    public ComboDTO saveCombo(String comboJson, MultipartFile file) throws IOException {
 
         //Creo json a objeto
         ObjectMapper objectMapper = new ObjectMapper();
-        ComboWithItDTO comboWithItDTO = objectMapper.readValue(comboJson, ComboWithItDTO.class);
+        ComboDTO comboDTO = objectMapper.readValue(comboJson, ComboDTO.class);
         Path filePath = null;
 
         if (!file.isEmpty()) {
@@ -103,23 +86,23 @@ public class ComboImplementation implements IComboService{
             String fileExtension = contentType.equals("image/jpeg") ? ".jpg" : ".png";
             String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-            String fileName = comboWithItDTO.getName().replaceAll("\\s+","_").trim() + "_" + formattedDate + fileExtension;
+            String fileName = comboDTO.getName().replaceAll("\\s+","_").trim() + "_" + formattedDate + fileExtension;
 
             //Crea la ruta del archivo
             filePath = Paths.get(uploadDir, fileName);
 
             //Seteo la ruta al atributo img de producto
-            comboWithItDTO.setImg("/images/" + fileName);
+            comboDTO.setImg("/images/" + fileName);
         }
 
         //Normalizar los espacios en blanco y convertir a mayusculas
-        String normalizedName = comboWithItDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
+        String normalizedName = comboDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
 
         if (!verifyName(normalizedName)) {
-            comboWithItDTO.setName(normalizedName);
+            comboDTO.setName(normalizedName);
 
             // Convertir ComboWithProductComboDTO a entidad Combo
-            Combo combo = mapperCombo.convertDtoToComboWithIt(comboWithItDTO);
+            Combo combo = mapperCombo.convertDtoToCombo(comboDTO);
 
             // Guardar el combo en la base de datos
             Combo savedCombo = comboDAO.save(combo);
@@ -127,48 +110,37 @@ public class ComboImplementation implements IComboService{
             // Guardo la imagen (si un archivo se llama igual en el path lo va a reemplazar)
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return mapperCombo.convertComboWithItToDto(savedCombo);
+            return mapperCombo.convertComboToDto(savedCombo);
         }
         return null;
     }
 
     @Override
-    public ComboWithItDTO update(ComboWithItDTO existingComboWithItDTO, String comboJson, MultipartFile file) throws IOException {
+    public ComboDTO update(ComboDTO existingComboDTO, String comboJson, MultipartFile file) throws IOException {
         Path filePath = null;
 
-        Combo existingCombo = comboDAO.findByIdCombo(existingComboWithItDTO.getIdCombo());
+        Combo existingCombo = comboDAO.findByIdCombo(existingComboDTO.getIdCombo());
         if (existingCombo == null) {
             return null;
         }
 
         //Convierto json a objeto
         ObjectMapper objectMapper = new ObjectMapper();
-        ComboWithItDTO comboWithItDTO = objectMapper.readValue(comboJson, ComboWithItDTO.class);
+        ComboDTO comboDTO = objectMapper.readValue(comboJson, ComboDTO.class);
 
 
         //Normalizar los espacios en blacno y convertir a mayusculas
-        String normalizedName = comboWithItDTO.getName().replaceAll("\s+", " ").trim().toUpperCase();
+        String normalizedName = comboDTO.getName().replaceAll("\s+", " ").trim().toUpperCase();
 
         //Verifica que el nombre esta disponible
-        if (!verifyName(normalizedName, existingComboWithItDTO.getIdCombo())) {
+        if (verifyName(normalizedName, existingComboDTO.getIdCombo())) {
             return null; //Si el nombre ya esta siendo utilizado
         }
 
         //Actualizar los campos de la entidad existente
-        existingCombo.setName(comboWithItDTO.getName());
-        existingCombo.setDescription(comboWithItDTO.getDescription());
-        existingCombo.setPrice(comboWithItDTO.getPrice());
-        //Creamos una lista de productCombos para guardar los productCombos que se van a settear
-        //en el nuevo combo
-        List<ProductCombo> productComboList = new ArrayList<>();
-        //Buscamos la instancia de productCombo en base al productComboDTO
-        for (ProductComboDTO productComboDTO : comboWithItDTO.getProductCombo()) {
-            ProductCombo productCombo = productComboDAO.findByIdProductCombo(productComboDTO.getIdProductCombo());
-            if (productCombo == null) {
-                throw new EntityNotFoundException("Product not found with ID: " + productComboDTO.getIdProductCombo());
-            }
-            productComboList.add(productCombo);
-        }
+        existingCombo.setName(comboDTO.getName());
+        existingCombo.setDescription(comboDTO.getDescription());
+        existingCombo.setPrice(comboDTO.getPrice());
 
         //Hago la verificacion de imagen
         if (file != null && !file.isEmpty()) {
@@ -183,7 +155,7 @@ public class ComboImplementation implements IComboService{
             // Genero un nombre custom para la imagen usando el nombre del producto y un UUID
             String fileExtension = contentType.equals("image/jpeg") ? ".jpg" : ".png";
             String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String fileName = comboWithItDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate + fileExtension;
+            String fileName = comboDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate + fileExtension;
 
             //Crea la ruta del archivo, si esta creada actualiza, de lo contrario crea
             filePath = Paths.get(uploadDir, fileName);
@@ -197,7 +169,7 @@ public class ComboImplementation implements IComboService{
         Combo updatedCombo = comboDAO.save(existingCombo);
 
         //Devolvemos el DTO del combo actualizado
-        return mapperCombo.convertComboWithItToDto(updatedCombo);
+        return mapperCombo.convertComboToDto(updatedCombo);
     }
 
     @Override

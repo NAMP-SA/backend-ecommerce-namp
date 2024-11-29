@@ -12,9 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface IComboService {
     List<ComboDTO> getCombos();
     List<ComboWithItDTO> getCombosWithIt();
-    ComboDTO saveCombo(ComboDTO comboDTO);
-    ComboWithItDTO saveComboWithIt(String product, MultipartFile file) throws IOException;
-    ComboWithItDTO update(ComboWithItDTO comboWithItDTO, String product, MultipartFile file) throws IOException;
+    ComboDTO saveCombo(String product, MultipartFile file) throws IOException;
+    ComboDTO update(ComboDTO comboDTO, String product, MultipartFile file) throws IOException;
     void delete(ComboDTO comboDTO);
     ComboDTO findById(Long id);
     ComboWithItDTO findByIdWithIt(Long id);

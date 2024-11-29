@@ -38,7 +38,7 @@ public class ComboController {
     @PostMapping("/admin/combo")
     public ResponseEntity<?> createCombo(@RequestParam("combo") String comboJson, @RequestParam("file") MultipartFile file){
         try{
-            ComboWithItDTO createdComboDTO = comboService.saveComboWithIt(comboJson, file);
+            ComboDTO createdComboDTO = comboService.saveCombo(comboJson, file);
 
             if (createdComboDTO == null){
                 return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -77,14 +77,14 @@ public class ComboController {
     @PutMapping("/admin/combo/{id}")
     public ResponseEntity<?> updateCombo(@PathVariable long id, @RequestParam("combo") String comboJson, @RequestParam(value = "file", required = false) MultipartFile file){
         try{
-            ComboWithItDTO existingComboDTO = comboService.findByIdWithIt(id);
+            ComboDTO existingComboDTO = comboService.findById(id);
 
             if (existingComboDTO == null){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("The combo does not exist");
             }
 
-            ComboWithItDTO updatedComboDTO = comboService.update(existingComboDTO, comboJson, file);
+            ComboDTO updatedComboDTO = comboService.update(existingComboDTO, comboJson, file);
 
             if (updatedComboDTO == null){
                 return ResponseEntity.status(HttpStatus.CONFLICT)
