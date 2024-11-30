@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,8 @@ public class StatisticController {
     private IStatisticService statisticService;
 
     @GetMapping("/admin/getDailyIncome")
-    ResponseEntity<?> statisticDailyIncome(@RequestBody LocalDateTime startDate,
-                                           @RequestBody LocalDateTime endDate) {
+    ResponseEntity<?> statisticDailyIncome(@RequestParam LocalDateTime startDate,
+                                           @RequestParam LocalDateTime endDate) {
         try {
             return ResponseEntity.ok(statisticService.getDailyIncome(startDate, endDate));
         } catch (Exception e) {
@@ -29,7 +30,7 @@ public class StatisticController {
     }
 
     @GetMapping("/admin/getMonthlyIncome")
-    ResponseEntity<?> statisticMonthlyIncome(@RequestBody Integer year) {
+    ResponseEntity<?> statisticMonthlyIncome(@RequestParam Integer year) {
         try {
             return ResponseEntity.ok(statisticService.getMonthlyIncome(year));
         } catch (Exception e) {
@@ -39,9 +40,9 @@ public class StatisticController {
     }
 
     @GetMapping("/admin/getTopProductSold")
-    ResponseEntity<?> statisticTopProductSold(@RequestBody Integer limit,
-                                              @RequestBody(required = false) LocalDateTime startDate,
-                                              @RequestBody(required = false) LocalDateTime endDate) {
+    ResponseEntity<?> statisticTopProductSold(@RequestParam Integer limit,
+                                              @RequestParam(required = false) LocalDateTime startDate,
+                                              @RequestParam(required = false) LocalDateTime endDate) {
         try {
             List<Map<String, Object>> results;
 
@@ -61,9 +62,9 @@ public class StatisticController {
     }
 
     @GetMapping("/admin/getTopComboSold")
-    ResponseEntity<?> statisticTopComboSold(@RequestBody Integer limit,
-                                            @RequestBody(required = false) LocalDateTime startDate,
-                                            @RequestBody(required = false) LocalDateTime endDate) {
+    ResponseEntity<?> statisticTopComboSold(@RequestParam Integer limit,
+                                            @RequestParam(required = false) LocalDateTime startDate,
+                                            @RequestParam(required = false) LocalDateTime endDate) {
         try {
             List<Map<String, Object>> results;
 
@@ -83,8 +84,8 @@ public class StatisticController {
     }
 
     @GetMapping("/admin/getStockByPeriod")
-    ResponseEntity<?> statisticStockByPeriod(@RequestBody LocalDateTime startDate,
-                                             @RequestBody LocalDateTime endDate) {
+    ResponseEntity<?> statisticStockByPeriod(@RequestParam LocalDateTime startDate,
+                                             @RequestParam LocalDateTime endDate) {
         try {
             return ResponseEntity.ok(statisticService.getStockByPeriod(startDate, endDate));
         } catch (Exception e) {
