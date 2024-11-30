@@ -25,8 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -216,7 +215,7 @@ public class ProductImplementationTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 100000, "prueba.jpg", subcategoryDTO);
+        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 100000, "prueba.jpg", subcategoryDTO, null);
 
         when(productService.save(anyString(), any())).thenReturn(mockProduct);
 
@@ -253,7 +252,7 @@ public class ProductImplementationTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 99999, "prueba.jpg", subcategoryDTO);
+        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 99999, "prueba.jpg", subcategoryDTO, null);
 
         when(productService.save(anyString(), any())).thenReturn(mockProduct);
 
@@ -291,7 +290,7 @@ public class ProductImplementationTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 100001, "prueba.jpg", subcategoryDTO);
+        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 100001, "prueba.jpg", subcategoryDTO, null);
 
         when(productService.save(anyString(), any())).thenThrow(new IllegalArgumentException("El stock excede el límite de 100.000 unidades."));
 
@@ -330,7 +329,7 @@ public class ProductImplementationTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 0, "prueba.jpg", subcategoryDTO);
+        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 0, "prueba.jpg", subcategoryDTO, null);
 
         when(productService.save(anyString(), any())).thenReturn(mockProduct);
 
@@ -367,7 +366,7 @@ public class ProductImplementationTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 1, "prueba.jpg", subcategoryDTO);
+        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 1, "prueba.jpg", subcategoryDTO, null);
 
         when(productService.save(anyString(), any())).thenReturn(mockProduct);
 
@@ -404,7 +403,7 @@ public class ProductImplementationTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, -1, "prueba.jpg", subcategoryDTO);
+        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, -1, "prueba.jpg", subcategoryDTO, null);
 
         when(productService.save(anyString(), any())).thenThrow(new IllegalArgumentException("El stock debe ser un número positivo"));
 
