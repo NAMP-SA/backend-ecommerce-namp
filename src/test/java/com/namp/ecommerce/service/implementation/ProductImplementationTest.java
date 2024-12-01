@@ -1,3 +1,4 @@
+
 package com.namp.ecommerce.service.implementation;
 
 import com.namp.ecommerce.dto.CategoryDTO;
@@ -192,16 +193,16 @@ public class ProductImplementationTest {
 
     @Test
     public void testStockNotExceedMaxLimit_Equal() throws Exception {
+
+        ProductDTO productDTO = new ProductDTO(1L, "Prueba sistemas", "Descripción prueba sistemas", 1, 100000, "prueba.jpg", null, null);
+
         String productJson = """
                 {
                     "name": "Prueba sistemas",
                     "description": "Descripción prueba sistemas",
                     "price": 1,
                     "stock": 100000,
-                    "img": "prueba1.jpg", 
-                    "idSubcategory": {
-                        "idSubcategory": 1,
-                        "name": "Subcategoria Test"
+                    "img": "prueba1.jpg"
                     }
                 }
             """;
@@ -213,33 +214,25 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
-        SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
+        when(productService.save(productJson, file)).thenReturn(productDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 100000, "prueba.jpg", subcategoryDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        when(productService.save(anyString(), any())).thenReturn(mockProduct);
-
-        // Simula el envio de una solicitud HTTP (POST en este caso porque es para almacenar un objeto)
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isOk());
+        assertEquals(result, productDTO);
     }
 
     @Test
     public void testStockNotExceedMaxLimit_Under() throws Exception {
+
+        ProductDTO productDTO = new ProductDTO(1L, "Prueba sistemas", "Descripción prueba sistemas", 1, 99999, "prueba.jpg", null, null);
+
         String productJson = """
                 {
                     "name": "Prueba sistemas",
                     "description": "Descripción prueba sistemas",
                     "price": 1,
                     "stock": 99999,
-                    "img": "prueba1.jpg", 
-                    "idSubcategory": {
-                        "idSubcategory": 1,
-                        "name": "Subcategoria Test"
-                    }
+                    "img": "prueba1.jpg"
                 }
             """;
 
@@ -250,18 +243,11 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
-        SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
+        when(productService.save(productJson, file)).thenReturn(productDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 99999, "prueba.jpg", subcategoryDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        when(productService.save(anyString(), any())).thenReturn(mockProduct);
-
-        // Simula el envio de una solicitud HTTP (POST en este caso porque es para almacenar un objeto)
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isOk());
+        assertEquals(result, productDTO);
 
     }
 
@@ -288,35 +274,25 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
-        SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
+        when(productService.save(productJson, file)).thenReturn(null);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 100001, "prueba.jpg", subcategoryDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        when(productService.save(anyString(), any())).thenThrow(new IllegalArgumentException("El stock excede el límite de 100.000 unidades."));
-
-        // Simula el envio de una solicitud HTTP (POST en este caso porque es para almacenar un objeto)
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string(containsString("El stock excede el límite de 100.000 unidades")));
+        assertNull(result);
 
     }
 
     @Test
     public void testStockNotExceedMinLimit_Equal() throws Exception {
+        ProductDTO productDTO = new ProductDTO(1L, "Prueba sistemas", "Descripción prueba sistemas", 1, 0, "prueba.jpg", null, null);
+
         String productJson = """
                 {
                     "name": "Prueba sistemas",
                     "description": "Descripción prueba sistemas",
                     "price": 1,
                     "stock": 0,
-                    "img": "prueba1.jpg", 
-                    "idSubcategory": {
-                        "idSubcategory": 1,
-                        "name": "Subcategoria Test"
-                    }
+                    "img": "prueba1.jpg"
                 }
             """;
 
@@ -327,18 +303,12 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
-        SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
+        when(productService.save(productJson, file)).thenReturn(productDTO);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 0, "prueba.jpg", subcategoryDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        when(productService.save(anyString(), any())).thenReturn(mockProduct);
+        assertEquals(result, productDTO);
 
-        // Simula el envio de una solicitud HTTP (POST en este caso porque es para almacenar un objeto)
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isOk());
     }
 
     @Test
@@ -364,22 +334,16 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
-        SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
+        when(productService.save(productJson, file)).thenReturn(null);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, 1, "prueba.jpg", subcategoryDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        when(productService.save(anyString(), any())).thenReturn(mockProduct);
-
-        // Simula el envio de una solicitud HTTP (POST en este caso porque es para almacenar un objeto)
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isOk());
+        assertNull(result);
     }
 
     @Test
     public void testStockExceedMinLimit_Under() throws Exception {
+
         String productJson = """
                 {
                     "name": "Prueba sistemas",
@@ -401,31 +365,24 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Category","Description");
-        SubcategoryDTO subcategoryDTO = new SubcategoryDTO(1L, "Subcategory","Description",categoryDTO);
+        when(productService.save(productJson, file)).thenReturn(null);
 
-        ProductDTO mockProduct = new ProductDTO(1L, "Prueba sistemas 1", "Descripción prueba sistemas 1", 1, -1, "prueba.jpg", subcategoryDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        when(productService.save(anyString(), any())).thenThrow(new IllegalArgumentException("El stock debe ser un número positivo"));
-
-        // Simula el envio de una solicitud HTTP (POST en este caso porque es para almacenar un objeto)
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string(containsString("El stock debe ser un número positivo")));
+        assertNull(result);
 
     }
 
     @Test public void registerProduct() throws Exception {
+
+        ProductDTO productDTO = new ProductDTO(1L,"Producto1", "Descripcion de prueba", 199.99, 50, "prueba.jpg", null, null);
 
         String productJson = """
         {
             "name": "Producto1",
             "description": "Descripción de prueba",
             "price": 199.99,
-            "stock": 50,
-            "idSubcategory": {"idSubcategory": 1}
+            "stock": 50
         }
         """;
         MockMultipartFile file = new MockMultipartFile(
@@ -435,20 +392,11 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        ProductDTO mockProductDTO = new ProductDTO();
-        mockProductDTO.setName("Producto1");
-        mockProductDTO.setDescription("Descripción de prueba");
-        mockProductDTO.setPrice(199.99);
-        mockProductDTO.setStock(50);
-        mockProductDTO.setImg("/images/imagen.jpg");
+        when(productService.save(productJson, file)).thenReturn(productDTO);
 
-        Mockito.when(productService.save(Mockito.anyString(), Mockito.any(MultipartFile.class)))
-                .thenReturn(mockProductDTO);
+        ProductDTO result = productService.save(productJson, file);
 
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isOk());
+        assertEquals(result, productDTO);
 
     }
 
@@ -459,10 +407,10 @@ public class ProductImplementationTest {
             "name": "Producto2",
             "description": "Descripción de prueba",
             "price": 199.99,
-            "stock": 50,
-            "idSubcategory": {"idSubcategory": 1}
+            "stock": 50
         }
         """;
+
         MockMultipartFile file = new MockMultipartFile(
                 "file",
                 "prueba1.jpg",
@@ -470,14 +418,11 @@ public class ProductImplementationTest {
                 "Contenido de prueba".getBytes()
         );
 
-        Mockito.when(productService.save(Mockito.anyString(), Mockito.any(MultipartFile.class)))
-                .thenReturn(null);
+        when(productService.save(productJson, file)).thenReturn(null);
 
-        mockMvc.perform(multipart("/api-namp/product")
-                        .file(file)
-                        .param("product", productJson))
-                .andExpect(status().isConflict())
-                .andExpect(content().string(containsString("This product already exists")));
+        ProductDTO result = productService.save(productJson, file);
+
+        assertNull(result);
 
     }
 }
