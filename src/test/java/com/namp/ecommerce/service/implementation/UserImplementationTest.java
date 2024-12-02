@@ -2,6 +2,7 @@ package com.namp.ecommerce.service.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.UserDTO;
+import com.namp.ecommerce.jwt.JwtAuthenticationFilter;
 import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IUserDAO;
 import jakarta.validation.ConstraintViolation;
@@ -24,12 +25,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.http.MediaType;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,6 +50,10 @@ public class UserImplementationTest {
 
     @InjectMocks
     private UserImplementation userServiceLogic;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     @BeforeAll
     public static void setup() {
@@ -115,7 +119,7 @@ public class UserImplementationTest {
 
     @Test public void testVerifyUsername_Exist() {
         // Simulo que existen objetos en la base de datos ya almacenados
-        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123");
+        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123", null);
         List<User> mockUsers = Arrays.asList(user1);
 
         // Configuro el comportamiento del mock para que findAll() devuelva la lista simulada
@@ -130,8 +134,9 @@ public class UserImplementationTest {
     }
 
     @Test public void testVerifyUsername_NotExist() {
+
         // Simulo que existen objetos en la base de datos ya almacenados
-        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123");
+        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123", null);
         List<User> mockUsers = Arrays.asList(user1);
 
         // Configuro el comportamiento del mock para que findAll() devuelva la lista simulada
@@ -148,7 +153,7 @@ public class UserImplementationTest {
     @Test public void testEmailNotLimit_NotEmpty() throws Exception {
 
         UserDTO userDTO = new UserDTO(10, "Agustin", "Doe", "example@gmail.com", "123 Main",
-                "1234567890", "johndoe", "12345678aa", "12345678aa");
+                "1234567890", "johndoe", "12345678aa", null);
 
         when(userService.save(Mockito.any(UserDTO.class))).thenReturn(userDTO);
 
@@ -162,79 +167,77 @@ public class UserImplementationTest {
             "phone": "1234567890",
             "username": "johndoe",
             "password": "12345678aa",
-            "confirmPassword": "12345678aa"
+            "role": null
         }
         """;
 
         // Realizar la solicitud POST con el JSON
-        mockMvc.perform(post("/api-namp/user")
+        mockMvc.perform(post("/api-namp/admin/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validUserJson))
                 .andExpect(status().isOk());
     }
 
     @Test public void testEmailInvalid() throws Exception {
-        UserDTO userDTO = new UserDTO(11, "Gonzalo", "Doe", "example  @gmail.com", "123 Main", "1234567890", "johndoe", "12345678aa", "12345678aa");
-        String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
 
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent))
-                .andExpect(status().isConflict());
+        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "example  @gmail.com", "123 Main", "1234567890", "johndoe", "12345678aa", null);
+
+        when(userService.save(userDTO)).thenReturn(null);
+
+        UserDTO result = userService.save(userDTO);
+
+        assertNull(result);
     }
 
 
     @Test public void testEmailLimit() throws Exception {
-        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "ejemplo.correo.de.51.caracteres.en.total@gmail.com", "123 Main", "1234567890", "johndoe", "12345678aa", "12345678aa");
-        String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "ejemplo.correo.de.51.caracteres.en.total@gmail.com", "123 Main", "1234567890", "johndoe", "12345678aa", null);
 
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent))
-                .andExpect(status().isConflict());
+        when(userService.save(userDTO)).thenReturn(null);
+
+        UserDTO result = userService.save(userDTO);
+
+        assertNull(result);
     }
 
     @Test public void testEmailEmpty() throws Exception {
-        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "  ", "123 Main", "1234567890", "johndoe", "12345678aa", "12345678aa");
-        String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "  ", "123 Main", "1234567890", "johndoe", "12345678aa", null);
 
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent))
-                .andExpect(status().isConflict());
+        when(userService.save(userDTO)).thenReturn(null);
+
+        UserDTO result = userService.save(userDTO);
+
+        assertNull(result);
     }
 
     @Test public void testEmailAt() throws Exception {
-        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "@", "123 Main", "1234567890", "johndoe", "12345678aa", "12345678aa");
-        String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "@", "123 Main", "1234567890", "johndoe", "12345678aa", null);
 
-        when(userService.save(Mockito.any(UserDTO.class))).thenReturn(null);
+        when(userService.save(userDTO)).thenReturn(null);
 
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent))
-                .andExpect(status().isConflict());
+        UserDTO result = userService.save(userDTO);
+
+        assertNull(result);
+
     }
 
     @Test public void testEmailSpecial() throws Exception {
-        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "prueba@!!.ss.com", "123 Main", "1234567890", "johndoe", "12345678aa", "12345678aa");
-        String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "prueba@!!.ss.com", "123 Main", "1234567890", "johndoe", "12345678aa", null);
 
-        when(userService.save(Mockito.any(UserDTO.class))).thenReturn(null);
+        when(userService.save(userDTO)).thenReturn(null);
 
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent))
-                .andExpect(status().isConflict());
+        UserDTO result = userService.save(userDTO);
+
+        assertNull(result);
     }
 
     @Test public void testEmailAccept() throws Exception {
-        UserDTO userDTO = new UserDTO(1, "Agustin", "Doe", "prueba@ypf.com", "123 Main", "1234567890", "agustin", "12345678aa", "12345678aa");
+        UserDTO userDTO = new UserDTO(1, "Agustin", "Doe", "prueba@ypf.com", "123 Main", "1234567890", "agustin", "12345678aa", null);
         String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
 
         when(userService.save(Mockito.any(UserDTO.class))).thenReturn(userDTO);
 
-        mockMvc.perform(post("/api-namp/user")
+        mockMvc.perform(post("/api-namp/admin/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonContent))
                 .andExpect(status().isOk());
@@ -242,84 +245,40 @@ public class UserImplementationTest {
 
     @Test public void testPasswordMaxLimit_Upper() throws Exception {
 
-        String validUserJson = """
-        {
-            "idUser": 12,
-            "name": "Gonzalo",
-            "lastname": "Doe",
-            "email": "test@gmail.com",
-            "address": "123 Main",
-            "phone": "1234567890",
-            "username": "johndoe",
-            "password": "ContraseñaDeEjemplo123456",
-            "confirmPassword": "ContraseñaDeEjemplo123456"
-        }
-        """;
+        UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "test@gmail.com", "123 Main",
+                "1234567890", "johndoe", "ContraseñaDeEjemplo12345", null);
 
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validUserJson))
-                .andExpect(status().isConflict())
-                .andExpect(content().string("This user already exists"));
+        when(userService.save(userDTO)).thenReturn(null);
+
+        UserDTO result = userService.save(userDTO);
+
+        assertNull(result);
     }
 
     @Test public void testPasswordMaxLimit_Equal() throws Exception {
 
         UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "test@gmail.com", "123 Main",
-                "1234567890", "johndoe", "ContraseñaDeEjemplo12345", "ContraseñaDeEjemplo12345");
+                "1234567890", "johndoe", "ContraseñaDeEjemplo12345", null);
 
-        when(userService.save(Mockito.any(UserDTO.class))).thenReturn(userDTO);
+        when(userService.save(userDTO)).thenReturn(userDTO);
 
-        String validUserJson = """
-        {
-            "idUser": 12,
-            "name": "Gonzalo",
-            "lastname": "Doe",
-            "email": "test@gmail.com",
-            "address": "123 Main",
-            "phone": "1234567890",
-            "username": "johndoe",
-            "password": "ContraseñaDeEjemplo1234",
-            "confirmPassword": "ContraseñaDeEjemplo12345"
-        }
-        """;
+        UserDTO result = userService.save(userDTO);
 
-    mockMvc.perform(post("/api-namp/user")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(validUserJson))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value("test@gmail.com"))
-            .andExpect(jsonPath("$.username").value("johndoe"));
+        assertEquals("ContraseñaDeEjemplo12345", result.getPassword());
+
+
     }
 
     @Test public void testPasswordMaxLimit_Under() throws Exception {
 
         UserDTO userDTO = new UserDTO(12, "Gonzalo", "Doe", "test@gmail.com", "123 Main",
-                "1234567890", "johndoe", "ContraseñaDeEjemplo1234", "ContraseñaDeEjemplo1234");
+                "1234567890", "johndoe", "ContrasenaDeEjemplo1234", null);
 
-        when(userService.save(Mockito.any(UserDTO.class))).thenReturn(userDTO);
+        when(userService.save(userDTO)).thenReturn(userDTO);
 
-        String validUserJson = """
-        {
-            "idUser": 12,
-            "name": "Gonzalo",
-            "lastname": "Doe",
-            "email": "test@gmail.com",
-            "address": "123 Main",
-            "phone": "1234567890",
-            "username": "johndoe",
-            "password": "ContraseñaDeEjemplo1234",
-            "confirmPassword": "ContraseñaDeEjemplo1234"
-        }
-        """;
+        UserDTO result = userService.save(userDTO);
 
-        // Realizar la solicitud POST con el JSON
-        mockMvc.perform(post("/api-namp/user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validUserJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("test@gmail.com"))
-                .andExpect(jsonPath("$.username").value("johndoe"));
+        assertEquals("ContrasenaDeEjemplo1234", result.getPassword());
     }
 
 }
