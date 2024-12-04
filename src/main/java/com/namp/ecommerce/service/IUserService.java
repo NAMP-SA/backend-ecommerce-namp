@@ -20,4 +20,5 @@ public interface IUserService {
     boolean findById(long id);
     UserAnswerDTO getUserById(long id);
     UserDTO findByUsername(String username);
+    UserAnswerDTO getUserByUsername(String username);
 }

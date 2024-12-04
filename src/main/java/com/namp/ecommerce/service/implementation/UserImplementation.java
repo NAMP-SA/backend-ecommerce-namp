@@ -44,6 +44,12 @@ public class UserImplementation implements IUserService {
     }
 
     @Override
+    public UserAnswerDTO getUserByUsername(String username) {
+        User user = userDAO.findByUsername(username).orElseThrow();
+        return mapperUser.convertUserToUserAnswerDTO(user);
+    }
+
+    @Override
     public UserDTO save(UserDTO userDTO) {
         //Normalizo el email del usuario
         String normalizedEmail = userDTO.getEmail().replaceAll("\\s+", " ").trim().toUpperCase();

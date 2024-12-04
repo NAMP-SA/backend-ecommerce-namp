@@ -473,6 +473,7 @@ public class MapperUtil {
         userAnswerDTO.setAddress(user.getAddress());
         userAnswerDTO.setPhone(user.getPhone());
         userAnswerDTO.setUsername(user.getUsername());
+        userAnswerDTO.setRole(user.getRole());
 
         return userAnswerDTO;
     }

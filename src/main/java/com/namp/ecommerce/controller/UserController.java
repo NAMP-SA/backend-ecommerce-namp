@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/admin/user")
+    @GetMapping("/admin/users")
     public ResponseEntity<?> getUsers() {
         try {
             return ResponseEntity.ok(userService.getUsers()); // 200 OK
@@ -27,13 +27,18 @@ public class UserController {
         }
     }
 
-    @GetMapping("/admin/user/{id}")
-    public ResponseEntity<?> getUserId(@PathVariable long id) {
-        try {
-            return ResponseEntity.ok(userService.getUserById(id)); // 200 OK
+    @GetMapping("/admin/user")
+    public ResponseEntity<?> getUser(@RequestParam(required = false) Long id, @RequestParam(required = false) String username) {
+        try{
+            if(id!=null){
+                return ResponseEntity.ok(userService.getUserById(id)); // 200 OK
+            } else if (username!=null){
+                return ResponseEntity.ok(userService.getUserByUsername(username)); // 200 OK
+            }
+            return ResponseEntity.badRequest().body("Debe proporcionar un ID o un username");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred: " + e.getMessage());  //500
+                .body("An error occurred: " + e.getMessage());  //500
         }
     }
 
