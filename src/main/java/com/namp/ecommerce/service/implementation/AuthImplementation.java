@@ -3,17 +3,12 @@ package com.namp.ecommerce.service.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.namp.ecommerce.auth.AuthResponse;
 import com.namp.ecommerce.auth.LoginRequest;
 import com.namp.ecommerce.auth.RegisterRequest;
 import com.namp.ecommerce.dto.UserDTO;
-import com.namp.ecommerce.mapper.MapperUser;
-import com.namp.ecommerce.model.User;
-import com.namp.ecommerce.repository.IUserDAO;
 import com.namp.ecommerce.service.IAuthService;
 import com.namp.ecommerce.service.IJwtService;
 import com.namp.ecommerce.service.IUserService;
@@ -25,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthImplementation implements IAuthService {
     
-    @Autowired
-    private IUserDAO userDAO;
 
     @Autowired
     private IUserService userService; 
@@ -34,8 +27,6 @@ public class AuthImplementation implements IAuthService {
     @Autowired
     private final IJwtService jwtService; 
 
-    @Autowired
-    private MapperUser mapperUser;
 
     private final PasswordEncoder passwordEncoder;
 

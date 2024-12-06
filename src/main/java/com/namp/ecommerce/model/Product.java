@@ -1,9 +1,7 @@
 package com.namp.ecommerce.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,19 +24,22 @@ public class Product implements Serializable{
     @Column(name = "idProduct")
     private long idProduct;
 
-    @NotNull(message = "El nombre no debe estar vacio")
+    @NotBlank(message = "El nombre no puede estar vacío ni contener solo espacios")
     @Pattern(regexp = "^[a-zA-Z0-9 ]*$", message = "El nombre solo puede contener caracteres alfanuméricos")
     private String name;
 
-    @NotNull(message = "La descripcion no debe estar vacio")
+    @NotNull(message = "La descripcion no debe estar vacia")
+    @Size(max = 200, message = "La descripción no puede tener más de 200 caracteres")
     private String description;
 
     @NotNull(message = "El precio no debe estar vacio")
     @Min(value = 0, message = "El precio debe ser un número positivo")
+    @Max(value = 500000, message = "El precio limite es de $500.000")
     private double price;
 
     @NotNull(message = "El stock no debe estar vacio")
     @Min(value = 0, message = "El stock debe ser un número positivo")
+    @Max(value = 100000, message = "El stock limite es de 100.000 unidades")
     private int stock;
 
     @Value("${image.upload.dir}")
@@ -47,7 +48,10 @@ public class Product implements Serializable{
 
     @OneToMany(mappedBy = "idProduct",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<RegisterStock> registerStocks = new ArrayList<>();
-    
+
+    @Transient
+    int simulatedStock;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_subcategory", referencedColumnName = "idSubcategory")
@@ -55,4 +59,12 @@ public class Product implements Serializable{
 
     @OneToMany(mappedBy = "idProduct")
     private List<ProductCombo> productCombo = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idProduct")
+    private List<OrderDetail> orderDetail = new ArrayList<>();
+
+
+    @ManyToOne
+    @JoinColumn(name = "fk_promotion", referencedColumnName = "idPromotion", nullable = true)
+    private Promotion idPromotion;
 }

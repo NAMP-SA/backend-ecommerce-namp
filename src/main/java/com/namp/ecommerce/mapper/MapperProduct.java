@@ -1,22 +1,23 @@
 package com.namp.ecommerce.mapper;
 
-import com.namp.ecommerce.dto.CategoryDTO;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
-import com.namp.ecommerce.dto.SubcategoryDTO;
 import com.namp.ecommerce.model.Product;
+import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
 
 @Component
 public class MapperProduct {
 
     @Autowired
     private ISubcategoryDAO subcategoryDAO;
+
+    @Autowired
+    private IPromotionDAO promotionDAO;
 
     @Autowired
     private MapperUtil mapperUtil;
@@ -30,6 +31,11 @@ public class MapperProduct {
         product.setStock(productDTO.getStock());
         product.setImg(productDTO.getImg());
         product.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
+
+        if(productDTO.getIdPromotion() != null){
+            product.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        }
+
 
         return product;
     }

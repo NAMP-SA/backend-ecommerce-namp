@@ -1,5 +1,6 @@
 package com.namp.ecommerce.dto;
 
+import com.namp.ecommerce.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,6 @@ public class UserAnswerDTO {
     private String address;
     private String phone;
     private String username;
+    private Role role;
 
 }

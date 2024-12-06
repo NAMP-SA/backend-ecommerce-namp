@@ -4,7 +4,6 @@ import com.namp.ecommerce.dto.ProductComboDTO;
 import com.namp.ecommerce.model.ProductCombo;
 import com.namp.ecommerce.repository.IComboDAO;
 import com.namp.ecommerce.repository.IProductDAO;
-import com.namp.ecommerce.service.IProductComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

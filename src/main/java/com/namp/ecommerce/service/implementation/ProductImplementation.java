@@ -3,12 +3,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
+import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.mapper.MapperProduct;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IProductDAO;
+import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
 import com.namp.ecommerce.service.IProductService;
 import com.namp.ecommerce.error.InvalidFileFormatException;
+import com.namp.ecommerce.exception.DeletionException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,7 +21,6 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -36,6 +38,9 @@ public class ProductImplementation implements IProductService{
 
     @Autowired
     private ISubcategoryDAO subcategoryDAO;
+
+    @Autowired
+    private IPromotionDAO promotionDAO;
 
     @Autowired
     private MapperProduct mapperProduct;
@@ -157,8 +162,12 @@ public class ProductImplementation implements IProductService{
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setPrice(productDTO.getPrice());
         existingProduct.setStock(productDTO.getStock());
-        //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente
+
+        //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente, lo mismo para la Promocion en base a promotionDTO seteada en productDTO.
         existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
+        if(productDTO.getIdPromotion() != null){
+            existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        }
 
             //Hago la verificacion de imagen
             if (file != null && !file.isEmpty()){
@@ -205,8 +214,7 @@ public class ProductImplementation implements IProductService{
             try {
                 Files.delete(filePath);
             } catch (IOException e) {
-                throw new RuntimeException(product.getName(), e);
-            }
+                throw new DeletionException("Error deleting the product: " + product.getName(), e);            }
         }
 
         // Luego elimino el objeto producto de la base de datos
@@ -252,7 +260,6 @@ public class ProductImplementation implements IProductService{
         return false;
     }
 
-
     @Override
     public void increaseStock(ProductDTO productDTO, int quantity) {
         Product product = productDAO.findByIdProduct(productDTO.getIdProduct());
@@ -262,7 +269,7 @@ public class ProductImplementation implements IProductService{
 
 
     @Override
-    public void decraseStock(ProductDTO productDTO, int quantity) {
+    public void decreaseStock(ProductDTO productDTO, int quantity) {
         if (productDTO.getStock() < quantity) {
             throw new IllegalArgumentException("Insufficient stock for product with ID: " + productDTO.getIdProduct());
         }
@@ -270,5 +277,27 @@ public class ProductImplementation implements IProductService{
         product.setStock(product.getStock()-quantity);
         productDAO.save(product);
     }
-    
+
+
+    @Override
+    public boolean checkStock(ProductDTO productDTO, int quantity) {
+        Product product = productDAO.findByIdProduct(productDTO.getIdProduct());
+        if (product.getSimulatedStock() < quantity) {
+            return false;
+        }
+
+        product.setSimulatedStock(product.getSimulatedStock() - quantity);
+        return true;
+    }
+
+
+    @Override
+    public double getDiscountPrice(ProductDTO productDTO) {
+       PromotionDTO promotionDTO = productDTO.getIdPromotion();
+       if(promotionDTO != null && promotionDTO.isInEffect()){
+        return productDTO.getPrice() - (productDTO.getPrice() * promotionDTO.getDiscount() / 100);
+       }
+       return productDTO.getPrice();
+    }
+
 }

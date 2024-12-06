@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import com.namp.ecommerce.service.IProductService;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 @RestController
 @RequestMapping("/api-namp")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class ProductController {
 
     @Autowired
@@ -78,6 +77,7 @@ public class ProductController {
             }
 
             return ResponseEntity.ok(createdProductDTO);
+        // 400 En el caso de que la imagen no cumpla el formato
         }catch (InvalidFileFormatException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
