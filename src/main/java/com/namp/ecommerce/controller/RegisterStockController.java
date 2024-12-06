@@ -16,7 +16,7 @@ public class RegisterStockController {
     @Autowired
     private IRegisterStockService registerStockService;
 
-    @GetMapping("registerStock")
+    @GetMapping("/admin/registerStock")
     public ResponseEntity<?> getRegisterStocks(){
         try{
             return ResponseEntity.ok(registerStockService.getRegisterStocks());
