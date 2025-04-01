@@ -16,29 +16,32 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name= "\"order\"")
+@Table(name = "\"order\"")
 public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idOrder")
-    private long idOrder;   
+    private long idOrder;
 
     @NotNull(message = "La fecha y hora no puede ser vacío")
-    private Timestamp  dateTime;
-    
+    private Timestamp dateTime;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_user", referencedColumnName = "idUser")
-    private User idUser; 
+    private User idUser;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "fk_state", referencedColumnName = "idState")
-    private State idState; 
-    
-    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL,orphanRemoval = true)
+    private State idState;
+
+    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetail = new ArrayList<>();
+
+    @OneToOne(mappedBy = "idOrder")
+    private DiscountCoupon discountCoupon;
 
     public double calculateTotal() {
         return this.orderDetail.stream()
@@ -46,5 +49,4 @@ public class Order implements Serializable {
                 .sum();
     }
 
-    
 }
