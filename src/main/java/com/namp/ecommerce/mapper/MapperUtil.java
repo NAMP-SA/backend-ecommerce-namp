@@ -342,6 +342,7 @@ public class MapperUtil {
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
+        orderDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
 
         return orderDTO;
     }

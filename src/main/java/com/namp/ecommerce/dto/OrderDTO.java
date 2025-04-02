@@ -10,13 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDTO {
-    private long idOrder; 
-    private Timestamp dateTime; 
-    private StateDTO idState; 
-    private UserDTO idUser; 
+    private long idOrder;
+    private Timestamp dateTime;
+    private StateDTO idState;
+    private UserDTO idUser;
+    private DiscountCouponDTO idDiscountCoupon;
 
 }
-
-
-
-
