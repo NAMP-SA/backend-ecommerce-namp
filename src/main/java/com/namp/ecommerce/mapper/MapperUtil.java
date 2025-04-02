@@ -338,7 +338,6 @@ public class MapperUtil {
         OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setIdOrder(order.getIdOrder());
-        // orderDTO.setTotal(order.getTotal());
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));

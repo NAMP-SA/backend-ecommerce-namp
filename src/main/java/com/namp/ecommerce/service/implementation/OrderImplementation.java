@@ -102,10 +102,15 @@ public class OrderImplementation implements IOrderService {
 
     @Override
     public OrderDTO findById(long id) {
+
         Order order = orderDAO.findByIdOrder(id);
+
         if (order == null) {
+
             return null;
+
         }
+
         return mapperOrder.convertOrderToDTO(order);
     }
 

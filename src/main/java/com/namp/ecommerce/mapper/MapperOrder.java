@@ -28,6 +28,7 @@ public class MapperOrder {
     // Metodo para convertir de OrderDTO a OrderDTO
     public Order convertDtoToOrder(OrderDTO orderDTO) {
         Order order = new Order();
+        
         // order.setTotal(orderDTO.getTotal());
         order.setDateTime(orderDTO.getDateTime());
         order.setIdState(stateDAO.findByIdState(orderDTO.getIdState().getIdState()));

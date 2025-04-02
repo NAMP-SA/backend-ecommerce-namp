@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.namp.ecommerce.dto.OrderDTO;
+import com.namp.ecommerce.model.DiscountCoupon;
 import com.namp.ecommerce.model.Order;
 import com.namp.ecommerce.service.IOrderService;
 
@@ -99,6 +99,7 @@ public class OrderController {
     public ResponseEntity<?> updateOrder(@PathVariable long id, @Valid @RequestBody Order order) {
         try {
             OrderDTO existingOrderDTO = orderService.findById(id);
+
             if (existingOrderDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("The order does not exists ");
@@ -116,16 +117,24 @@ public class OrderController {
         }
     }
 
+    /**
+     * Agrega un cupon de descuento a un pedido
+     * @param id                idPedido
+     * @param discountCoupon    Objeto de cupon
+     * @return estado Http
+    */
     @PostMapping("/user/order/addCoupon/{id}")
-    public ResponseEntity<?> addCoupon(@PathVariable long id, @Valid @RequestBody String couponCode) {
+    public ResponseEntity<?> addCoupon(@PathVariable long id, @RequestBody DiscountCoupon discountCoupon) {
         try {
-            OrderDTO existingOrderDTO = orderService.findById(id);
-            if (existingOrderDTO == null) {
+            
+            OrderDTO orderDTO = orderService.findById(id);
+
+            if (orderDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("The order does not exists ");
             }
 
-            OrderDTO orderDTOWithCoupon = orderService.addCoupon(id, couponCode);
+            OrderDTO orderDTOWithCoupon = orderService.addCoupon(id, discountCoupon.getCodigo());
             if (orderDTOWithCoupon == null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body("The coupon does not exists or is not valid");
