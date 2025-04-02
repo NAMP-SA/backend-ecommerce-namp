@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.namp.ecommerce.dto.CategoryDTO;
 import com.namp.ecommerce.dto.DiscountCouponDTO;
-import com.namp.ecommerce.model.Category;
 import com.namp.ecommerce.model.DiscountCoupon;
+import com.namp.ecommerce.service.IDiscountCouponService;
 
 import jakarta.validation.Valid;
 
@@ -25,17 +24,17 @@ public class DiscountCouponController {
     @Autowired
     private IDiscountCouponService discountCouponService;
 
-    @GetMapping("discount-coupon")
+    @GetMapping("coupon")
     public ResponseEntity<?> getCoupons() {
         try {
-            return ResponseEntity.ok(discountCouponService.getCoupons());
+            return ResponseEntity.ok(discountCouponService.getDiscountCoupons());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error showing the coupons:" + e.getMessage());
         }
     }
 
-    @PostMapping("/admin/coupons")
+    @PostMapping("/admin/coupon")
     public ResponseEntity<?> createCoupon(@Valid @RequestBody DiscountCouponDTO discountCouponDTO) {
         try {
             DiscountCouponDTO createdDiscountCouponDTO = discountCouponService.save(discountCouponDTO);
@@ -51,7 +50,7 @@ public class DiscountCouponController {
         }
     }
 
-    @DeleteMapping("/admin/category/{id}")
+    @DeleteMapping("/admin/coupon/{id}")
     public ResponseEntity<?> deleteCoupon(@PathVariable long id) {
         try {
             DiscountCouponDTO discountCouponDTO = discountCouponService.findById(id);
@@ -70,7 +69,7 @@ public class DiscountCouponController {
         }
     }
 
-    @PutMapping("/admin/category/{id}")
+    @PutMapping("/admin/coupon/{id}")
     public ResponseEntity<?> updateCoupon(@PathVariable long id, @Valid @RequestBody DiscountCoupon discountCoupon) {
         try {
             DiscountCouponDTO existingDiscountCouponDTO = discountCouponService.findById(id);

@@ -40,7 +40,8 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetail = new ArrayList<>();
 
-    @OneToOne(mappedBy = "idOrder")
+    @OneToOne()
+    @JoinColumn(name = "discount_coupon_id")
     private DiscountCoupon discountCoupon;
 
     public double calculateTotal() {

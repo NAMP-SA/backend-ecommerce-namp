@@ -34,6 +34,6 @@ public class DiscountCoupon {
 
     private boolean vigente;
 
-    @OneToOne(mappedBy = "idCoupon")
+    @OneToOne(mappedBy = "discountCoupon")
     private Order order;
 }
