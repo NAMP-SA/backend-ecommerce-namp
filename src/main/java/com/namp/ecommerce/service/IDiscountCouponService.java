@@ -7,7 +7,7 @@ import com.namp.ecommerce.model.DiscountCoupon;
 
 public interface IDiscountCouponService {
 
-    List<DiscountCoupon> getDiscountCoupons();
+    List<DiscountCouponDTO> getDiscountCoupons();
 
     DiscountCouponDTO save(DiscountCouponDTO discountCouponDTO);
 

@@ -11,7 +11,7 @@ public class MapperDiscountCoupon {
     @Autowired
     private MapperUtil mapperUtil;
 
-    private DiscountCoupon convertDtoToDiscountCoupon(DiscountCouponDTO discountCouponDTO) {
+    public DiscountCoupon convertDtoToDiscountCoupon(DiscountCouponDTO discountCouponDTO) {
         DiscountCoupon discountCoupon = new DiscountCoupon();
 
         discountCoupon.setCodigo(discountCouponDTO.getCodigo());
@@ -19,5 +19,10 @@ public class MapperDiscountCoupon {
         discountCoupon.setVigente(discountCouponDTO.isVigente());
 
         return discountCoupon;
+    }
+
+    public DiscountCouponDTO convertDiscountCouponToDTO(DiscountCoupon discountCoupon) {
+        DiscountCouponDTO discountCouponDTO = mapperUtil.convertDiscountCouponToDto(discountCoupon);
+        return discountCouponDTO;
     }
 }
