@@ -61,7 +61,7 @@ public class PromotionImplementation implements IPromotionService {
             
 
             if (promotionDTO.getDateTimeStart() == null || promotionDTO.getDateTimeEnd() == null) {
-                throw new IllegalArgumentException("La fecha de inicio y la fecha de fin no deben ser nulas.");
+                throw new IllegalArgumentException("The start date and the end date must not be void.");
             }
     
             if (promotionDTO.getDateTimeEnd().before(promotionDTO.getDateTimeStart())) {
@@ -70,7 +70,10 @@ public class PromotionImplementation implements IPromotionService {
             
             promotionDTO.setName(nomralizedName);
 
+            //Convertir el DTO a entidad
             Promotion promotion = mapperPromotion.convertDtoToPromotion(promotionDTO);
+
+            
             Promotion savedPromotion = promotionDAO.save(promotion); 
             return mapperPromotion.convertPromotionToDto(savedPromotion); 
         
@@ -106,7 +109,9 @@ public class PromotionImplementation implements IPromotionService {
         existingPromotion.setName(nomralizedName); 
         existingPromotion.setDateTimeStart(promotion.getDateTimeStart());
         existingPromotion.setDateTimeEnd(promotion.getDateTimeEnd());
-        existingPromotion.setInEffect(promotion.isInEffect()); 
+        //existingPromotion.setInEffect(promotion.isInEffect()); 
+
+       
 
         //Guardar la promocion actualizada
         Promotion updatedPromotion = promotionDAO.save(existingPromotion); 

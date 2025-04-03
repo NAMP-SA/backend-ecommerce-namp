@@ -131,8 +131,16 @@ public class MapperUtil {
 
         productDTO.setIdSubcategory(this.convertSubcategoryToDto(product.getIdSubcategory()));
 
-        if(product.getIdPromotion() != null){
-            productDTO.setIdPromotion(this.convertPromotionToDTO(product.getIdPromotion()));
+        if (product.getIdPromotion() != null) {
+            Promotion promotion = product.getIdPromotion();
+            if (promotion.isInEffect()) {
+                productDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
+            } else {
+                productDTO.setSellingPrice(product.getPrice());
+            }
+            productDTO.setIdPromotion(this.convertPromotionToDTO(promotion));
+        } else {
+            productDTO.setSellingPrice(product.getPrice());
         }
 
         return productDTO;
@@ -161,6 +169,17 @@ public class MapperUtil {
         productDTO.setStock(product.getStock());
         productDTO.setImg(product.getImg());
 
+        if (product.getIdPromotion() != null) {
+            Promotion promotion = product.getIdPromotion();
+            if (promotion.isInEffect()) {
+                productDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
+            } else {
+                productDTO.setSellingPrice(product.getPrice());
+            }
+        } else {
+            productDTO.setSellingPrice(product.getPrice());
+        }
+
         productDTO.setProductCombo(product.getProductCombo()
                 .stream()
                 .map(this::convertProductComboToDto)
@@ -179,6 +198,17 @@ public class MapperUtil {
         productWithDoDTO.setStock(product.getStock());
         productWithDoDTO.setImg(product.getImg());
 
+        if (product.getIdPromotion() != null) {
+            Promotion promotion = product.getIdPromotion();
+            if (promotion.isInEffect()) {
+                productWithDoDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
+            } else {
+                productWithDoDTO.setSellingPrice(product.getPrice());
+            }
+        } else {
+            productWithDoDTO.setSellingPrice(product.getPrice());
+        }
+
         productWithDoDTO.setOrderDetail(product.getOrderDetail()
                 .stream()
                 .map(this::convertOrderDetailToDto)
@@ -196,6 +226,17 @@ public class MapperUtil {
         productDTO.setPrice(product.getPrice());
         productDTO.setStock(product.getStock());
         productDTO.setImg(product.getImg());
+
+        if (product.getIdPromotion() != null) {
+            Promotion promotion = product.getIdPromotion();
+            if (promotion.isInEffect()) {
+                productDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
+            } else {
+                productDTO.setSellingPrice(product.getPrice());
+            }
+        } else {
+            productDTO.setSellingPrice(product.getPrice());
+        }
 
         productDTO.setRegisterStocks(product.getRegisterStocks()
             .stream()
@@ -397,7 +438,7 @@ public class MapperUtil {
         promotionDTO.setDiscount(promotion.getDiscount());
         promotionDTO.setDateTimeStart(promotion.getDateTimeStart());
         promotionDTO.setDateTimeEnd(promotion.getDateTimeEnd());
-        promotionDTO.setInEffect(promotion.isInEffect());
+        //promotionDTO.setInEffect(promotion.isInEffect());
 
 
         return promotionDTO;
@@ -411,7 +452,7 @@ public class MapperUtil {
         promotionWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
-        promotionWithProductsDTO.setInEffect(promotion.isInEffect());
+        //promotionWithProductsDTO.setInEffect(promotion.isInEffect());
 
 
         promotionWithProductsDTO.setProducts(promotion.getProducts()
@@ -430,7 +471,7 @@ public class MapperUtil {
         promotionIdWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionIdWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionIdWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
-        promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
+        //promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
 
         promotionIdWithProductsDTO.setProducts(promotion.getProducts()
                 .stream()

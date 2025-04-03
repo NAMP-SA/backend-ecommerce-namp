@@ -15,7 +15,7 @@ public class PromotionWithProductsDTO {
     private double discount; 
     private Timestamp dateHourStart; 
     private Timestamp dateHourEnd; 
-    private boolean inEffect; 
+    //private boolean inEffect; 
 
     private List<ProductDTO> products;
 }

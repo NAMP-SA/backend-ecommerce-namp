@@ -2,6 +2,7 @@ package com.namp.ecommerce.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +53,18 @@ public class Promotion implements Serializable{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp  dateTimeEnd;
 
-    private boolean inEffect; 
 
     @OneToMany(mappedBy = "idPromotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
-    
+
+    //Metodo que devuelve un True en caso de que la promocion este vigente, false en caso contrario
+    //Se considera vigente si la fecha y hora actual es mayor o igual a la fecha y hora de inicio y menor o igual a la fecha y hora de fin
+    public boolean isInEffect() {
+        Timestamp now = Timestamp.from(Instant.now());
+        if(this.dateTimeStart == null || this.dateTimeEnd == null) {
+            return false; 
+        }
+
+        return !now.before(this.dateTimeStart) && !now.after(this.dateTimeEnd);
+    }   
 }

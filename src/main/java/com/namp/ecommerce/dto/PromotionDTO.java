@@ -22,5 +22,5 @@ public class PromotionDTO {
     private Timestamp dateTimeStart; 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp dateTimeEnd; 
-    private boolean inEffect; 
+    //private boolean inEffect; 
 }
