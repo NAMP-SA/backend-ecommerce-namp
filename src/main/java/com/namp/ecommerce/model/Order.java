@@ -45,9 +45,17 @@ public class Order implements Serializable {
     private DiscountCoupon idDiscountCoupon;
 
     public double calculateTotal() {
-        return this.orderDetail.stream()
+        Double total = this.orderDetail.stream()
                 .mapToDouble(OrderDetail::getSubTotal)
                 .sum();
-    }
+        
+        if (idDiscountCoupon != null) {
 
+            double discount = idDiscountCoupon.getDescuento(); 
+            total -= total * (discount / 100);
+
+        }
+
+    return total;
+    }
 }

@@ -33,7 +33,11 @@ public class MapperOrder {
         order.setDateTime(orderDTO.getDateTime());
         order.setIdState(stateDAO.findByIdState(orderDTO.getIdState().getIdState()));
         order.setIdUser(userDAO.findByIdUser(orderDTO.getIdUser().getIdUser()));
-        order.setIdDiscountCoupon(discountCouponDAO.findById(orderDTO.getIdDiscountCoupon().getIdDiscountCoupon()));
+
+        if (orderDTO.getIdDiscountCoupon() != null) {
+            order.setIdDiscountCoupon(discountCouponDAO.findById(orderDTO.getIdDiscountCoupon().getIdDiscountCoupon()));
+
+        }
         return order;
     }
 

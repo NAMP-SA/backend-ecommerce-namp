@@ -117,6 +117,7 @@ public class OrderImplementation implements IOrderService {
     @Override
     public OrderWithDoDTO getOrdersIdWithOrderDetails(long id) {
         Order order = orderDAO.findByIdOrder(id);
+
         if (order == null) {
             return null;
         }
@@ -192,6 +193,9 @@ public class OrderImplementation implements IOrderService {
 
         Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder());
         order.setIdState(stateDAO.findByIdState(2));
+        
+        order.getIdDiscountCoupon().setVigente(false);
+
         Order savedOrder = orderDAO.save(order);
 
         // Convertir la entidad guardada de nuevo a DTO

@@ -341,7 +341,12 @@ public class MapperUtil {
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
-        orderDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        if (order.getIdDiscountCoupon() != null) {
+
+            orderDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        }
 
         return orderDTO;
     }
@@ -354,6 +359,12 @@ public class MapperUtil {
         orderDTO.setIdOrder(order.getIdOrder());
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
+
+        if (order.getIdDiscountCoupon() != null) {
+
+            orderDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        }
         return orderDTO;
     }
 
@@ -365,6 +376,12 @@ public class MapperUtil {
         orderWithDoDTO.setDateTime(order.getDateTime());
         orderWithDoDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         orderWithDoDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
+
+        if (order.getIdDiscountCoupon() != null) {
+
+            orderWithDoDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        }
         orderWithDoDTO.setOrderDetail(order.getOrderDetail()
                 .stream()
                 .map(this::convertOrderDetailToDto)
