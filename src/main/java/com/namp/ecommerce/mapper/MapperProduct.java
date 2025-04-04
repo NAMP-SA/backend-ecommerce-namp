@@ -6,6 +6,8 @@ import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
+import com.namp.ecommerce.service.implementation.PromotionImplementation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,9 @@ public class MapperProduct {
 
     @Autowired
     private MapperUtil mapperUtil;
+
+    @Autowired
+    private PromotionImplementation promotionImplementation;
 
     //Metodo para convertir de ProductDTO a Product
     public Product convertDtoToProduct(ProductDTO productDTO) {
@@ -46,16 +51,19 @@ public class MapperProduct {
      */
     public ProductDTO convertProductToDto(Product product) {
         ProductDTO productDTO = mapperUtil.convertProductToDto(product);
+        productDTO.setSellingPrice(promotionImplementation.calculateSellingPrice(product));
         return productDTO;
     }
 
     public ProductWithItDTO convertProductWithItToDto(Product product) {
         ProductWithItDTO productDTO = mapperUtil.convertProductWithItToDto(product);
+        productDTO.setSellingPrice(promotionImplementation.calculateSellingPrice(product));
         return productDTO;
     }
 
     public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
         ProductWithRegisterStocksDTO productDTO = mapperUtil.convertProductWithRegisterStocksToDto(product);
+        productDTO.setSellingPrice(promotionImplementation.calculateSellingPrice(product));
         return productDTO;
     }
 }

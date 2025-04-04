@@ -1,5 +1,7 @@
 package com.namp.ecommerce.service.implementation;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.dto.PromotionWithProductsDTO;
 import com.namp.ecommerce.mapper.MapperPromotion;
+import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.model.Promotion;
 import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.service.IPromotionService;
@@ -165,5 +168,26 @@ public class PromotionImplementation implements IPromotionService {
         }
         return false; 
     }    
+
+    //Metodo que devuelve un True en caso de que la promocion este vigente, false en caso contrario
+    //Se considera vigente si la fecha y hora actual es mayor o igual a la fecha y hora de inicio y menor o igual a la fecha y hora de fin
+    public boolean isPromotionInEffect(Promotion promotion) {
+        if (promotion.getDateTimeStart() == null || promotion.getDateTimeEnd() == null) {
+            return false;
+        }
+        Timestamp now = Timestamp.from(Instant.now());
+        return !now.before(promotion.getDateTimeStart()) && !now.after(promotion.getDateTimeEnd());
+    }
+
+    //Metodo que calcula el precio de venta de un producto, aplicando la promocion si esta vigente
+    public double calculateSellingPrice(Product product) {
+        if (product.getIdPromotion() != null) {
+            Promotion promotion = product.getIdPromotion();
+            if (isPromotionInEffect(promotion)) {
+                return product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100);
+            }
+        }
+        return product.getPrice();
+    }
     
 }

@@ -116,8 +116,8 @@ public class MapperUtil {
     }
     /*
     ----------------------------------------------------------------------------------------------------------
-                                            PRODUCT METHODS
-   -----------------------------------------------------------------------------------------------------------
+                                                PRODUCT METHODS
+    -----------------------------------------------------------------------------------------------------------
     */
     public ProductDTO convertProductToDto(Product product) {
         ProductDTO productDTO = new ProductDTO();
@@ -132,15 +132,7 @@ public class MapperUtil {
         productDTO.setIdSubcategory(this.convertSubcategoryToDto(product.getIdSubcategory()));
 
         if (product.getIdPromotion() != null) {
-            Promotion promotion = product.getIdPromotion();
-            if (promotion.isInEffect()) {
-                productDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
-            } else {
-                productDTO.setSellingPrice(product.getPrice());
-            }
-            productDTO.setIdPromotion(this.convertPromotionToDTO(promotion));
-        } else {
-            productDTO.setSellingPrice(product.getPrice());
+            productDTO.setIdPromotion(this.convertPromotionToDTO(product.getIdPromotion()));
         }
 
         return productDTO;
@@ -169,17 +161,6 @@ public class MapperUtil {
         productDTO.setStock(product.getStock());
         productDTO.setImg(product.getImg());
 
-        if (product.getIdPromotion() != null) {
-            Promotion promotion = product.getIdPromotion();
-            if (promotion.isInEffect()) {
-                productDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
-            } else {
-                productDTO.setSellingPrice(product.getPrice());
-            }
-        } else {
-            productDTO.setSellingPrice(product.getPrice());
-        }
-
         productDTO.setProductCombo(product.getProductCombo()
                 .stream()
                 .map(this::convertProductComboToDto)
@@ -198,17 +179,6 @@ public class MapperUtil {
         productWithDoDTO.setStock(product.getStock());
         productWithDoDTO.setImg(product.getImg());
 
-        if (product.getIdPromotion() != null) {
-            Promotion promotion = product.getIdPromotion();
-            if (promotion.isInEffect()) {
-                productWithDoDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
-            } else {
-                productWithDoDTO.setSellingPrice(product.getPrice());
-            }
-        } else {
-            productWithDoDTO.setSellingPrice(product.getPrice());
-        }
-
         productWithDoDTO.setOrderDetail(product.getOrderDetail()
                 .stream()
                 .map(this::convertOrderDetailToDto)
@@ -219,7 +189,7 @@ public class MapperUtil {
 
     public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
         ProductWithRegisterStocksDTO productDTO = new ProductWithRegisterStocksDTO();
-       
+
         productDTO.setIdProduct(product.getIdProduct());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
@@ -227,21 +197,10 @@ public class MapperUtil {
         productDTO.setStock(product.getStock());
         productDTO.setImg(product.getImg());
 
-        if (product.getIdPromotion() != null) {
-            Promotion promotion = product.getIdPromotion();
-            if (promotion.isInEffect()) {
-                productDTO.setSellingPrice(product.getPrice() - (product.getPrice() * promotion.getDiscount() / 100));
-            } else {
-                productDTO.setSellingPrice(product.getPrice());
-            }
-        } else {
-            productDTO.setSellingPrice(product.getPrice());
-        }
-
         productDTO.setRegisterStocks(product.getRegisterStocks()
-            .stream()
-            .map(this::convertRegisterStockToDto)
-            .collect(Collectors.toList())
+                .stream()
+                .map(this::convertRegisterStockToDto)
+                .collect(Collectors.toList())
         );
 
         return productDTO;

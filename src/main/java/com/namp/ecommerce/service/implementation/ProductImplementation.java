@@ -3,7 +3,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
-import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.mapper.MapperProduct;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IProductDAO;
@@ -44,6 +43,7 @@ public class ProductImplementation implements IProductService{
 
     @Autowired
     private MapperProduct mapperProduct; 
+
 
 
     @Value("${image.upload.dir}")
@@ -298,21 +298,5 @@ public class ProductImplementation implements IProductService{
         return true;
     }
 
-
-    @Override
-    public double getDiscountPrice(ProductDTO productDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDiscountPrice'");
-    }
-
-
-    // @Override
-    // public double getDiscountPrice(ProductDTO productDTO) {
-    //    PromotionDTO promotionDTO = productDTO.getIdPromotion();
-    //    if(promotionDTO != null && promotionDTO.isInEffect()){
-    //     return productDTO.getPrice() - (productDTO.getPrice() * promotionDTO.getDiscount() / 100);
-    //    }
-    //    return productDTO.getPrice();
-    // }
 
 }
