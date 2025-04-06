@@ -6,11 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import com.namp.ecommerce.model.User;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +20,9 @@ public class Review implements Serializable {
     @Column(name = "idReview")
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long idReview;
+
+    @NotEmpty(message = "El titulo no debe estar vacio")
+    private String subject;
 
     @NotEmpty(message = "El mensaje no debe estar vacio")
     @Column(columnDefinition = "TEXT")

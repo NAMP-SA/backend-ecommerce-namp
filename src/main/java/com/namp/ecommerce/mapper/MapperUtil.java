@@ -447,7 +447,6 @@ public class MapperUtil {
                                              USERS METHODS
    -----------------------------------------------------------------------------------------------------------
     */
-
     public UserDTO convertUserToUserDTO(User user){
         UserDTO userDTO = new UserDTO();
 
@@ -494,6 +493,26 @@ public class MapperUtil {
     }
 
 
+    public UserWithReviewDTO convertUserWithReviewToDTO (User user){
+        UserWithReviewDTO userWithReviewDTO = new UserWithReviewDTO();
+
+        userWithReviewDTO.setIdUser(user.getIdUser());
+        userWithReviewDTO.setName(user.getName());
+        userWithReviewDTO.setLastname(user.getLastname());
+        userWithReviewDTO.setEmail(user.getEmail());
+        userWithReviewDTO.setAddress(user.getAddress());
+        userWithReviewDTO.setPhone(user.getPhone());
+        userWithReviewDTO.setUsername(user.getUsername());
+        userWithReviewDTO.setPassword(user.getPassword());
+
+        userWithReviewDTO.setReviews(user.getReviews()
+                .stream()
+                .map(this::convertReviewToDto)
+                .collect(Collectors.toList()));
+
+        return userWithReviewDTO;
+    }
+
     /*
     ----------------------------------------------------------------------------------------------------------
                                              REGISTERSTOCK METHODS
@@ -510,5 +529,23 @@ public class MapperUtil {
         registerStockDTO.setIdProduct(this.convertProductWOSubcategoryToDto(registerStock.getIdProduct()));
 
         return registerStockDTO;
+    }
+
+        /*
+    ----------------------------------------------------------------------------------------------------------
+                                             Review Methods
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public ReviewDTO convertReviewToDto(Review review){
+        ReviewDTO reviewDTO = new ReviewDTO();
+
+        reviewDTO.setIdReview(review.getIdReview());
+        reviewDTO.setMessage(review.getMessage());
+        reviewDTO.setSubject(review.getSubject());
+
+        reviewDTO.setIdUser(this.convertUserToUserDTO(review.getIdUser()));
+
+        return reviewDTO;
     }
 }
