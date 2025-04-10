@@ -60,7 +60,7 @@ public class PromotionController {
     }
 
     @PostMapping("/admin/promotion")
-    public ResponseEntity<?>  cratPromotion(@Valid @RequestBody PromotionDTO promotionDTO){
+    public ResponseEntity<?>  createPromotion(@Valid @RequestBody PromotionDTO promotionDTO){
         try{
             PromotionDTO createdPromotionDTO = promotionService.save(promotionDTO); 
             if(createdPromotionDTO == null){
@@ -113,10 +113,4 @@ public class PromotionController {
         }
         
     }
-    
-
-
-
-
-
 }
