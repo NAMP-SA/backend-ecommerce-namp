@@ -103,11 +103,6 @@ public class PromotionImplementation implements IPromotionService {
         if (promotion.getDateTimeEnd().before(promotion.getDateTimeStart())) {
              throw new IllegalArgumentException("The end date must be later than the start date");
         } 
-
-        Timestamp now = Timestamp.from(Instant.now());
-        if (promotion.getDateTimeStart().before(now)) {
-            throw new IllegalArgumentException("The start date must be later than the current date");
-        }
                 
         //Normalizar los espacios y convertir a mayusculas
         String nomralizedName = promotion.getName().replaceAll("\\s+", " ").trim().toUpperCase();
