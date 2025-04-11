@@ -42,8 +42,8 @@ public class Promotion implements Serializable{
     private String name;
 
     @NotNull(message = "El descuento no debe estar vacio")
-    @Min(value = 0, message = "El descuento debe ser un número positivo")
-    @Max(value = 100, message = "El descuento no puede ser mayor al 100%")
+    @DecimalMin(value = "0.01", inclusive = true,  message = "El descuento debe ser un número positivo mayor a 0%")
+    @DecimalMax(value = "100.00", inclusive = true, message = "El descuento no puede ser mayor al 100%")
     private double discount;
 
     @NotNull(message = "La fecha y hora no puede ser vacío")
