@@ -3,6 +3,7 @@ package com.namp.ecommerce.service;
 import java.util.List;
 
 import com.namp.ecommerce.dto.DiscountCouponDTO;
+import com.namp.ecommerce.dto.DiscountCouponEditRq;
 import com.namp.ecommerce.model.DiscountCoupon;
 
 public interface IDiscountCouponService {
@@ -11,7 +12,7 @@ public interface IDiscountCouponService {
 
     DiscountCouponDTO save(DiscountCouponDTO discountCouponDTO);
 
-    DiscountCouponDTO update(DiscountCouponDTO discountCouponDTO, DiscountCoupon discountCoupon);
+    DiscountCouponDTO update(DiscountCouponDTO discountCouponDTO, DiscountCouponEditRq discountCoupon);
 
     void delete(DiscountCouponDTO discountCouponDTO);
 
@@ -21,4 +22,5 @@ public interface IDiscountCouponService {
 
     boolean verifyName(String normalizedName, long categoryId);
 
+    String generarCodigoAleatorio();
 }

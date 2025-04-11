@@ -1,12 +1,13 @@
 package com.namp.ecommerce.service.implementation;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.namp.ecommerce.dto.DiscountCouponDTO;
+import com.namp.ecommerce.dto.DiscountCouponEditRq;
 import com.namp.ecommerce.mapper.MapperDiscountCoupon;
 import com.namp.ecommerce.model.DiscountCoupon;
 import com.namp.ecommerce.repository.IDiscountCouponDAO;
@@ -16,6 +17,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class DiscountCouponImplementation implements IDiscountCouponService {
+
+    private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom random = new SecureRandom();
 
     @Autowired
     private IDiscountCouponDAO discountCouponDAO;
@@ -33,6 +37,8 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
 
     @Override
     public DiscountCouponDTO save(DiscountCouponDTO discountCouponDTO) {
+        discountCouponDTO.setCodigo(this.generarCodigoAleatorio());
+        discountCouponDTO.setVigente(true);
         String normalizedCode = discountCouponDTO.getCodigo().replaceAll("\\s+", " ").trim().toUpperCase();
 
         if (!verifyName(normalizedCode)) {
@@ -44,20 +50,13 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
     }
 
     @Override
-    public DiscountCouponDTO update(DiscountCouponDTO existingDiscountCouponDTO, DiscountCoupon discountCoupon) {
+    public DiscountCouponDTO update(DiscountCouponDTO existingDiscountCouponDTO, DiscountCouponEditRq discountCoupon) {
         DiscountCoupon existingDiscountCoupon = discountCouponDAO
                 .findById(existingDiscountCouponDTO.getIdDiscountCoupon());
-        if (existingDiscountCoupon == null) {
+
+        if (existingDiscountCoupon == null || !existingDiscountCoupon.isVigente()) {
             return null;
         }
-
-        String normalizedName = discountCoupon.getCodigo().replaceAll("\s+", " ").trim().toUpperCase();
-
-        if (verifyName(normalizedName, existingDiscountCouponDTO.getIdDiscountCoupon())) {
-            return null; // Si el nombre ya esta siendo utilizado
-        }
-
-        existingDiscountCoupon.setCodigo(discountCoupon.getCodigo());
         existingDiscountCoupon.setDescuento(discountCoupon.getDescuento());
         existingDiscountCoupon.setVigente(discountCoupon.isVigente());
 
@@ -116,6 +115,16 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
         }
 
         return false;
+    }
+
+    @Override
+    public String generarCodigoAleatorio() {
+        StringBuilder codigo = new StringBuilder(6);
+        for (int i = 0; i < 6; i++) {
+            int index = random.nextInt(CARACTERES.length());
+            codigo.append(CARACTERES.charAt(index));
+        }
+        return codigo.toString();
     }
 
 }
