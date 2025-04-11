@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -42,6 +43,7 @@ public class Promotion implements Serializable{
 
     @NotNull(message = "El descuento no debe estar vacio")
     @Min(value = 0, message = "El descuento debe ser un número positivo")
+    @Max(value = 100, message = "El descuento no puede ser mayor al 100%")
     private double discount;
 
     @NotNull(message = "La fecha y hora no puede ser vacío")
@@ -55,6 +57,4 @@ public class Promotion implements Serializable{
 
     @OneToMany(mappedBy = "idPromotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
-
-      
 }
