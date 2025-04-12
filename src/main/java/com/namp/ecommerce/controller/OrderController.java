@@ -117,16 +117,10 @@ public class OrderController {
         }
     }
 
-    /**
-     * Agrega un cupon de descuento a un pedido
-     * @param id                idPedido
-     * @param discountCoupon    Objeto de cupon
-     * @return estado Http
-    */
     @PostMapping("/user/order/addCoupon/{id}")
     public ResponseEntity<?> addCoupon(@PathVariable long id, @RequestBody DiscountCoupon discountCoupon) {
         try {
-            
+
             OrderDTO orderDTO = orderService.findById(id);
 
             if (orderDTO == null) {
@@ -144,6 +138,28 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error adding the coupon:" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/user/order/deleteCoupon/{id}")
+    public ResponseEntity<?> deleteCoupon(@PathVariable long id) {
+        try {
+            OrderDTO orderDTO = orderService.findById(id);
+
+            if (orderDTO == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("The order does not exists ");
+            }
+
+            OrderDTO orderDTOWithoutCoupon = orderService.deleteCoupon(id);
+            if (orderDTOWithoutCoupon == null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Error deleting the coupon from the order");
+            }
+            return ResponseEntity.ok(orderDTOWithoutCoupon);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting the coupon:" + e.getMessage());
         }
     }
 

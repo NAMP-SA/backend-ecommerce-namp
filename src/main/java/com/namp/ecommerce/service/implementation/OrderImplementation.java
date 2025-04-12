@@ -193,7 +193,7 @@ public class OrderImplementation implements IOrderService {
 
         Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder());
         order.setIdState(stateDAO.findByIdState(2));
-        
+
         order.getIdDiscountCoupon().setVigente(false);
 
         Order savedOrder = orderDAO.save(order);
@@ -217,6 +217,17 @@ public class OrderImplementation implements IOrderService {
         }
         return null;
 
+    }
+
+    @Override
+    public OrderDTO deleteCoupon(Long id) {
+        Order order = orderDAO.findByIdOrder(id);
+        if (order == null) {
+            return null;
+        }
+        order.setIdDiscountCoupon(null);
+        Order orderWithoutCoupon = orderDAO.save(order);
+        return mapperOrder.convertOrderToDTO(orderWithoutCoupon);
     }
 
 }

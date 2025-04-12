@@ -2,6 +2,8 @@ package com.namp.ecommerce.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
+
 import com.namp.ecommerce.dto.OrderDTO;
 import com.namp.ecommerce.dto.OrderWithDoDTO;
 import com.namp.ecommerce.model.Order;
@@ -26,6 +28,8 @@ public interface IOrderService {
     boolean checkStocks(OrderDTO orderDTO);
 
     OrderDTO addCoupon(Long idOrder, String couponCode);
+
+    OrderDTO deleteCoupon(Long id);
 
     // METODO PROVISIORIO
     OrderDTO confirmOrder(OrderDTO orderDTO);
