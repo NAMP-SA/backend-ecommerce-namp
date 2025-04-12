@@ -194,5 +194,20 @@ public class PromotionImplementation implements IPromotionService {
         }
         return product.getPrice();
     }
+
+    //Metodo que devuelve una lista de promociones vigentes (Activas y futuras, siempre y cuando no hayan expirado)
+    @Override
+    public List<PromotionDTO> getValidPromotions() {
+       Timestamp now = Timestamp.from(Instant.now());
+
+       return promotionDAO.findAll()
+                .stream()
+                .filter(promotion -> promotion.getDateTimeEnd() != null &&
+                                     promotion.getDateTimeEnd().after(now))
+                .filter(promotion -> isPromotionInEffect(promotion) ||
+                                     promotion.getDateTimeStart().after(now))
+                .map(mapperPromotion::convertPromotionToDto)
+                .collect(Collectors.toList());
+    }
     
 }
