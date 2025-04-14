@@ -23,7 +23,7 @@ public class MapperPromotion {
         promotion.setName(promotionDTO.getName());
         promotion.setDateTimeStart(promotionDTO.getDateTimeStart());
         promotion.setDateTimeEnd(promotionDTO.getDateTimeEnd());
-        promotion.setInEffect(promotionDTO.isInEffect());
+        //promotion.setInEffect(promotionDTO.isInEffect());
        
         return promotion; 
     }

@@ -18,4 +18,7 @@ public class ProductWithItDTO {
     private String img;
 
     private List<ProductComboDTO> productCombo;
+
+    private double sellingPrice; // Precio luego de aplicar la promoción
+
 }

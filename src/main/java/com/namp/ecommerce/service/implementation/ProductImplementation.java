@@ -3,7 +3,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
-import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.mapper.MapperProduct;
 import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IProductDAO;
@@ -30,20 +29,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@Service
+@Service 
 public class ProductImplementation implements IProductService{
 
     @Autowired
-    private IProductDAO productDAO;
+    private IProductDAO productDAO; 
 
     @Autowired
-    private ISubcategoryDAO subcategoryDAO;
+    private ISubcategoryDAO subcategoryDAO; 
 
     @Autowired
-    private IPromotionDAO promotionDAO;
+    private IPromotionDAO promotionDAO; 
 
     @Autowired
-    private MapperProduct mapperProduct;
+    private MapperProduct mapperProduct; 
+
+
 
     @Value("${image.upload.dir}")
     private String uploadDir;
@@ -125,6 +126,8 @@ public class ProductImplementation implements IProductService{
         if(!verifyName(normalizedName)) {
             productDTO.setName(normalizedName);
             Product product = mapperProduct.convertDtoToProduct(productDTO);
+
+
             Product savedProduct = productDAO.save(product);
 
             // Guardo la imagen (si un archivo se llama igual en el path lo va a reemplazar)
@@ -157,17 +160,22 @@ public class ProductImplementation implements IProductService{
                 return null; //Si el nombre ya esta siendo utilizado
             }
 
-        //Actualizar los campos en la entidad existente
-        existingProduct.setName(normalizedName);
-        existingProduct.setDescription(productDTO.getDescription());
-        existingProduct.setPrice(productDTO.getPrice());
-        existingProduct.setStock(productDTO.getStock());
+            //Actualizar los campos en la entidad existente
+            existingProduct.setName(normalizedName);
+            existingProduct.setDescription(productDTO.getDescription());
+            existingProduct.setPrice(productDTO.getPrice());
+            existingProduct.setStock(productDTO.getStock());
 
-        //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente, lo mismo para la Promocion en base a promotionDTO seteada en productDTO.
-        existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
-        if(productDTO.getIdPromotion() != null){
-            existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
-        }
+            // Actualizar la promoción, verficando si esta activa
+            if (productDTO.getIdPromotion() != null) {
+                existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+            }
+
+            //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente, lo mismo para la Promocion en base a promotionDTO seteada en productDTO.
+            existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
+            if(productDTO.getIdPromotion() != null){
+                existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+            }
 
             //Hago la verificacion de imagen
             if (file != null && !file.isEmpty()){
@@ -290,14 +298,5 @@ public class ProductImplementation implements IProductService{
         return true;
     }
 
-
-    @Override
-    public double getDiscountPrice(ProductDTO productDTO) {
-       PromotionDTO promotionDTO = productDTO.getIdPromotion();
-       if(promotionDTO != null && promotionDTO.isInEffect()){
-        return productDTO.getPrice() - (productDTO.getPrice() * promotionDTO.getDiscount() / 100);
-       }
-       return productDTO.getPrice();
-    }
 
 }

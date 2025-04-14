@@ -67,4 +67,5 @@ public class Product implements Serializable{
     @ManyToOne
     @JoinColumn(name = "fk_promotion", referencedColumnName = "idPromotion", nullable = true)
     private Promotion idPromotion;
+    
 }

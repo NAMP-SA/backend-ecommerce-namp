@@ -116,8 +116,8 @@ public class MapperUtil {
     }
     /*
     ----------------------------------------------------------------------------------------------------------
-                                            PRODUCT METHODS
-   -----------------------------------------------------------------------------------------------------------
+                                                PRODUCT METHODS
+    -----------------------------------------------------------------------------------------------------------
     */
     public ProductDTO convertProductToDto(Product product) {
         ProductDTO productDTO = new ProductDTO();
@@ -131,7 +131,7 @@ public class MapperUtil {
 
         productDTO.setIdSubcategory(this.convertSubcategoryToDto(product.getIdSubcategory()));
 
-        if(product.getIdPromotion() != null){
+        if (product.getIdPromotion() != null) {
             productDTO.setIdPromotion(this.convertPromotionToDTO(product.getIdPromotion()));
         }
 
@@ -189,7 +189,7 @@ public class MapperUtil {
 
     public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
         ProductWithRegisterStocksDTO productDTO = new ProductWithRegisterStocksDTO();
-       
+
         productDTO.setIdProduct(product.getIdProduct());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
@@ -198,9 +198,9 @@ public class MapperUtil {
         productDTO.setImg(product.getImg());
 
         productDTO.setRegisterStocks(product.getRegisterStocks()
-            .stream()
-            .map(this::convertRegisterStockToDto)
-            .collect(Collectors.toList())
+                .stream()
+                .map(this::convertRegisterStockToDto)
+                .collect(Collectors.toList())
         );
 
         return productDTO;
@@ -397,7 +397,7 @@ public class MapperUtil {
         promotionDTO.setDiscount(promotion.getDiscount());
         promotionDTO.setDateTimeStart(promotion.getDateTimeStart());
         promotionDTO.setDateTimeEnd(promotion.getDateTimeEnd());
-        promotionDTO.setInEffect(promotion.isInEffect());
+        //promotionDTO.setInEffect(promotion.isInEffect());
 
 
         return promotionDTO;
@@ -411,7 +411,7 @@ public class MapperUtil {
         promotionWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
-        promotionWithProductsDTO.setInEffect(promotion.isInEffect());
+        //promotionWithProductsDTO.setInEffect(promotion.isInEffect());
 
 
         promotionWithProductsDTO.setProducts(promotion.getProducts()
@@ -430,7 +430,7 @@ public class MapperUtil {
         promotionIdWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionIdWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionIdWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
-        promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
+        //promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
 
         promotionIdWithProductsDTO.setProducts(promotion.getProducts()
                 .stream()

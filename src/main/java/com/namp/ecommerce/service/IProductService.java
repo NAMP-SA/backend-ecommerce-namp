@@ -24,5 +24,5 @@ public interface IProductService {
     void decreaseStock(ProductDTO productDTO, int quantity);
     boolean checkStock(ProductDTO productDTO,int quantity);
 
-    double getDiscountPrice(ProductDTO productDTO);
+    //double getDiscountPrice(ProductDTO productDTO);
 }

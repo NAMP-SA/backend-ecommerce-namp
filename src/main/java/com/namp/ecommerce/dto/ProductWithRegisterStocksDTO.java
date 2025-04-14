@@ -19,4 +19,7 @@ public class ProductWithRegisterStocksDTO {
 
 
     private List<RegisterStockDTO> registerStocks;
+
+    private double sellingPrice; // Precio luego de aplicar la promoción
+
 }
