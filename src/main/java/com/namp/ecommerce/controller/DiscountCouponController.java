@@ -24,7 +24,7 @@ public class DiscountCouponController {
     @Autowired
     private IDiscountCouponService discountCouponService;
 
-    @GetMapping("/admin/coupon")
+    @GetMapping("/coupon")
     public ResponseEntity<?> getCoupons() {
         try {
             return ResponseEntity.ok(discountCouponService.getDiscountCoupons());

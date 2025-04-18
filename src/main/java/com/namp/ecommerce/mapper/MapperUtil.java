@@ -433,7 +433,7 @@ public class MapperUtil {
         promotionDTO.setDiscount(promotion.getDiscount());
         promotionDTO.setDateTimeStart(promotion.getDateTimeStart());
         promotionDTO.setDateTimeEnd(promotion.getDateTimeEnd());
-        promotionDTO.setInEffect(promotion.isInEffect());
+        //promotionDTO.setInEffect(promotion.isInEffect());
 
         return promotionDTO;
     }
@@ -446,7 +446,7 @@ public class MapperUtil {
         promotionWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
-        promotionWithProductsDTO.setInEffect(promotion.isInEffect());
+        //promotionWithProductsDTO.setInEffect(promotion.isInEffect());
 
         promotionWithProductsDTO.setProducts(promotion.getProducts()
                 .stream()
@@ -464,7 +464,7 @@ public class MapperUtil {
         promotionIdWithProductsDTO.setDiscount(promotion.getDiscount());
         promotionIdWithProductsDTO.setDateHourStart(promotion.getDateTimeStart());
         promotionIdWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
-        promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
+        //promotionIdWithProductsDTO.setInEffect(promotion.isInEffect());
 
         promotionIdWithProductsDTO.setProducts(promotion.getProducts()
                 .stream()
