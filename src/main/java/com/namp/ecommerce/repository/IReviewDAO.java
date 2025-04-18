@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IReviewDAO extends CrudRepository<Review,Long> {
     List<Review> findAll();
-    Review findById(long id);
+    Review findByIdReview(long id);
     List<Review> findByUserId (long UserId);
 }
