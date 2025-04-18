@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.namp.ecommerce.dto.DiscountCouponDTO;
-import com.namp.ecommerce.dto.DiscountCouponEditRq;
 import com.namp.ecommerce.mapper.MapperDiscountCoupon;
 import com.namp.ecommerce.model.DiscountCoupon;
 import com.namp.ecommerce.repository.IDiscountCouponDAO;
@@ -50,11 +49,11 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
     }
 
     @Override
-    public DiscountCouponDTO update(DiscountCouponDTO existingDiscountCouponDTO, DiscountCouponEditRq discountCoupon) {
+    public DiscountCouponDTO update(DiscountCouponDTO existingDiscountCouponDTO, DiscountCoupon discountCoupon) {
         DiscountCoupon existingDiscountCoupon = discountCouponDAO
                 .findById(existingDiscountCouponDTO.getIdDiscountCoupon());
 
-        if (existingDiscountCoupon == null || !existingDiscountCoupon.isVigente()) {
+        if (existingDiscountCoupon == null) {
             return null;
         }
         existingDiscountCoupon.setDescuento(discountCoupon.getDescuento());

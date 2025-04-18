@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.namp.ecommerce.dto.DiscountCouponDTO;
-import com.namp.ecommerce.dto.DiscountCouponEditRq;
 import com.namp.ecommerce.model.DiscountCoupon;
 import com.namp.ecommerce.service.IDiscountCouponService;
 
@@ -87,7 +86,7 @@ public class DiscountCouponController {
 
     @PutMapping("/admin/coupon/{id}")
     public ResponseEntity<?> updateCoupon(@PathVariable long id,
-            @Valid @RequestBody DiscountCouponEditRq discountCoupon) {
+            @RequestBody DiscountCoupon discountCoupon) {
         try {
             DiscountCouponDTO existingDiscountCouponDTO = discountCouponService.findById(id);
 
