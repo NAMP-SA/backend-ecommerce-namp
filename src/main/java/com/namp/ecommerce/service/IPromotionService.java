@@ -16,4 +16,5 @@ public interface IPromotionService {
     PromotionDTO findById(long id);
     boolean verifyName(String normalizedName);
     boolean verifyName(String normalizedName, long idPromotion);
+    List<PromotionDTO> getValidPromotions();
 }

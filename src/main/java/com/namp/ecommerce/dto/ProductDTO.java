@@ -17,4 +17,6 @@ public class ProductDTO {
     private String img;
     private SubcategoryDTO idSubcategory;
     private PromotionDTO idPromotion; 
+
+    private double sellingPrice; // Precio luego de aplicar la promoción
 }

@@ -8,8 +8,6 @@ import com.namp.ecommerce.error.InvalidFileFormatException;
 import com.namp.ecommerce.exception.DeletionException;
 import com.namp.ecommerce.mapper.MapperCombo;
 import com.namp.ecommerce.model.Combo;
-import com.namp.ecommerce.model.ProductCombo;
-import com.namp.ecommerce.repository.IProductComboDAO;
 import com.namp.ecommerce.service.IComboService;
 import com.namp.ecommerce.service.IProductComboService;
 
@@ -24,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,8 +41,6 @@ public class ComboImplementation implements IComboService{
     @Autowired 
     private IProductComboService productComboService;
 
-    @Autowired
-    private IProductComboDAO productComboDAO;
 
     @Value("${image.upload.dir}")
     private String uploadDir;
@@ -261,5 +256,6 @@ public class ComboImplementation implements IComboService{
 
         return true;
     }
+  
 }
 

@@ -2,6 +2,10 @@ package com.namp.ecommerce.controller;
 
 import com.namp.ecommerce.dto.ComboWithItDTO;
 import com.namp.ecommerce.error.InvalidFileFormatException;
+import com.namp.ecommerce.model.ProductCombo;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,7 @@ public class ComboController {
                     .body("Error showing the combos:"+e.getMessage());
         }
     }
+    
     @GetMapping("comboWithProductCombo")
     public ResponseEntity<?> getCombosWithIt(){
         try{
@@ -35,6 +40,24 @@ public class ComboController {
                     .body("Error showing the combos:"+e.getMessage());
         }
     }
+
+    @GetMapping("comboWithProductCombo/{id}")
+    public ResponseEntity<?> getCombosWithItById(@PathVariable long id){
+        try{
+            ComboWithItDTO comboWithItDTO = comboService.findByIdWithIt(id);
+
+            if (comboWithItDTO == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("The combo does not exist");
+            }
+            return ResponseEntity.ok(comboWithItDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error showing the combos:"+e.getMessage());
+        }
+    }
+
+    
     @PostMapping("/admin/combo")
     public ResponseEntity<?> createCombo(@RequestParam("combo") String comboJson, @RequestParam("file") MultipartFile file){
         try{
