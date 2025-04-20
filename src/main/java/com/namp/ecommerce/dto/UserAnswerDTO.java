@@ -2,12 +2,14 @@ package com.namp.ecommerce.dto;
 
 import com.namp.ecommerce.model.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserAnswerDTO {
 
     private long idUser;
