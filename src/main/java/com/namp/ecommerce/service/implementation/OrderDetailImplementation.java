@@ -147,15 +147,15 @@ public class OrderDetailImplementation implements IOrderDetailService {
 
     @Override
     public double CalculateSubTotalProduct(Integer quantity, double productPrice, ProductDTO productDTO) {
-      double finalPrice;
+      // double finalPrice;
 
-      if(productDTO.getIdPromotion() != null && productDTO.getIdPromotion().isInEffect()){
-        finalPrice = productPrice - (productPrice * productDTO.getIdPromotion().getDiscount() / 100);
-        System.out.println("SubTotal del producto con promocion"+finalPrice);
-      }else{
-        finalPrice = productPrice; // Si no hay promoción, emplea el precio base
-      }
-      return quantity * finalPrice;  
+      // if(productDTO.getIdPromotion() != null && productDTO.getIdPromotion().isInEffect()){
+      //   finalPrice = productPrice - (productPrice * productDTO.getIdPromotion().getDiscount() / 100);
+      //   System.out.println("SubTotal del producto con promocion"+finalPrice);
+      // }else{
+      //   finalPrice = productPrice; // Si no hay promoción, emplea el precio base
+      // }
+      return quantity * productPrice;  
       
     }
 

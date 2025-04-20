@@ -20,4 +20,6 @@ public class ProductWithDoDTO {
     private SubcategoryDTO idSubcategory;
 
     private List<OrderDetailDTO> orderDetail; 
+
+    private double sellingPrice; // Precio luego de aplicar la promoción
 }

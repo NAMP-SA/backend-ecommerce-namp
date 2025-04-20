@@ -1,5 +1,7 @@
 package com.namp.ecommerce.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,8 +61,19 @@ public class PromotionController {
         }
     }
 
+    @GetMapping("/admin/promotion/validPromotions")
+    public ResponseEntity<?> getValidPromotion(){
+        try{
+            List<PromotionDTO> validPromotions = promotionService.getValidPromotions();
+            return ResponseEntity.ok(validPromotions);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error showing the valid Promotions:"+e.getMessage());
+        }
+    }
+
     @PostMapping("/admin/promotion")
-    public ResponseEntity<?>  cratPromotion(@Valid @RequestBody PromotionDTO promotionDTO){
+    public ResponseEntity<?>  createPromotion(@Valid @RequestBody PromotionDTO promotionDTO){
         try{
             PromotionDTO createdPromotionDTO = promotionService.save(promotionDTO); 
             if(createdPromotionDTO == null){
@@ -113,10 +126,4 @@ public class PromotionController {
         }
         
     }
-    
-
-
-
-
-
 }

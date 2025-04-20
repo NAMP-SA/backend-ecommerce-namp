@@ -15,7 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -41,7 +42,8 @@ public class Promotion implements Serializable{
     private String name;
 
     @NotNull(message = "El descuento no debe estar vacio")
-    @Min(value = 0, message = "El descuento debe ser un número positivo")
+    @DecimalMin(value = "0.01", inclusive = true,  message = "El descuento debe ser un número positivo mayor a 0%")
+    @DecimalMax(value = "100.00", inclusive = true, message = "El descuento no puede ser mayor al 100%")
     private double discount;
 
     @NotNull(message = "La fecha y hora no puede ser vacío")
@@ -52,9 +54,9 @@ public class Promotion implements Serializable{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp  dateTimeEnd;
 
-    private boolean inEffect; 
 
     @OneToMany(mappedBy = "idPromotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
-    
 }
+
+
