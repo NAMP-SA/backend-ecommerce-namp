@@ -3,6 +3,7 @@ package com.namp.ecommerce.service.implementation;
 import com.namp.ecommerce.dto.ReviewDTO;
 import com.namp.ecommerce.mapper.MapperReview;
 import com.namp.ecommerce.model.Review;
+import com.namp.ecommerce.model.User;
 import com.namp.ecommerce.repository.IReviewDAO;
 import com.namp.ecommerce.service.IReviewService;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,7 +37,7 @@ public class ReviewImplementation implements IReviewService {
 
     @Override
     public List<ReviewDTO> findByUserId(long id){
-        return reviewDAO.findByUserId(id)
+        return reviewDAO.findReviewsByUserId(id)
                 .stream()
                 .map(mapperReview::convertReviewToDto)
                 .collect(Collectors.toList());
