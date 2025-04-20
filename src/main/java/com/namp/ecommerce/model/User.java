@@ -1,5 +1,6 @@
 package com.namp.ecommerce.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -71,6 +72,9 @@ public class User implements Serializable, UserDetails {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "role")  // Esto asegura que el valor de Role se guarde como entero
     Role role;
+
+    @OneToMany(mappedBy = "idUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

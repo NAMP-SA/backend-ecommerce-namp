@@ -119,7 +119,7 @@ public class UserImplementationTest {
 
     @Test public void testVerifyUsername_Exist() {
         // Simulo que existen objetos en la base de datos ya almacenados
-        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123", null);
+        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123", null, null);
         List<User> mockUsers = Arrays.asList(user1);
 
         // Configuro el comportamiento del mock para que findAll() devuelva la lista simulada
@@ -136,7 +136,7 @@ public class UserImplementationTest {
     @Test public void testVerifyUsername_NotExist() {
 
         // Simulo que existen objetos en la base de datos ya almacenados
-        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123", null);
+        User user1 = new User(1L, "Agustin", "Anil", "agustin@gmail,com", "La Rioja", "232454444", "USUARIO1", "123", null, null);
         List<User> mockUsers = Arrays.asList(user1);
 
         // Configuro el comportamiento del mock para que findAll() devuelva la lista simulada
