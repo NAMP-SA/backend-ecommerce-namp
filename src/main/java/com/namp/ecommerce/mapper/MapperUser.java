@@ -3,6 +3,7 @@ package com.namp.ecommerce.mapper;
 import com.namp.ecommerce.dto.UserAnswerDTO;
 import com.namp.ecommerce.dto.UserDTO;
 import com.namp.ecommerce.dto.UserEditableDTO;
+import com.namp.ecommerce.dto.UserWithReviewDTO;
 import com.namp.ecommerce.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,5 +52,11 @@ public class MapperUser {
         UserEditableDTO userEditableDTO = mapperUtil.convertUserToUserEditableDTO(user);
 
         return userEditableDTO;
+    }
+
+    public UserWithReviewDTO convertUserToUserWithReviewDTO(User user){
+        UserWithReviewDTO userWithReviewDTO = mapperUtil.convertUserWithReviewToDTO(user);
+
+        return userWithReviewDTO;
     }
 }
