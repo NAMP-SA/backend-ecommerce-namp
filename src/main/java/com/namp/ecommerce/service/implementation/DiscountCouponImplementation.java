@@ -36,16 +36,20 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
 
     @Override
     public DiscountCouponDTO save(DiscountCouponDTO discountCouponDTO) {
-        discountCouponDTO.setCodigo(this.generarCodigoAleatorio());
-        discountCouponDTO.setVigente(true);
-        String normalizedCode = discountCouponDTO.getCodigo().replaceAll("\\s+", " ").trim().toUpperCase();
+        String generatedCode;
+        String normalizedCode;
 
-        if (!verifyName(normalizedCode)) {
+        do {
+            generatedCode = this.generarCodigoAleatorio();
+            normalizedCode = generatedCode.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        } while (verifyName(normalizedCode));
+
+            discountCouponDTO.setCodigo(this.generarCodigoAleatorio());
+            discountCouponDTO.setVigente(true);
             DiscountCoupon discountCoupon = mapperDiscountCoupon.convertDtoToDiscountCoupon(discountCouponDTO);
             DiscountCoupon savedDiscountCoupon = discountCouponDAO.save(discountCoupon);
             return mapperDiscountCoupon.convertDiscountCouponToDTO(savedDiscountCoupon);
-        }
-        return null;
     }
 
     @Override
