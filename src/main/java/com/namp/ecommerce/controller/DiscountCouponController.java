@@ -24,7 +24,7 @@ public class DiscountCouponController {
     @Autowired
     private IDiscountCouponService discountCouponService;
 
-    @GetMapping("/coupon")
+    @GetMapping("/admin/coupon")
     public ResponseEntity<?> getCoupons() {
         try {
             return ResponseEntity.ok(discountCouponService.getDiscountCoupons());
@@ -34,7 +34,7 @@ public class DiscountCouponController {
         }
     }
 
-    @GetMapping("/admin/coupon/{id}")
+    @GetMapping("/user/coupon/{id}")
     public ResponseEntity<?> getCoupon(@PathVariable long id) {
         try {
             if (discountCouponService.findById(id) == null) {
@@ -46,7 +46,6 @@ public class DiscountCouponController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error showing the coupon " + e.getMessage());
         }
-
     }
 
     @PostMapping("/admin/coupon")
