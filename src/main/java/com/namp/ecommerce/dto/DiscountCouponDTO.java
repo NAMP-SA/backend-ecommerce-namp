@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DiscountCouponDTO {
     private long idDiscountCoupon;
-    private String codigo;
-    private int descuento;
-    private boolean vigente;
+    private String code;
+    private int discount;
+    private boolean current;
 }

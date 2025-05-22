@@ -194,7 +194,7 @@ public class OrderImplementation implements IOrderService {
         Order order = orderDAO.findByIdOrder(orderDTO.getIdOrder());
         order.setIdState(stateDAO.findByIdState(2));
 
-        order.getIdDiscountCoupon().setVigente(false);
+        order.getIdDiscountCoupon().setCurrent(false);
 
         Order savedOrder = orderDAO.save(order);
 
@@ -207,10 +207,10 @@ public class OrderImplementation implements IOrderService {
     public OrderDTO addCoupon(Long idOrder, String couponCode) {
         Order order = orderDAO.findByIdOrder(idOrder);
 
-        DiscountCoupon discountCoupon = discountCouponDAO.findByCodigo(couponCode);
+        DiscountCoupon discountCoupon = discountCouponDAO.findByCode(couponCode);
         if (discountCoupon == null) {
             return null;
-        } else if (discountCoupon.isVigente() == true) {
+        } else if (discountCoupon.isCurrent() == true) {
             order.setIdDiscountCoupon(discountCoupon);
             Order orderWithCoupon = orderDAO.save(order);
             return mapperOrder.convertOrderToDTO(orderWithCoupon);

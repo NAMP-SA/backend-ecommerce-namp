@@ -128,7 +128,7 @@ public class OrderController {
                         .body("The order does not exists ");
             }
 
-            OrderDTO orderDTOWithCoupon = orderService.addCoupon(id, discountCoupon.getCodigo());
+            OrderDTO orderDTOWithCoupon = orderService.addCoupon(id, discountCoupon.getCode());
             if (orderDTOWithCoupon == null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body("The coupon does not exists or is not valid");

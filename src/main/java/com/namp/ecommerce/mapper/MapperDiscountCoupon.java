@@ -14,9 +14,9 @@ public class MapperDiscountCoupon {
     public DiscountCoupon convertDtoToDiscountCoupon(DiscountCouponDTO discountCouponDTO) {
         DiscountCoupon discountCoupon = new DiscountCoupon();
 
-        discountCoupon.setCodigo(discountCouponDTO.getCodigo());
-        discountCoupon.setDescuento(discountCouponDTO.getDescuento());
-        discountCoupon.setVigente(discountCouponDTO.isVigente());
+        discountCoupon.setCode(discountCouponDTO.getCode());
+        discountCoupon.setDiscount(discountCouponDTO.getDiscount());
+        discountCoupon.setCurrent(discountCouponDTO.isCurrent());
 
         return discountCoupon;
     }

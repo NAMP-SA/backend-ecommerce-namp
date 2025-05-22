@@ -45,8 +45,8 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
 
         } while (verifyName(normalizedCode));
 
-            discountCouponDTO.setCodigo(this.generarCodigoAleatorio());
-            discountCouponDTO.setVigente(true);
+            discountCouponDTO.setCode(this.generarCodigoAleatorio());
+            discountCouponDTO.setCurrent(true);
             DiscountCoupon discountCoupon = mapperDiscountCoupon.convertDtoToDiscountCoupon(discountCouponDTO);
             DiscountCoupon savedDiscountCoupon = discountCouponDAO.save(discountCoupon);
             return mapperDiscountCoupon.convertDiscountCouponToDTO(savedDiscountCoupon);
@@ -60,8 +60,8 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
         if (existingDiscountCoupon == null) {
             return null;
         }
-        existingDiscountCoupon.setDescuento(discountCoupon.getDescuento());
-        existingDiscountCoupon.setVigente(discountCoupon.isVigente());
+        existingDiscountCoupon.setDiscount(discountCoupon.getDiscount());
+        existingDiscountCoupon.setCurrent(discountCoupon.isCurrent());
 
         DiscountCoupon updatedDiscountCoupon = discountCouponDAO.save(existingDiscountCoupon);
 
@@ -88,6 +88,15 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
     }
 
     @Override
+    public DiscountCouponDTO findByCode(String code) {
+        DiscountCoupon discountCoupon = discountCouponDAO.findByCode(code);
+        if (discountCoupon == null) {
+            return null;
+        }
+        return mapperDiscountCoupon.convertDiscountCouponToDTO(discountCoupon);
+    }
+
+    @Override
     public boolean verifyName(String normalizedName) {
         List<DiscountCoupon> discountCoupons = discountCouponDAO.findAll();
         String name = normalizedName.replaceAll("\\s+", "");
@@ -95,7 +104,7 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
         // Comparar el nombre de la categoria que se quiere guardar, con todos los demas
         // sin espacio para ver si es el mismo
         for (DiscountCoupon discountCoupon : discountCoupons) {
-            if (name.equals(discountCoupon.getCodigo().replaceAll("\\s+", ""))) {
+            if (name.equals(discountCoupon.getCode().replaceAll("\\s+", ""))) {
                 return true;
             }
         }
@@ -112,7 +121,7 @@ public class DiscountCouponImplementation implements IDiscountCouponService {
         // está actualizando
         for (DiscountCoupon discountCoupon : discountCoupons) {
             if (discountCoupon.getIdDiscountCoupon() != discountCouponId
-                    && name.equals(discountCoupon.getCodigo().replaceAll("\s+", ""))) {
+                    && name.equals(discountCoupon.getCode().replaceAll("\s+", ""))) {
                 return true;
             }
         }

@@ -597,9 +597,9 @@ public class MapperUtil {
         DiscountCouponDTO discountCouponDTO = new DiscountCouponDTO();
 
         discountCouponDTO.setIdDiscountCoupon(discountCoupon.getIdDiscountCoupon());
-        discountCouponDTO.setCodigo(discountCoupon.getCodigo());
-        discountCouponDTO.setDescuento(discountCoupon.getDescuento());
-        discountCouponDTO.setVigente(discountCoupon.isVigente());
+        discountCouponDTO.setCode(discountCoupon.getCode());
+        discountCouponDTO.setDiscount(discountCoupon.getDiscount());
+        discountCouponDTO.setCurrent(discountCoupon.isCurrent());
 
         return discountCouponDTO;
     }

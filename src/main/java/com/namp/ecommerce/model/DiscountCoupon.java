@@ -31,12 +31,12 @@ public class DiscountCoupon {
     private long idDiscountCoupon;
 
     @NotEmpty(message = "El codigo no debe estar vacio")
-    private String codigo;
+    private String code;
 
     @NotNull(message = "El descuento no puede estar vacio")
-    private int descuento;
+    private int discount;
 
-    private boolean vigente;
+    private boolean current;
 
     @OneToMany(mappedBy = "idDiscountCoupon", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();

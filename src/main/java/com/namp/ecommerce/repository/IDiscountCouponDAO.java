@@ -10,5 +10,5 @@ public interface IDiscountCouponDAO extends CrudRepository<DiscountCoupon, Long>
 
     DiscountCoupon findById(long id);
 
-    DiscountCoupon findByCodigo(String codigo);
+    DiscountCoupon findByCode(String code);
 }

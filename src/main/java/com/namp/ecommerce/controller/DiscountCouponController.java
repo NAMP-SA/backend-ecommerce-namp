@@ -34,7 +34,7 @@ public class DiscountCouponController {
         }
     }
 
-    @GetMapping("/user/coupon/{id}")
+    @GetMapping("/admin/coupon/{id}")
     public ResponseEntity<?> getCoupon(@PathVariable long id) {
         try {
             if (discountCouponService.findById(id) == null) {
@@ -42,6 +42,27 @@ public class DiscountCouponController {
                         .body("Coupon with ID " + id + " not found");
             }
             return ResponseEntity.ok(discountCouponService.findById(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error showing the coupon " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/coupon/{code}")
+    public ResponseEntity<?> getCouponByCode(@PathVariable String code) {
+        try {
+
+            if (code == null || code.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Coupon code must not be null or empty");
+            }
+            
+            DiscountCouponDTO discountCoupon = discountCouponService.findByCode(code);
+            if (discountCoupon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Coupon with code " + code + " not found");
+            }
+            return ResponseEntity.ok(discountCoupon);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error showing the coupon " + e.getMessage());

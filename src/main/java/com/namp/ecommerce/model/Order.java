@@ -51,7 +51,7 @@ public class Order implements Serializable {
         
         if (idDiscountCoupon != null) {
 
-            double discount = idDiscountCoupon.getDescuento(); 
+            double discount = idDiscountCoupon.getDiscount(); 
             total -= total * (discount / 100);
 
         }

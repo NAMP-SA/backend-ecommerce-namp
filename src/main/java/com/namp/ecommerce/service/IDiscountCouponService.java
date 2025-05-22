@@ -17,6 +17,8 @@ public interface IDiscountCouponService {
 
     DiscountCouponDTO findById(long id);
 
+    DiscountCouponDTO findByCode(String code);
+
     boolean verifyName(String normalizedName);
 
     boolean verifyName(String normalizedName, long categoryId);
