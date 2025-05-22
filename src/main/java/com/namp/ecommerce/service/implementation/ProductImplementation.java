@@ -3,8 +3,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namp.ecommerce.dto.ProductDTO;
 import com.namp.ecommerce.dto.ProductWithItDTO;
 import com.namp.ecommerce.dto.ProductWithRegisterStocksDTO;
+import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.mapper.MapperProduct;
 import com.namp.ecommerce.model.Product;
+import com.namp.ecommerce.model.Promotion;
 import com.namp.ecommerce.repository.IProductDAO;
 import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
@@ -17,7 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,6 +129,7 @@ public class ProductImplementation implements IProductService{
         String normalizedName = productDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
         if(!verifyName(normalizedName)) {
             productDTO.setName(normalizedName);
+            validPromotionForProduct(productDTO.getIdPromotion());
             Product product = mapperProduct.convertDtoToProduct(productDTO);
 
 
@@ -168,6 +173,7 @@ public class ProductImplementation implements IProductService{
 
             // Actualizar la promoción, verficando si esta activa
             if (productDTO.getIdPromotion() != null) {
+                validPromotionForProduct(productDTO.getIdPromotion());
                 existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
             }
 
@@ -298,5 +304,21 @@ public class ProductImplementation implements IProductService{
         return true;
     }
 
+    public void validPromotionForProduct(PromotionDTO promotionDTO) {
+        if (promotionDTO != null) {
+            Promotion promotionForProduct = promotionDAO.findByIdPromotion(promotionDTO.getIdPromotion());
+            if (promotionForProduct == null) {
+                throw new IllegalArgumentException("The assigned promotion does not exist.");
+            }
+
+            Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+            if (promotionForProduct.getDateTimeEnd().before(now)) {
+                throw new IllegalArgumentException("The promotion has already ended and cannot be assigned to the product.");
+            }
+        }
+    }
+
+    
 
 }
