@@ -122,6 +122,7 @@ public class OrderImplementation implements IOrderService {
             return null;
         }
 
+        System.out.println(order.calculateTotal());
         return mapperOrder.convertOrderWithOrderDetailToDto(order);
     }
 

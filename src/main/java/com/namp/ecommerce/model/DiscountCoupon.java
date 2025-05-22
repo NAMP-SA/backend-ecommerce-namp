@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,8 @@ public class DiscountCoupon {
     private String codigo;
 
     @NotNull(message = "El descuento no puede estar vacio")
+    @Min(value = 5, message = "El descuento debe de ser, al menos, del 5%")
+    @Max(value = 20, message = "El descuento maximo es de 20%")
     private int descuento;
 
     private boolean vigente;
