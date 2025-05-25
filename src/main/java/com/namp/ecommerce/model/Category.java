@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +23,7 @@ public class Category implements Serializable {
     private long idCategory;
 
     @NotEmpty(message = "El nombre no debe estar vacio")
-    @Pattern(regexp = "^(?!\s*$)[a-zA-Z\s]+$",message = "El nombre debe contener solo caracteres alfabeticos")
+    @Pattern(regexp = "^(?!\s*$)[a-zA-Z\s]+$", message = "El nombre debe contener solo caracteres alfabeticos")
     private String name;
 
     @NotNull(message = "La descripcion no debe estar vacia")
