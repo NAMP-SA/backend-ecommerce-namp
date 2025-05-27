@@ -1,5 +1,6 @@
 package com.namp.ecommerce.service.implementation;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.dto.PromotionWithProductsDTO;
 import com.namp.ecommerce.mapper.MapperPromotion;
@@ -11,19 +12,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class PromotionTest {
 
     @Mock
     IPromotionDAO repository;
+
+    @Mock
+    private MockMvc mockMvc;
 
     @Mock
     MapperPromotion mapperPromotion;
@@ -79,6 +85,36 @@ public class PromotionTest {
         assertEquals(50, promotionSaved.getDiscount());
         assertEquals(PromotionData.PROMOTIONS.get(0).getDateTimeStart(), promotionSaved.getDateTimeStart());
 
+    }
+
+    @Test
+    void save_ThrowsException_WhenEndDateBeforeStartDate() {
+        PromotionDTO promotionDTO = new PromotionDTO();
+        promotionDTO.setName("Promo error");
+        promotionDTO.setDateTimeStart(Timestamp.valueOf("2025-06-01 10:00:00"));
+        promotionDTO.setDateTimeEnd(Timestamp.valueOf("2025-05-29 10:00:00"));
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.save(promotionDTO)
+        );
+
+        assertEquals("The end date must be later than the start date", exception.getMessage());
+    }
+
+    @Test
+    void save_ThrowsException_WhenStartDateInThePast() {
+        PromotionDTO promotionDTO = new PromotionDTO();
+        promotionDTO.setName("Promo antigua");
+        promotionDTO.setDateTimeStart(Timestamp.valueOf("2020-01-01 10:00:00"));
+        promotionDTO.setDateTimeEnd(Timestamp.valueOf("2025-07-07 10:00:00"));
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.save(promotionDTO)
+        );
+
+        assertEquals("The start date must be later than the current date", exception.getMessage());
     }
 
 }
