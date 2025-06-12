@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 public class MapperUtil {
 
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                             CATEGORY METHODS
-   -----------------------------------------------------------------------------------------------------------
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * CATEGORY METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
      */
     public CategoryDTO convertCategoryToDto(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
@@ -66,11 +68,13 @@ public class MapperUtil {
     }
 
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                            SUBCATEGORY METHODS
-   -----------------------------------------------------------------------------------------------------------
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * SUBCATEGORY METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
      */
-    public SubcategoryDTO convertSubcategoryToDto(Subcategory subcategory){
+    public SubcategoryDTO convertSubcategoryToDto(Subcategory subcategory) {
         SubcategoryDTO subcategoryDTO = new SubcategoryDTO();
 
         subcategoryDTO.setIdSubcategory(subcategory.getIdSubcategory());
@@ -114,11 +118,14 @@ public class MapperUtil {
 
         return subcategoryIdWithProductsDTO;
     }
+
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                                PRODUCT METHODS
-    -----------------------------------------------------------------------------------------------------------
-    */
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * PRODUCT METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
     public ProductDTO convertProductToDto(Product product) {
         ProductDTO productDTO = new ProductDTO();
 
@@ -138,8 +145,9 @@ public class MapperUtil {
         return productDTO;
     }
 
-    //Este metodo esta creado porque al actualizar un RegisterStock, ya que tiraba que la subcategory era nula
-    public ProductDTO convertProductWOSubcategoryToDto(Product product){
+    // Este metodo esta creado porque al actualizar un RegisterStock, ya que tiraba
+    // que la subcategory era nula
+    public ProductDTO convertProductWOSubcategoryToDto(Product product) {
         ProductDTO productDTO = new ProductDTO();
 
         productDTO.setIdProduct(product.getIdProduct());
@@ -169,7 +177,7 @@ public class MapperUtil {
         return productDTO;
     }
 
-    public ProductWithDoDTO convertProductWithDoToDto(Product product){
+    public ProductWithDoDTO convertProductWithDoToDto(Product product) {
         ProductWithDoDTO productWithDoDTO = new ProductWithDoDTO();
 
         productWithDoDTO.setIdProduct(product.getIdProduct());
@@ -187,7 +195,7 @@ public class MapperUtil {
         return productWithDoDTO;
     }
 
-    public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product){
+    public ProductWithRegisterStocksDTO convertProductWithRegisterStocksToDto(Product product) {
         ProductWithRegisterStocksDTO productDTO = new ProductWithRegisterStocksDTO();
 
         productDTO.setIdProduct(product.getIdProduct());
@@ -200,17 +208,18 @@ public class MapperUtil {
         productDTO.setRegisterStocks(product.getRegisterStocks()
                 .stream()
                 .map(this::convertRegisterStockToDto)
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList()));
 
         return productDTO;
     }
 
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                         PRODUCT COMBO METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * PRODUCT COMBO METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
     public ProductComboDTO convertProductComboToDto(ProductCombo productCombo) {
         ProductComboDTO productComboDTO = new ProductComboDTO();
 
@@ -221,11 +230,14 @@ public class MapperUtil {
 
         return productComboDTO;
     }
+
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                             COMBO METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * COMBO METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
     public ComboDTO convertComboToDto(Combo combo) {
         ComboDTO comboDTO = new ComboDTO();
 
@@ -254,7 +266,8 @@ public class MapperUtil {
 
         return comboWithItDTO;
     }
-    public ComboWithDoDTO convertComboWithDoTDoDto(Combo combo){
+
+    public ComboWithDoDTO convertComboWithDoTDoDto(Combo combo) {
         ComboWithDoDTO comboWithDoDTO = new ComboWithDoDTO();
 
         comboWithDoDTO.setIdCombo(combo.getIdCombo());
@@ -265,17 +278,19 @@ public class MapperUtil {
 
         comboWithDoDTO.setOrderDetail(combo.getOrderDetail()
                 .stream()
-                .map(this:: convertOrderDetailToDto)
+                .map(this::convertOrderDetailToDto)
                 .collect(Collectors.toList()));
 
         return comboWithDoDTO;
     }
 
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                             State METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * State METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
     public StateDTO convertStateToDTO(State state) {
         StateDTO stateDTO = new StateDTO();
 
@@ -285,96 +300,116 @@ public class MapperUtil {
         return stateDTO;
     }
 
-    public StateWithOrdersDTO convertStateWithOrderToDTO(State state){
+    public StateWithOrdersDTO convertStateWithOrderToDTO(State state) {
         StateWithOrdersDTO stateWithOrderDTO = new StateWithOrdersDTO();
 
         stateWithOrderDTO.setIdState(state.getIdState());
         stateWithOrderDTO.setName(state.getName());
 
         stateWithOrderDTO.setOrdes(state.getOrders()
-            .stream()
-            .map(this::convertOrderToDTO)
-            .collect(Collectors.toList()));
+                .stream()
+                .map(this::convertOrderToDTO)
+                .collect(Collectors.toList()));
 
         return stateWithOrderDTO;
     }
 
-    public StateWithOrdersDTO convertStateIdWithOrderDTO(State state){
+    public StateWithOrdersDTO convertStateIdWithOrderDTO(State state) {
         StateWithOrdersDTO stateIdWithOrderDTO = new StateWithOrdersDTO();
 
         stateIdWithOrderDTO.setIdState(state.getIdState());
         stateIdWithOrderDTO.setName(state.getName());
 
         stateIdWithOrderDTO.setOrdes(state.getOrders()
-            .stream()
-            .map(this::convertOrderToDTO)
-            .collect(Collectors.toList()));
+                .stream()
+                .map(this::convertOrderToDTO)
+                .collect(Collectors.toList()));
 
         return stateIdWithOrderDTO;
     }
 
 
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                             Order METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
-    public OrderDTO convertOrderToDTO(Order order){
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * Order METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
+    public OrderDTO convertOrderToDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setIdOrder(order.getIdOrder());
-        //orderDTO.setTotal(order.getTotal());
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
 
+        if (order.getIdDiscountCoupon() != null) {
+
+            orderDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        }
+
         return orderDTO;
     }
 
-    //Este metodo tambien es para que no tire error porque no existe la clave foranea
-    public OrderDTO convertOrderWoStateToDTO(Order order){
+    // Este metodo tambien es para que no tire error porque no existe la clave
+    // foranea
+    public OrderDTO convertOrderWoStateToDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setIdOrder(order.getIdOrder());
         orderDTO.setDateTime(order.getDateTime());
         orderDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
+
+        if (order.getIdDiscountCoupon() != null) {
+
+            orderDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        }
         return orderDTO;
     }
 
-    public OrderWithDoDTO convertOrderWithDoToDto(Order order){
+    public OrderWithDoDTO convertOrderWithDoToDto(Order order) {
         OrderWithDoDTO orderWithDoDTO = new OrderWithDoDTO();
 
         orderWithDoDTO.setIdOrder(order.getIdOrder());
-        //orderWithDoDTO.setTotal(order.getTotal());
+        // orderWithDoDTO.setTotal(order.getTotal());
         orderWithDoDTO.setDateTime(order.getDateTime());
         orderWithDoDTO.setIdState(this.convertStateToDTO(order.getIdState()));
         orderWithDoDTO.setIdUser(this.convertUserToUserDTO(order.getIdUser()));
+
+        if (order.getIdDiscountCoupon() != null) {
+
+            orderWithDoDTO.setIdDiscountCoupon(this.convertDiscountCouponToDto(order.getIdDiscountCoupon()));
+
+        }
         orderWithDoDTO.setOrderDetail(order.getOrderDetail()
-                    .stream()
-                    .map(this::convertOrderDetailToDto)
-                    .collect(Collectors.toList()));
+                .stream()
+                .map(this::convertOrderDetailToDto)
+                .collect(Collectors.toList()));
 
         return orderWithDoDTO;
     }
 
-
     /*
-    ----------------------------------------------------------------------------------------------------------
-                                             Detail Order METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * Detail Order METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
 
-    public OrderDetailDTO convertOrderDetailToDto(OrderDetail orderDetail){
+    public OrderDetailDTO convertOrderDetailToDto(OrderDetail orderDetail) {
         OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
-
 
         orderDetailDTO.setIdOrderDetail(orderDetail.getIdDetailOrder());
         orderDetailDTO.setSubTotal(orderDetail.getSubTotal());
         orderDetailDTO.setQuantity(orderDetail.getQuantity());
 
-        if (orderDetail.getIdCombo() == null){
+        if (orderDetail.getIdCombo() == null) {
             orderDetailDTO.setIdProduct(this.convertProductWOSubcategoryToDto(orderDetail.getIdProduct()));
-        }else{
+        } else {
             orderDetailDTO.setIdCombo(this.convertComboToDto(orderDetail.getIdCombo()));
         }
 
@@ -382,14 +417,15 @@ public class MapperUtil {
         return orderDetailDTO;
     }
 
+    /*
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * Promotion METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
 
-     /*
-    ----------------------------------------------------------------------------------------------------------
-                                             Promotion METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
-
-    public PromotionDTO convertPromotionToDTO(Promotion promotion){
+    public PromotionDTO convertPromotionToDTO(Promotion promotion) {
         PromotionDTO promotionDTO = new PromotionDTO();
 
         promotionDTO.setIdPromotion(promotion.getIdPromotion());
@@ -399,11 +435,10 @@ public class MapperUtil {
         promotionDTO.setDateTimeEnd(promotion.getDateTimeEnd());
         //promotionDTO.setInEffect(promotion.isInEffect());
 
-
         return promotionDTO;
     }
 
-    public PromotionWithProductsDTO convertPromotionWithProductsDto(Promotion promotion){
+    public PromotionWithProductsDTO convertPromotionWithProductsDto(Promotion promotion) {
         PromotionWithProductsDTO promotionWithProductsDTO = new PromotionWithProductsDTO();
 
         promotionWithProductsDTO.setIdPromotion(promotion.getIdPromotion());
@@ -413,7 +448,6 @@ public class MapperUtil {
         promotionWithProductsDTO.setDateHourEnd(promotion.getDateTimeEnd());
         //promotionWithProductsDTO.setInEffect(promotion.isInEffect());
 
-
         promotionWithProductsDTO.setProducts(promotion.getProducts()
                 .stream()
                 .map(this::convertProductToDto)
@@ -422,7 +456,7 @@ public class MapperUtil {
         return promotionWithProductsDTO;
     }
 
-    public PromotionWithProductsDTO convertPromotionIdWithProductsDto(Promotion promotion){
+    public PromotionWithProductsDTO convertPromotionIdWithProductsDto(Promotion promotion) {
         PromotionWithProductsDTO promotionIdWithProductsDTO = new PromotionWithProductsDTO();
 
         promotionIdWithProductsDTO.setIdPromotion(promotion.getIdPromotion());
@@ -440,14 +474,12 @@ public class MapperUtil {
         return promotionIdWithProductsDTO;
     }
 
-
-
     /*
+
     ----------------------------------------------------------------------------------------------------------
                                              USERS METHODS
    -----------------------------------------------------------------------------------------------------------
     */
-
     public UserDTO convertUserToUserDTO(User user){
         UserDTO userDTO = new UserDTO();
 
@@ -478,10 +510,10 @@ public class MapperUtil {
         return userAnswerDTO;
     }
 
-    public UserEditableDTO convertUserToUserEditableDTO(User user){
+    public UserEditableDTO convertUserToUserEditableDTO(User user) {
         UserEditableDTO userEditableDTO = new UserEditableDTO();
 
-        //userEditableDTO.setIdUser(user.getIdUser());
+        // userEditableDTO.setIdUser(user.getIdUser());
         userEditableDTO.setName(user.getName());
         userEditableDTO.setLastname(user.getLastname());
         userEditableDTO.setUsername(user.getUsername());
@@ -494,13 +526,36 @@ public class MapperUtil {
     }
 
 
-    /*
-    ----------------------------------------------------------------------------------------------------------
-                                             REGISTERSTOCK METHODS
-   -----------------------------------------------------------------------------------------------------------
-    */
 
-    public RegisterStockDTO convertRegisterStockToDto(RegisterStock registerStock){
+    public UserWithReviewDTO convertUserWithReviewToDTO (User user){
+        UserWithReviewDTO userWithReviewDTO = new UserWithReviewDTO();
+
+        userWithReviewDTO.setIdUser(user.getIdUser());
+        userWithReviewDTO.setName(user.getName());
+        userWithReviewDTO.setLastname(user.getLastname());
+        userWithReviewDTO.setEmail(user.getEmail());
+        userWithReviewDTO.setAddress(user.getAddress());
+        userWithReviewDTO.setPhone(user.getPhone());
+        userWithReviewDTO.setUsername(user.getUsername());
+        userWithReviewDTO.setPassword(user.getPassword());
+
+        userWithReviewDTO.setReviews(user.getReviews()
+                .stream()
+                .map(this::convertReviewToDto)
+                .collect(Collectors.toList()));
+
+        return userWithReviewDTO;
+    }
+
+    /*
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * REGISTERSTOCK METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
+
+    public RegisterStockDTO convertRegisterStockToDto(RegisterStock registerStock) {
         RegisterStockDTO registerStockDTO = new RegisterStockDTO();
 
         registerStockDTO.setIdRegisterStock(registerStock.getIdRegisterStock());
@@ -511,4 +566,42 @@ public class MapperUtil {
 
         return registerStockDTO;
     }
+
+        /*
+    ----------------------------------------------------------------------------------------------------------
+                                             Review Methods
+   -----------------------------------------------------------------------------------------------------------
+    */
+
+    public ReviewDTO convertReviewToDto(Review review){
+        ReviewDTO reviewDTO = new ReviewDTO();
+
+        reviewDTO.setIdReview(review.getIdReview());
+        reviewDTO.setMessage(review.getMessage());
+        reviewDTO.setSubject(review.getSubject());
+
+        reviewDTO.setIdUser(this.convertUserToUserDTO(review.getIdUser()));
+
+        return reviewDTO;
+    }
+
+    /*
+     * -----------------------------------------------------------------------------
+     * -----------------------------
+     * DISCOUNT COUPON METHODS
+     * -----------------------------------------------------------------------------
+     * ------------------------------
+     */
+
+    public DiscountCouponDTO convertDiscountCouponToDto(DiscountCoupon discountCoupon) {
+        DiscountCouponDTO discountCouponDTO = new DiscountCouponDTO();
+
+        discountCouponDTO.setIdDiscountCoupon(discountCoupon.getIdDiscountCoupon());
+        discountCouponDTO.setCode(discountCoupon.getCode());
+        discountCouponDTO.setDiscount(discountCoupon.getDiscount());
+        discountCouponDTO.setCurrent(discountCoupon.isCurrent());
+
+        return discountCouponDTO;
+    }
+
 }

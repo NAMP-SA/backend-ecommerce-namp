@@ -2,6 +2,7 @@ package com.namp.ecommerce.service.implementation;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,9 +71,10 @@ public class PromotionImplementation implements IPromotionService {
             if (promotionDTO.getDateTimeEnd().before(promotionDTO.getDateTimeStart())) {
              throw new IllegalArgumentException("The end date must be later than the start date");
             }
-            
-            Timestamp now = Timestamp.from(Instant.now());
-            if (promotionDTO.getDateTimeStart().before(now)) {
+
+            LocalDate today = LocalDate.now();
+            LocalDate startDate = promotionDTO.getDateTimeStart().toLocalDateTime().toLocalDate();
+            if (startDate.isBefore(today)) {
                 throw new IllegalArgumentException("The start date must be later than the current date");
             }
 

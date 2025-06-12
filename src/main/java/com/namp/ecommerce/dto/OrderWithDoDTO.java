@@ -16,5 +16,6 @@ public class OrderWithDoDTO {
     private StateDTO idState; 
     private UserDTO idUser; 
     private List<OrderDetailDTO> orderDetail; 
+    private DiscountCouponDTO idDiscountCoupon;
 
 }
