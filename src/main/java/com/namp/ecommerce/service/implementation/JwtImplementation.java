@@ -26,14 +26,15 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Service
 @RequiredArgsConstructor
 public class JwtImplementation implements IJwtService{
-    
+
     private static final String SECRET_KEY;
 
     static {
-        // Cargar el archivo .env
-        Dotenv dotenv = Dotenv.configure().load();
-        SECRET_KEY = dotenv.get("JWT_SECRET");
-    } 
+        SECRET_KEY = System.getenv("JWT_SECRET");
+        if (SECRET_KEY == null) {
+            throw new IllegalStateException("JWT_SECRET environment variable is not set");
+        }
+    }
 
     @Override
     public String getToken(UserDTO user) {
