@@ -8,6 +8,7 @@ import com.namp.ecommerce.error.InvalidFileFormatException;
 import com.namp.ecommerce.exception.DeletionException;
 import com.namp.ecommerce.mapper.MapperCombo;
 import com.namp.ecommerce.model.Combo;
+import com.namp.ecommerce.service.ICloudinaryService;
 import com.namp.ecommerce.service.IComboService;
 import com.namp.ecommerce.service.IProductComboService;
 
@@ -41,9 +42,8 @@ public class ComboImplementation implements IComboService{
     @Autowired 
     private IProductComboService productComboService;
 
-
-    @Value("${image.upload.dir}")
-    private String uploadDir;
+    @Autowired
+    private ICloudinaryService cloudinaryService;
 
     @Override
     public List<ComboDTO> getCombos(){
@@ -78,16 +78,12 @@ public class ComboImplementation implements IComboService{
             }
 
             //Genero un nombre custom para la imagen usando el nombre del producto y la fecha actual
-            String fileExtension = contentType.equals("image/jpeg") ? ".jpg" : ".png";
             String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-            String fileName = comboDTO.getName().replaceAll("\\s+","_").trim() + "_" + formattedDate + fileExtension;
+            String fileName = comboDTO.getName().replaceAll("\\s+","_").trim() + "_" + formattedDate;
 
-            //Crea la ruta del archivo
-            filePath = Paths.get(uploadDir, fileName);
-
-            //Seteo la ruta al atributo img de producto
-            comboDTO.setImg("/images/" + fileName);
+            String imageUrl = cloudinaryService.uploadImage(file, fileName);
+            comboDTO.setImg(imageUrl);
         }
 
         //Normalizar los espacios en blanco y convertir a mayusculas
@@ -147,17 +143,19 @@ public class ComboImplementation implements IComboService{
                 throw new InvalidFileFormatException("El formato del archivo no es válido. Solo se permiten archivos JPG o PNG.");
             }
 
+            // Eliminar imagen anterior si existe
+            if (existingCombo.getImg() != null && !existingCombo.getImg().isEmpty()) {
+                cloudinaryService.deleteImageByUrl(existingCombo.getImg());
+            }
+
             // Genero un nombre custom para la imagen usando el nombre del producto y un UUID
-            String fileExtension = contentType.equals("image/jpeg") ? ".jpg" : ".png";
             String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String fileName = comboDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate + fileExtension;
+            String fileName = comboDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate;
 
-            //Crea la ruta del archivo, si esta creada actualiza, de lo contrario crea
-            filePath = Paths.get(uploadDir, fileName);
+            String newImageUrl = cloudinaryService.uploadImage(file, fileName);
 
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            existingCombo.setImg("/images/" + fileName);
+            // Seteo nueva URL
+            existingCombo.setImg(newImageUrl);
         }
 
         //Guardamos el combo actualizado
@@ -168,23 +166,15 @@ public class ComboImplementation implements IComboService{
     }
 
     @Override
-    public void delete(ComboDTO comboDTO){
+    public void delete(ComboDTO comboDTO) {
         Combo combo = comboDAO.findByIdCombo(comboDTO.getIdCombo());
-        if (combo == null) {
-            throw new EntityNotFoundException("Combo not found with ID: " + comboDTO.getIdCombo());
-        }
-        String imgPathDto = comboDTO.getImg().replace("/images","");
-        //Eliminar la imagen asociada con ese producto
-        String imgPath = uploadDir + imgPathDto;
-        //Creo el objeto Path para el archivo de la imagen
-        Path filePath = Paths.get(imgPath);
-        try{
-            Files.delete(filePath);
-        } catch (IOException e) {
-            throw new DeletionException("Error deleting the product: " + combo.getName(), e);
+        if (combo == null) throw new EntityNotFoundException("Combo not found with ID: " + comboDTO.getIdCombo());
+
+        // Eliminar imagen asociada en Cloudinary si existe
+        if (combo.getImg() != null && !combo.getImg().isEmpty()) {
+            cloudinaryService.deleteImageByUrl(combo.getImg());
         }
 
-        //Luego elimino el objeto combo de la base de datos
         comboDAO.delete(combo);
     }
 
