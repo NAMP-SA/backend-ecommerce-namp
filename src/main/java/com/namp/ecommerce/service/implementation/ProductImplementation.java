@@ -8,15 +8,12 @@ import com.namp.ecommerce.model.Product;
 import com.namp.ecommerce.repository.IProductDAO;
 import com.namp.ecommerce.repository.IPromotionDAO;
 import com.namp.ecommerce.repository.ISubcategoryDAO;
+import com.namp.ecommerce.service.ICloudinaryService;
 import com.namp.ecommerce.service.IProductService;
 import com.namp.ecommerce.error.InvalidFileFormatException;
 import com.namp.ecommerce.exception.DeletionException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +21,6 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,12 +38,10 @@ public class ProductImplementation implements IProductService{
     private IPromotionDAO promotionDAO; 
 
     @Autowired
-    private MapperProduct mapperProduct; 
+    private MapperProduct mapperProduct;
 
-
-
-    @Value("${image.upload.dir}")
-    private String uploadDir;
+    @Autowired
+    private ICloudinaryService cloudinaryService;
 
     private boolean skipFileDeletion = false;
 
@@ -93,119 +87,95 @@ public class ProductImplementation implements IProductService{
     @Override
     public ProductDTO save(String productJson, MultipartFile file) throws IOException {
 
-        // Creo json a objeto
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
-        Path filePath = null;
 
-        if (!file.isEmpty()){
+        // Validación del archivo
+        if (!file.isEmpty()) {
             String contentType = file.getContentType();
-
-            // Corroboro que el tipo de contenido sea una imagen
-            if (!contentType.equals("image/jpeg") && !contentType.equals("image/png")){
-                throw new InvalidFileFormatException("El formato del archivo no es válido. Solo se permiten archivos JPG o PNG.");
+            if (!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
+                throw new InvalidFileFormatException("El formato del archivo no es válido. Solo se permiten JPG o PNG.");
             }
 
-            // Genero un nombre custom para la imagen usando el nombre del producto y la fecha actual
-            String fileExtension = contentType.equals("image/jpeg") ? ".jpg" : ".png";
+            // Generar nombre único
             String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String publicId = productDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate;
 
-            String fileName = productDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate + fileExtension;
+            // Subir a Cloudinary y obtener la URL
+            String imageUrl = cloudinaryService.uploadImage(file, publicId);
 
-
-            // Crea la ruta del archivo, si esta creada actualiza, de lo contrario crea
-            filePath = Paths.get(uploadDir, fileName);
-
-
-            // Seteo ruta al atributo img de product
-            productDTO.setImg("/images/" + fileName);
-
+            // Setear URL en el DTO
+            productDTO.setImg(imageUrl);
         }
-        // Normalizar los espacios en blanco y convertir a mayúsculas
+
+        // Normalizar nombre
         String normalizedName = productDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
-        if(!verifyName(normalizedName)) {
+        if (!verifyName(normalizedName)) {
             productDTO.setName(normalizedName);
             Product product = mapperProduct.convertDtoToProduct(productDTO);
-
-
             Product savedProduct = productDAO.save(product);
-
-            // Guardo la imagen (si un archivo se llama igual en el path lo va a reemplazar)
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-
             return mapperProduct.convertProductToDto(savedProduct);
         }
 
         return null;
     }
 
-        @Override
-        public ProductDTO update(ProductDTO existingProductDTO, String productJson, MultipartFile file) throws IOException{
-            Path filePath = null;
+    @Override
+    public ProductDTO update(ProductDTO existingProductDTO, String productJson, MultipartFile file) throws IOException {
 
-            Product existingProduct = productDAO.findByIdProduct(existingProductDTO.getIdProduct());
-            if (existingProduct == null){
-                return null;
-            }
-
-            // Convierto json a objeto
-            ObjectMapper objectMapper = new ObjectMapper();
-            ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
-            // Normalizar los espacios en blanco y convertir a mayúsculas
-            String normalizedName = productDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
-
-            //Verifica que el nombre esta disponible
-            if(verifyName(normalizedName, existingProductDTO.getIdProduct())) {
-                return null; //Si el nombre ya esta siendo utilizado
-            }
-
-            //Actualizar los campos en la entidad existente
-            existingProduct.setName(normalizedName);
-            existingProduct.setDescription(productDTO.getDescription());
-            existingProduct.setPrice(productDTO.getPrice());
-            existingProduct.setStock(productDTO.getStock());
-
-            // Actualizar la promoción, verficando si esta activa
-            if (productDTO.getIdPromotion() != null) {
-                existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
-            }
-
-            //Buscamos la instancia de subcategoria en base a la subcategoriaDTO que esta setteada en el productoDTO existente, lo mismo para la Promocion en base a promotionDTO seteada en productDTO.
-            existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
-            if(productDTO.getIdPromotion() != null){
-                existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
-            }
-
-            //Hago la verificacion de imagen
-            if (file != null && !file.isEmpty()){
-
-                String contentType = file.getContentType();
-
-                // Corroboro que el tipo de contenido sea una imagen
-                if (!contentType.equals("image/jpeg") && !contentType.equals("image/png")){
-                    throw new InvalidFileFormatException("El formato del archivo no es válido. Solo se permiten archivos JPG o PNG.");
-                }
-
-                // Genero un nombre custom para la imagen usando el nombre del producto y un UUID
-                String fileExtension = contentType.equals("image/jpeg") ? ".jpg" : ".png";
-                String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String fileName = productDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate + fileExtension;
-
-                // Crea la ruta del archivo, si esta creada actualiza, de lo contrario crea
-                filePath = Paths.get(uploadDir, fileName);
-
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                existingProduct.setImg("/images/" + fileName);
-            }
-
-            //Guardamos el producto actualizado
-            Product updatedProduct = productDAO.save(existingProduct);
-
-            //Devolvemos el DTO del producto actualizado
-            return mapperProduct.convertProductToDto(updatedProduct);
+        Product existingProduct = productDAO.findByIdProduct(existingProductDTO.getIdProduct());
+        if (existingProduct == null){
+            return null;
         }
+
+        // Convertimos el JSON en DTO
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
+        String normalizedName = productDTO.getName().replaceAll("\\s+", " ").trim().toUpperCase();
+
+        // Validación del nombre
+        if(verifyName(normalizedName, existingProductDTO.getIdProduct())) {
+            return null;
+        }
+
+        // Seteo los campos básicos
+        existingProduct.setName(normalizedName);
+        existingProduct.setDescription(productDTO.getDescription());
+        existingProduct.setPrice(productDTO.getPrice());
+        existingProduct.setStock(productDTO.getStock());
+
+        // Seteo subcategoría y promoción
+        existingProduct.setIdSubcategory(subcategoryDAO.findByIdSubcategory(productDTO.getIdSubcategory().getIdSubcategory()));
+        if (productDTO.getIdPromotion() != null) {
+            existingProduct.setIdPromotion(promotionDAO.findByIdPromotion(productDTO.getIdPromotion().getIdPromotion()));
+        }
+
+        // Manejo de imagen si se cargó una nueva
+        if (file != null && !file.isEmpty()) {
+            String contentType = file.getContentType();
+
+            if (!contentType.equals("image/jpeg") && !contentType.equals("image/png")){
+                throw new InvalidFileFormatException("El formato del archivo no es válido. Solo se permiten JPG o PNG.");
+            }
+
+            // Genero publicId y subo la nueva imagen
+            String formattedDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String publicId = productDTO.getName().replaceAll("\\s+", "_").trim() + "_" + formattedDate;
+
+            String newImageUrl = cloudinaryService.uploadImage(file, publicId);
+
+            // Eliminar imagen anterior si existe
+            if (existingProduct.getImg() != null && !existingProduct.getImg().isEmpty()) {
+                cloudinaryService.deleteImageByUrl(existingProduct.getImg());
+            }
+
+            // Seteo nueva URL
+            existingProduct.setImg(newImageUrl);
+        }
+
+        Product updatedProduct = productDAO.save(existingProduct);
+        return mapperProduct.convertProductToDto(updatedProduct);
+    }
 
     @Override
     public void delete(ProductDTO productDTO){
@@ -213,19 +183,15 @@ public class ProductImplementation implements IProductService{
         if (product == null){
             throw new EntityNotFoundException("Product not found with ID: " + productDTO.getIdProduct());
         }
-        if (!skipFileDeletion) {
-            String imgPathDto = productDTO.getImg().replace("/images","");
-            //Eliminar la imagen asociada con ese producto
-            String imgPath = uploadDir + imgPathDto;
-            // Creo el objeto Path para el archivo de la imagen
-            Path filePath = Paths.get(imgPath);
+
+        if (!skipFileDeletion && product.getImg() != null && !product.getImg().isEmpty()) {
             try {
-                Files.delete(filePath);
-            } catch (IOException e) {
-                throw new DeletionException("Error deleting the product: " + product.getName(), e);            }
+                cloudinaryService.deleteImageByUrl(product.getImg());
+            } catch (Exception e) {
+                throw new DeletionException("Error al eliminar la imagen en Cloudinary del producto: " + product.getName(), e);
+            }
         }
 
-        // Luego elimino el objeto producto de la base de datos
         productDAO.delete(product);
     }
 
@@ -286,7 +252,6 @@ public class ProductImplementation implements IProductService{
         productDAO.save(product);
     }
 
-
     @Override
     public boolean checkStock(ProductDTO productDTO, int quantity) {
         Product product = productDAO.findByIdProduct(productDTO.getIdProduct());
@@ -297,6 +262,4 @@ public class ProductImplementation implements IProductService{
         product.setSimulatedStock(product.getSimulatedStock() - quantity);
         return true;
     }
-
-
 }
