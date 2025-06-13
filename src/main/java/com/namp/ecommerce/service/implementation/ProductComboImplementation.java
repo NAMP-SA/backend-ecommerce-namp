@@ -14,8 +14,6 @@ import com.namp.ecommerce.service.IProductService;
 
 import jakarta.persistence.EntityNotFoundException;
 
-
-
 @Service
 public class ProductComboImplementation implements IProductComboService {
 
@@ -25,8 +23,8 @@ public class ProductComboImplementation implements IProductComboService {
     @Autowired
     private MapperProductCombo mapperProductCombo;
 
-    @Autowired IProductService productService;
-
+    @Autowired
+    IProductService productService;
 
     @Override
     public List<ProductComboDTO> getProductCombos() {

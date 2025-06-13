@@ -1,16 +1,15 @@
 package com.namp.ecommerce.service.implementation;
 import com.namp.ecommerce.service.ICloudinaryService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.io.IOException;
 
-@Component
+@Service
 public class CloudinaryImplementation implements ICloudinaryService {
     private final Cloudinary cloudinary;
 
