@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Permite todas las rutas de la API
-                .allowedOrigins("http://localhost:3000") // Dirección del frontend
+                .allowedOrigins("https://namp-bebidas.vercel.app") // Dirección del frontend
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*") // Permite todos los encabezados
                 .allowCredentials(true); // Permite el envío de cookies y credenciales
