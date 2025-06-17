@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api-namp")
-@CrossOrigin(origins = "https://namp-bebidas.vercel.app", allowedHeaders = "*")
 public class ProductController {
 
     @Autowired
