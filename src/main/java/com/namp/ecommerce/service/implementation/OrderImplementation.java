@@ -230,4 +230,10 @@ public class OrderImplementation implements IOrderService {
         return mapperOrder.convertOrderToDTO(orderWithoutCoupon);
     }
 
+    @Override
+    public double calculateTotal(Long id){
+        Order order = orderDAO.findByIdOrder(id);
+        return order.calculateTotal();
+    }
+
 }
