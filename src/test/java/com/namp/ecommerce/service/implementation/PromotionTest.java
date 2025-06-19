@@ -1,6 +1,5 @@
 package com.namp.ecommerce.service.implementation;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.dto.PromotionWithProductsDTO;
 import com.namp.ecommerce.mapper.MapperPromotion;
@@ -19,8 +18,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class PromotionTest {
@@ -45,7 +42,8 @@ public class PromotionTest {
     @Test
     void findPromotionById() {
         when(repository.findByIdPromotion(1L)).thenReturn(PromotionData.PROMOTIONS.get(0));
-        when(mapperPromotion.convertPromotionToDto(PromotionData.PROMOTIONS.get(0))).thenReturn(PromotionData.PROMOTIONSDTO.get(0));
+        when(mapperPromotion.convertPromotionToDto(PromotionData.PROMOTIONS.get(0)))
+                .thenReturn(PromotionData.PROMOTIONSDTO.get(0));
 
         PromotionDTO promotion = service.findById(1L);
 
@@ -58,8 +56,9 @@ public class PromotionTest {
     void findPromotionsWithProducts() {
         when(repository.findAll()).thenReturn(PromotionData.PROMOTIONS);
 
-        for (int i = 0; i < (PromotionData.PROMOTIONS.size()); i++){
-            when(mapperPromotion.convertPromotionWithProductsToDto(PromotionData.PROMOTIONS.get(i))).thenReturn(PromotionData.PROMOTIONSWITHPRODUCTSDTO.get(i));
+        for (int i = 0; i < (PromotionData.PROMOTIONS.size()); i++) {
+            when(mapperPromotion.convertPromotionWithProductsToDto(PromotionData.PROMOTIONS.get(i)))
+                    .thenReturn(PromotionData.PROMOTIONSWITHPRODUCTSDTO.get(i));
         }
 
         List<PromotionWithProductsDTO> promotions = service.getPromotionsWithProducts();
@@ -72,8 +71,10 @@ public class PromotionTest {
 
     @Test
     void savePromotion() {
-        when(mapperPromotion.convertPromotionToDto(PromotionData.PROMOTIONS.get(0))).thenReturn(PromotionData.PROMOTIONSDTO.get(0));
-        when(mapperPromotion.convertDtoToPromotion(PromotionData.PROMOTIONSDTO.get(0))).thenReturn(PromotionData.PROMOTIONS.get(0));
+        when(mapperPromotion.convertPromotionToDto(PromotionData.PROMOTIONS.get(0)))
+                .thenReturn(PromotionData.PROMOTIONSDTO.get(0));
+        when(mapperPromotion.convertDtoToPromotion(PromotionData.PROMOTIONSDTO.get(0)))
+                .thenReturn(PromotionData.PROMOTIONS.get(0));
         when(repository.save(PromotionData.PROMOTIONS.get(0))).thenReturn(PromotionData.PROMOTIONS.get(0));
 
         PromotionDTO promotionDTO = PromotionData.PROMOTIONSDTO.get(0);
@@ -96,8 +97,7 @@ public class PromotionTest {
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.save(promotionDTO)
-        );
+                () -> service.save(promotionDTO));
 
         assertEquals("The end date must be later than the start date", exception.getMessage());
     }
@@ -111,8 +111,7 @@ public class PromotionTest {
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.save(promotionDTO)
-        );
+                () -> service.save(promotionDTO));
 
         assertEquals("The start date must be later than the current date", exception.getMessage());
     }
