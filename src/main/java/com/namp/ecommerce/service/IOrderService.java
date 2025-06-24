@@ -31,6 +31,8 @@ public interface IOrderService {
 
     OrderDTO deleteCoupon(Long id);
 
+    double calculateTotal(Long id);
+
     // METODO PROVISIORIO
     OrderDTO confirmOrder(OrderDTO orderDTO);
 }
