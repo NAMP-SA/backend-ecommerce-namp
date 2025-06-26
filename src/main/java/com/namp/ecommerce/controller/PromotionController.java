@@ -37,6 +37,16 @@ public class PromotionController {
         }
     }
 
+    @GetMapping("promotion/{id}")
+    public ResponseEntity<?> getPromotion(@PathVariable long id){
+        try{
+            return ResponseEntity.ok(promotionService.findById(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error showing the promotion:"+e.getMessage());
+        }
+    }
+
     @GetMapping("promotionWithProducts")
     public ResponseEntity<?> getPromotionsWithProducts(){
         try{

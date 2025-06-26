@@ -3,6 +3,7 @@ package com.namp.ecommerce.service.implementation;
 import com.namp.ecommerce.dto.PromotionDTO;
 import com.namp.ecommerce.dto.PromotionWithProductsDTO;
 import com.namp.ecommerce.mapper.MapperPromotion;
+import com.namp.ecommerce.model.Promotion;
 import com.namp.ecommerce.repository.IPromotionDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,25 +72,6 @@ public class PromotionTest {
     }
 
     @Test
-    void savePromotion() {
-        when(mapperPromotion.convertPromotionToDto(PromotionData.PROMOTIONS.get(0)))
-                .thenReturn(PromotionData.PROMOTIONSDTO.get(0));
-        when(mapperPromotion.convertDtoToPromotion(PromotionData.PROMOTIONSDTO.get(0)))
-                .thenReturn(PromotionData.PROMOTIONS.get(0));
-        when(repository.save(PromotionData.PROMOTIONS.get(0))).thenReturn(PromotionData.PROMOTIONS.get(0));
-
-        PromotionDTO promotionDTO = PromotionData.PROMOTIONSDTO.get(0);
-
-        PromotionDTO promotionSaved = service.save(promotionDTO);
-
-        assertNotNull(promotionSaved);
-        assertEquals("PROMOCION 1", promotionSaved.getName());
-        assertEquals(50, promotionSaved.getDiscount());
-        assertEquals(PromotionData.PROMOTIONS.get(0).getDateTimeStart(), promotionSaved.getDateTimeStart());
-
-    }
-
-    @Test
     void save_ThrowsException_WhenEndDateBeforeStartDate() {
         PromotionDTO promotionDTO = new PromotionDTO();
         promotionDTO.setName("Promo error");
@@ -114,6 +97,60 @@ public class PromotionTest {
                 () -> service.save(promotionDTO));
 
         assertEquals("The start date must be later than the current date", exception.getMessage());
+    }
+
+    @Test
+    void savePromotion() {
+        when(mapperPromotion.convertPromotionToDto(PromotionData.PROMOTIONS.get(0)))
+                .thenReturn(PromotionData.PROMOTIONSDTO.get(0));
+        when(mapperPromotion.convertDtoToPromotion(PromotionData.PROMOTIONSDTO.get(0)))
+                .thenReturn(PromotionData.PROMOTIONS.get(0));
+        when(repository.save(PromotionData.PROMOTIONS.get(0))).thenReturn(PromotionData.PROMOTIONS.get(0));
+
+        PromotionDTO promotionDTO = PromotionData.PROMOTIONSDTO.get(0);
+
+        PromotionDTO promotionSaved = service.save(promotionDTO);
+
+        assertNotNull(promotionSaved);
+        assertEquals("PROMOCION 1", promotionSaved.getName());
+        assertEquals(50, promotionSaved.getDiscount());
+        assertEquals(PromotionData.PROMOTIONS.get(0).getDateTimeStart(), promotionSaved.getDateTimeStart());
+
+    }
+
+    @Test
+    void save_Success_WhenDiscountIsZero() {
+        PromotionDTO dto = new PromotionDTO();
+        dto.setName("Promo sin descuento");
+        dto.setDiscount(0);
+        dto.setDateTimeStart(Timestamp.valueOf("2025-08-01 10:00:00"));
+        dto.setDateTimeEnd(Timestamp.valueOf("2025-08-31 10:00:00"));
+
+        when(mapperPromotion.convertDtoToPromotion(dto)).thenReturn(new Promotion(/* valores equivalentes */));
+        when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(mapperPromotion.convertPromotionToDto(any())).thenReturn(dto);
+
+        PromotionDTO saved = service.save(dto);
+
+        assertNotNull(saved);
+        assertEquals(0, saved.getDiscount());
+    }
+
+    @Test
+    void save_Fails_WhenNameIsNull() {
+        PromotionDTO dto = new PromotionDTO();
+        dto.setName(null); // nombre obligatorio
+        dto.setDiscount(20);
+        dto.setDateTimeStart(Timestamp.valueOf("2025-08-01 10:00:00"));
+        dto.setDateTimeEnd(Timestamp.valueOf("2025-08-31 10:00:00"));
+
+        try {
+            service.save(dto);
+            fail("Expected an exception due to null name");
+        } catch (Exception e) {
+            // Caja negra: validamos que haya fallado sin importar el tipo de excepción
+            assertTrue(true);
+        }
     }
 
 }
