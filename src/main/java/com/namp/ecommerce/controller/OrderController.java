@@ -174,4 +174,9 @@ public class OrderController {
         }
 
     }
+
+    @GetMapping("/user/totalOrder/{id}")
+    public ResponseEntity<?> getTotalOrder(@PathVariable long id){
+        return ResponseEntity.ok(orderService.calculateTotal(id));
+    }
 }

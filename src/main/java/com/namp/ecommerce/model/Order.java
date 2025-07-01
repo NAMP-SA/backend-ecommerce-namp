@@ -44,6 +44,9 @@ public class Order implements Serializable {
     @JoinColumn(name = "fk_discount_coupon", referencedColumnName = "idDiscountCoupon")
     private DiscountCoupon idDiscountCoupon;
 
+    @Transient
+    private double total;
+
     public double calculateTotal() {
         Double total = this.orderDetail.stream()
                 .mapToDouble(OrderDetail::getSubTotal)
